@@ -1,0 +1,33 @@
+package modules;
+
+import java.util.ArrayList;
+
+public class Mano {
+    private Jugador jugador;
+    private ArrayList<Carta> cartas = new ArrayList<Carta>();
+
+    public Mano(Jugador jugador, ArrayList<Carta> cartas) {
+        this.jugador = jugador;
+        this.cartas = cartas;
+    }
+
+    public Jugador getJugador() {
+        return this.jugador;
+    }
+
+    public ArrayList<Carta> getCartas() {
+        return this.cartas;
+    }
+
+    public Carta removeCarta() {
+        int n = (int) (Math.random() * cartas.size());
+        Carta carta = cartas.remove(n);
+        return carta;
+    }
+
+    public void addCarta(Carta carta) {
+        if (carta != null) {
+            cartas.add(carta);
+        }
+    }
+}

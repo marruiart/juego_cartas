@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Menú</title>
+    <link rel="shortcut icon" href="assets/img/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="./assets/css/style.css" type="text/css" />
+</head>
+
+<body>
+    <h1>Pumba!</h1>
+    <p>El Pumba, es un juego muy divertido cuya finalidad es muy diferente a la del resto de juegos que conocemos. No se
+        trata de ganar bazas o hacer combinaciones con las cartas, en el Pumba, hay que intentar ser el primero en
+        descartarse de las cartas de la mano, ganando de este modo la partida.</p>
+    <h2>Objetivo del juego</h2>
+    <p>El objetivo es desprenderse antes que los contrarios de todas las cartas de la mano y así hacer Pumba.</p>
+    <h2>Baraja de cartas</h2>
+    <p>Se juega con una baraja española de 40 cartas.</p>
+    <h2>Número de jugadores</h2>
+    <p>Pueden entrar en el juego de dos a seis jugadores.</p>
+    <h2>Orden y valor de las cartas</h2>
+    <p>El valor de las cartas se muestra en la siguiente tabla:</p>
+    <table>
+        <tr>
+            <th>As</th>
+            <td>1 Punto</td>
+        </tr>
+        <tr>
+            <th>Tres</th>
+            <td>3 Puntos</td>
+        </tr>
+        <tr>
+            <th>Cuatro</th>
+            <td>4 Puntos</td>
+        </tr>
+        <tr>
+            <th>Cinco</th>
+            <td>5 Puntos</td>
+        </tr>
+        <tr>
+            <th>Seis</th>
+            <td>6 Puntos</td>
+        </tr>
+        <tr>
+            <th>Siete</th>
+            <td>7 Puntos</td>
+        </tr>
+        <tr>
+            <th>Caballo</th>
+            <td>9 Puntos</td>
+        </tr>
+        <tr>
+            <th>Rey</th>
+            <td>10 Puntos</td>
+        </tr>
+        <tr>
+            <th>Dos</th>
+            <td>10 Puntos</td>
+        </tr>
+        <tr>
+            <th>Sota</th>
+            <td>10 Puntos</td>
+        </tr>
+    </table>
+    <h2>Distribución de las cartas</h2>
+    <p>El jugador encargado de repartir las cartas en primer lugar se determinará por sorteo. El que da, reparte 5
+        cartas al jugador situado a su derecha, el “mano”, y 4 cartas a los restantes.</p>
+    <h2>Inicio y marcha del juego</h2>
+    <p>El “mano” sale de una carta que pone descubierta sobre la mesa. El siguiente jugador deberá seguir al palo o
+        poner una carta de otro palo siempre que sea de igual número, en cuyo caso, cambia el palo al de la nueva carta.
+    </p>
+    <p>Si no puede jugar ninguna carta, debe pasar el turno a otro jugador. Las cartas que se van jugando deberán
+        superponerse bien, siendo visible únicamente la última carta jugada.</p>
+    <p>Cuando un jugador se quede con una carta en la mano, hay obligación de avisarlo, diciendo en voz alta “Pumba”
+        antes de poner su penúltima carta. Si olvida decir “Pumba” y algún jugador lo advierte, aquel queda sancionado
+        teniendo que tomar dos cartas del mazo. El juego finaliza cuando un jugador pone su última carta. En este
+        momento, los demás jugadores descubren las cartas contando tantos puntos como sume el valor de sus cartas.</p>
+    <p>Hay 6 cartas que tienen un significado especial:</p>
+    <ul>
+        <li><strong class="strong">El As o uno.</strong> Con esta carta, todos deben guardar silencio y el jugador que
+            hable deberá coger dos cartas del
+            mazo.</li>
+        <li><strong class="strong">El Dos.</strong> Esta carta obliga al siguiente jugador a robar 2 cartas. Los doses
+            son acumulativos, es decir, se
+            puede echar otro dos para salvarse de robar y el siguiente jugador robará 4 cartas, así podría darse el caso
+            de hasta 4 doses consecutivos, lo cual obligaría a robar 8 cartas. Pueden echarse en cualquier momento y el
+            palo pasa a ser el del dos jugado.</li>
+        <li><strong class="strong">El Siete.</strong> Esta carta cambia el sentido del juego.</li>
+        <li><strong class="strong">La Sota.</strong> Esta es la carta comodín. Es decir, esta carta se puede echar en
+            cualquier momento, excepto como
+            respuesta al dos y permite cambiar el palo de juego al que más le convenga al jugador que la eche.</li>
+        <li><strong class="strong">El Caballo.</strong> Esta carta salta a un jugador, por lo que el jugador situado
+            inmediatamente después al que la ha
+            tirado, estará un turno sin jugar.</li>
+        <li><strong class="strong">El Rey.</strong> Con esta carta se puede echar otra del mismo palo.</li>
+    </ul>
+    <h2>Tanteo</h2>
+    <p>Cada jugador anota la suma de los puntos que le queden en su mano, de forma que, al sumar 100 o sobrepasar esta
+        cifra, queda eliminado de la partida, continuando los otros jugadores hasta quedar uno solo que no alcance 100
+        puntos, el cual gana la partida. Estos 100 puntos de base pueden alterarse, de común acuerdo, antes de comenzar
+        la partida. El que gana un juego parcial, descuenta 5 puntos de su puntuación.</p>
+    <form method="POST" action="pumba.jsp">
+        <div>
+            <label for="jugadores">Elija el número de jugadores: </label>
+            <select name="jugadores" id="jugadores">
+                <option value="2" selected>2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+            </select>
+        </div>
+        <input type="hidden" name="iniciar" value="1">
+        <button type="submit">Jugar al Pumba</button>
+    </form>
+    <small>Fuente: <a href="https://www.nhfournier.es/como-jugar/pumba/">www.nhfournier.es</a></small>
+    <br/><a href="/manager/html" class="atras">Atrás</a>
+</body>
+
+</html>
