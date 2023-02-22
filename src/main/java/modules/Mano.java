@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class Mano {
     private Jugador jugador;
     private ArrayList<Carta> cartas = new ArrayList<Carta>();
+    private ArrayList<Carta> cartasValidas;
 
     public Mano(Jugador jugador, ArrayList<Carta> cartas) {
         this.jugador = jugador;
@@ -19,10 +20,27 @@ public class Mano {
         return this.cartas;
     }
 
+    public ArrayList<Carta> getCartasValidas() {
+        Carta centroMesa = jugador.verCentroMesa();
+        /* System.out.println("centro mesa: " + centroMesa); */
+        cartasValidas = new ArrayList<Carta>();
+        for (Carta c : cartas) {
+            if (c.esValida(centroMesa)) {
+                cartasValidas.add(c);
+            }
+        }
+        return this.cartasValidas;
+    }
+
     public Carta removeCarta() {
         int n = (int) (Math.random() * cartas.size());
         Carta carta = cartas.remove(n);
         return carta;
+    }
+
+    public Carta removeCarta(Carta c) {
+        cartas.remove(c);
+        return c;
     }
 
     public void addCarta(Carta carta) {

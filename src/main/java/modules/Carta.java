@@ -50,14 +50,22 @@ public class Carta {
         this.imagen = "assets/img/" + (this.descubierta ? (getNumero() + "_" + getPalo()) : "reverso") + ".png";
     }
 
+    public boolean esValida(Carta c) {
+        if (c.getNumero().equals(this.getNumero()) || c.getPalo().equals(this.getPalo())) {
+            return true;
+        }
+        return false;
+        /* || this.getNumero().equals(Numeros.SIETE.toString().toLowerCase())
+        || this.getNumero().equals(Numeros.DOS.toString().toLowerCase()) */
+    }
+
     @Override
     public boolean equals(Object o) {
-        return this.getClass() == o.getClass() && (this.numero == ((Carta) o).numero || this.palo == ((Carta) o).palo);
+        return this.getClass() == o.getClass() && (this.numero == ((Carta) o).numero && this.palo == ((Carta) o).palo);
     }
 
     @Override
     public String toString() {
         return "<img src=" + imagen + " width='100'>";
     }
-
 }

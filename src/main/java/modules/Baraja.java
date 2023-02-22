@@ -50,16 +50,16 @@ public class Baraja {
         devolverCarta(cartas.size(), carta);
     }
 
+    public void devolverCarta(int posicion, Carta carta) {
+        carta.setDescubierta(false);
+        cartas.add(posicion, carta);
+    }
+
     public void devolverCartas(ArrayList<Carta> cartas) {
         for (Carta c : cartas) {
             c.setDescubierta(false);
             this.cartas.add(c);
         }
-    }
-
-    public void devolverCarta(int posicion, Carta carta) {
-        carta.setDescubierta(false);
-        cartas.add(posicion, carta);
     }
 
     public void generarMazo() {

@@ -36,16 +36,48 @@ public class Jugador {
         return this.esMaquina;
     }
 
-    public void soltarCarta() {
-        this.soltarCartas(1);
+    public Carta verCentroMesa() {
+        return partida.getCentroMesa();
     }
 
-    public void soltarCartas(int n) {
+    public Carta soltarCartaValida() {
+        ArrayList<Carta> cartasValidas = this.cartas.getCartasValidas();
+        if (cartasValidas.size() == 0)
+            return null;
+        int n = (int) (Math.random() * cartasValidas.size());
+        return this.soltarCarta(cartasValidas.get(n));
+    }
+
+    public Carta soltarCarta() {
+        return this.soltarCartas(1).get(0);
+    }
+
+    public Carta soltarCarta(Carta c) {
+        ArrayList<Carta> carta = new ArrayList<>();
+        carta.add(c);
+        return this.soltarCartas(carta).get(0);
+    }
+
+    public ArrayList<Carta> soltarCartas(int n) {
+        ArrayList<Carta> cartasSoltadas = new ArrayList<>();
         for (int i = 0; i < n; i++) {
-            Carta c = cartas.removeCarta();
-            c.setDescubierta(true);
-            partida.soltarEnDescartes(c);
+            Carta carta = cartas.removeCarta();
+            cartasSoltadas.add(carta);
+            carta.setDescubierta(true);
+            /* System.out.println(c); */
+            partida.soltarEnDescartes(carta);
         }
+        return cartasSoltadas;
+    }
+
+    public ArrayList<Carta> soltarCartas(ArrayList<Carta> cartasSoltadas) {
+        for (Carta c : cartasSoltadas) {
+            Carta carta = this.cartas.removeCarta(c);
+            carta.setDescubierta(true);
+            /* System.out.println(c); */
+            partida.soltarEnDescartes(carta);
+        }
+        return cartasSoltadas;
     }
 
     public void robarCarta() {
@@ -57,6 +89,8 @@ public class Jugador {
         for (Carta c : cartasRobadas) {
             if (!this.esMaquina)
                 c.setDescubierta(true);
+            else
+                c.setDescubierta(false);
             cartas.addCarta(c);
         }
     }

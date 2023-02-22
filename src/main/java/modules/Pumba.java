@@ -8,12 +8,14 @@ public class Pumba {
     private ArrayList<Jugador> jugadores;
     private int turno;
     private int numeroJugadores;
+    private boolean partidaIniciada;
 
     public Pumba(int numeroJugadores) {
         this.mazo = new Baraja();
         this.descartes = new ArrayList<>();
         this.jugadores = new ArrayList<>();
         this.numeroJugadores = numeroJugadores;
+        this.partidaIniciada = false;
         puntuarCartas();
         generarJugadores();
         repartirCartas();
@@ -29,6 +31,10 @@ public class Pumba {
         return this.descartes;
     }
 
+    public Carta getCentroMesa() {
+        return this.descartes.get(this.descartes.size() - 1);
+    }
+
     public ArrayList<Jugador> getJugadores() {
         return this.jugadores;
     }
@@ -40,6 +46,14 @@ public class Pumba {
     public int setTurno() {
         turno = (++this.turno) % this.numeroJugadores;
         return this.turno;
+    }
+
+    public boolean estaIniciada() {
+        return this.partidaIniciada;
+    }
+
+    public void setPartidaIniciada(boolean partidaIniciada) {
+        this.partidaIniciada = partidaIniciada;
     }
 
     public Jugador getJugadorTurno() {
@@ -68,12 +82,25 @@ public class Pumba {
     }
 
     public void voltearDescartes() {
-        Carta ultima = this.descartes.remove(this.descartes.size() - 2);
+        Carta ultima = this.descartes.remove(this.descartes.size() - 1);
         System.out.println(ultima.getPalo() + ultima.getNumero());
         mazo.devolverCartas(this.descartes);
         mazo.barajar();
         this.descartes = new ArrayList<>();
         this.descartes.add(ultima);
+    }
+
+    public void ejecutarJugada() {
+        Jugador jugador = this.getJugadorTurno();
+        if (!this.estaIniciada()) {
+            this.setPartidaIniciada(true);
+            jugador.soltarCarta();
+        } else {
+            Carta cartaSoltada = jugador.soltarCartaValida();
+            if (cartaSoltada == null)
+                System.out.println("Roba carta");
+        }
+        jugador.robarCarta();
     }
 
     private void puntuarCartas() {

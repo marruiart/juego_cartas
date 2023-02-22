@@ -24,13 +24,11 @@
         int n = Integer.parseInt(request.getParameter("jugadores"));
         partida = new Pumba(n);
         session.setAttribute("partida", partida);
-        jugador = partida.getJugadorTurno();
         mensaje = "Comienza el juego";
       } else {
         partida = (Pumba)session.getAttribute("partida");
         jugador = partida.getJugadorTurno();
-        jugador.soltarCarta();
-        jugador.robarCarta();
+        partida.ejecutarJugada();
         int turno = partida.setTurno();
         mensaje = "Turno del jugador " + (turno + 1);
       }
