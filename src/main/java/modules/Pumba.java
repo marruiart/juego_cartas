@@ -26,12 +26,14 @@ public class Pumba {
     }
 
     public ArrayList<Carta> getMazo() {
+        System.out.println("Cartas en mazo: " + this.mazo.getCartas().size());
         return this.mazo.getCartas();
     }
 
     public ArrayList<Carta> getDescartes() {
         for (Carta c : this.descartes)
             c.setDescubierta(true);
+        System.out.println("Cartas en descartes: " + this.descartes.size());
         return this.descartes;
     }
 
@@ -53,6 +55,7 @@ public class Pumba {
             this.turno = this.numeroJugadores - 1;
         else
             this.turno = (this.turno) % this.numeroJugadores;
+        System.out.println("-------SET: " + this.getJugadorTurno().getStringJugador().toUpperCase());
         return this.turno;
     }
 
@@ -77,6 +80,7 @@ public class Pumba {
     }
 
     public ArrayList<Carta> robarCartasMazo(int n) {
+        System.out.println(getJugadorTurno().getStringJugador() + " robando " + n + " cartas...");
         ArrayList<Carta> cartasRobadas = new ArrayList<>();
         for (int i = 0; i < n; i++) {
             Carta c = mazo.sacarPrimeraCarta();
@@ -92,6 +96,7 @@ public class Pumba {
     }
 
     public void voltearDescartes() {
+        System.out.println("VOLTEAR DESCARTES");
         Carta ultima = this.descartes.remove(this.descartes.size() - 1);
         mazo.devolverCartas(this.descartes);
         mazo.barajar();
@@ -100,6 +105,7 @@ public class Pumba {
     }
 
     public void cambioSentido() {
+        System.out.println("CAMBIO SENTIDO");
         this.sentidoTurno *= -1;
     }
 
@@ -115,6 +121,7 @@ public class Pumba {
         if (this.chupateDos != 8)
             cartaSoltada = jugador.soltarCartaValida(centroMesa);
         if (cartaSoltada == null) {
+            System.out.println("---" + jugador.getStringJugador() + " chupa: " + this.chupateDos + " cartas---");
             jugador.robarCartas(chupateDos);
             this.chupateDos = -1;
         } else {
@@ -125,6 +132,7 @@ public class Pumba {
 
     public String ejecutarJugada() {
         Jugador jugador = this.getJugadorTurno();
+        System.out.println("\nTURNO: " + jugador.getStringJugador().toUpperCase());
         String partida = "";
         Carta cartaSoltada;
         String jugada = "";
