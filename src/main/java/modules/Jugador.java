@@ -33,7 +33,14 @@ public class Jugador {
     }
 
     public String getStringJugador() {
-        return String.format("jugador %d", numero);
+        return getStringJugador(false);
+    }
+
+    public String getStringJugador(boolean primeraMayus) {
+        if (primeraMayus)
+            return String.format("Jugador %d", numero);
+        else
+            return String.format("jugador %d", numero);
     }
 
     public boolean esMano() {

@@ -1,7 +1,6 @@
 package modules;
 
 import java.util.ArrayList;
-import modules.Enums.Palos;
 
 public class Mano {
     private Jugador jugador;

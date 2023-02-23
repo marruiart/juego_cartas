@@ -139,7 +139,7 @@ public class Pumba {
         if (!this.estaIniciada()) {
             this.setPartidaIniciada(true);
             cartaSoltada = jugador.soltarCarta();
-            jugada = " echa " + cartaSoltada.getStringCarta();
+            jugada = " echa " + cartaSoltada.getStringCarta() + ". ";
         } else {
             Carta centroMesa = this.getCentroMesa();
             if (centroMesa.getNumero().equals("dos")) {
@@ -166,9 +166,15 @@ public class Pumba {
                 }
             }
         }
-        partida = jugador.getStringJugador() + jugada;
-        if (cartaSoltada != null && cartaSoltada.getNumero().equals("siete"))
+        partida = jugador.getStringJugador(true) + jugada;
+        if (cartaSoltada != null && cartaSoltada.getNumero().equals("siete")) {
             this.cambioSentido();
+            partida += "Cambio de sentido. ";
+        } else if (cartaSoltada != null && cartaSoltada.getNumero().equals("caballo")) {
+            System.out.println("SALTA TURNO: no juega " + this.getJugadorTurno().getStringJugador());
+            this.setTurno();
+            partida += "Salta el turno del " + this.getJugadorTurno().getStringJugador() + ". ";
+        }
         this.setTurno();
         jugador = this.getJugadorTurno();
         String turno = this.getJugadorTurno().esMaquina() ? "Turno del " + jugador.getStringJugador() + "."
