@@ -167,7 +167,9 @@ public class Pumba {
             }
         }
         partida = jugador.getStringJugador(true) + jugada;
-        if (cartaSoltada != null && cartaSoltada.getNumero().equals("siete")) {
+        if (jugador.getCartasEnMano() == 0) {
+            return "FIN DE LA PARTIDA, ¡GANA EL JUGADOR " + jugador.getStringJugador().toUpperCase() + "!";
+        } else if (cartaSoltada != null && cartaSoltada.getNumero().equals("siete")) {
             this.cambioSentido();
             partida += "Cambio de sentido. ";
         } else if (cartaSoltada != null && cartaSoltada.getNumero().equals("caballo")) {

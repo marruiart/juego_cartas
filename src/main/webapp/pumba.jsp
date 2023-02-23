@@ -50,8 +50,14 @@
       </div>
     <br/>
     <div class="mensaje"><%=mensaje%></div>
-    <a href="pumba.jsp?iniciar=0">OK</a>
-    <a href="index.html" class="atras">Atrás</a>
+    <%
+    if (mensaje.contains("FIN")) {%>
+      <a href="index.html" class="atras">Atrás</a>
+    <%} else {%>
+      <a href="pumba.jsp?iniciar=0">OK</a>
+      <a href="index.html" class="atras">Atrás</a>
+    <%}
+    %>
     <footer>Autora: Marina Ruiz Artacho</footer>
   </body>
 </html>
