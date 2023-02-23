@@ -2,6 +2,8 @@ package modules;
 
 import java.util.ArrayList;
 
+import modules.Enums.Palos;
+
 public class Jugador {
     private Pumba partida;
     private int numero;
@@ -28,6 +30,10 @@ public class Jugador {
         return this.cartas;
     }
 
+    public String getStringJugador() {
+        return String.format("jugador %d", numero);
+    }
+
     public boolean esMano() {
         return this.esMano;
     }
@@ -40,8 +46,12 @@ public class Jugador {
         return partida.getCentroMesa();
     }
 
-    public Carta soltarCartaValida() {
-        ArrayList<Carta> cartasValidas = this.cartas.getCartasValidas();
+    public Carta soltarCartaValida(Carta centroMesa) {
+        return soltarCartaValida(centroMesa, null);
+    }
+
+    public Carta soltarCartaValida(Carta centroMesa, String cambioPalo) {
+        ArrayList<Carta> cartasValidas = this.cartas.getCartasValidas(centroMesa, cambioPalo);
         if (cartasValidas.size() == 0)
             return null;
         int n = (int) (Math.random() * cartasValidas.size());
@@ -102,11 +112,9 @@ public class Jugador {
 
     @Override
     public String toString() {
-        String mano = "<h3>Cartas en la mano:</h3>";
-        for (Carta c : cartas.getCartas()) {
-            mano += c;
-        }
-        return String.format("<h2>Jugador %d%s%s%s</h2>", numero, esMano ? " (Mano)" : "", esMaquina ? "" : " (Tú)",
-                mano);
+        String textoMano = esMano ? " (Mano)" : "";
+        String textoMaquina = esMaquina ? "" : " (Tú)";
+        return String.format("<div class=\"jugador\"><h2>%s %s%s</h2>%s</div>",
+                this.getStringJugador(), textoMano, textoMaquina, this.cartas.toString());
     }
 }

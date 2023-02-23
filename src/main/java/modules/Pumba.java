@@ -9,6 +9,8 @@ public class Pumba {
     private int turno;
     private int numeroJugadores;
     private boolean partidaIniciada;
+    private int chupateDos;
+    private int sentidoTurno;
 
     public Pumba(int numeroJugadores) {
         this.mazo = new Baraja();
@@ -16,6 +18,8 @@ public class Pumba {
         this.jugadores = new ArrayList<>();
         this.numeroJugadores = numeroJugadores;
         this.partidaIniciada = false;
+        this.chupateDos = 2;
+        this.sentidoTurno = 1;
         puntuarCartas();
         generarJugadores();
         repartirCartas();
@@ -44,7 +48,9 @@ public class Pumba {
     }
 
     public int setTurno() {
-        turno = (++this.turno) % this.numeroJugadores;
+        this.turno += sentidoTurno;
+        turno = (this.turno) % this.numeroJugadores;
+        System.out.println(turno);
         return this.turno;
     }
 
@@ -83,24 +89,74 @@ public class Pumba {
 
     public void voltearDescartes() {
         Carta ultima = this.descartes.remove(this.descartes.size() - 1);
-        System.out.println(ultima.getPalo() + ultima.getNumero());
+        /* System.out.println(ultima.getPalo() + ultima.getNumero()); */
         mazo.devolverCartas(this.descartes);
         mazo.barajar();
         this.descartes = new ArrayList<>();
         this.descartes.add(ultima);
     }
 
-    public void ejecutarJugada() {
-        Jugador jugador = this.getJugadorTurno();
-        if (!this.estaIniciada()) {
-            this.setPartidaIniciada(true);
-            jugador.soltarCarta();
-        } else {
-            Carta cartaSoltada = jugador.soltarCartaValida();
-            if (cartaSoltada == null)
-                System.out.println("Roba carta");
+    public void cambioSentido() {
+        this.sentidoTurno *= -1;
+    }
+
+    public Carta jugadaEspecialDos(Jugador jugador, Carta centroMesa) {
+        Carta cartaSoltada = null;
+        if (this.chupateDos == -1) {
+            cartaSoltada = jugador.soltarCartaValida(centroMesa, centroMesa.getPalo());
+            if (cartaSoltada != null) {
+                this.chupateDos = 2;
+            }
+            return cartaSoltada;
         }
-        jugador.robarCarta();
+        if (this.chupateDos != 8)
+            cartaSoltada = jugador.soltarCartaValida(centroMesa);
+        if (cartaSoltada == null) {
+            System.out.println("Chupa: " + this.chupateDos + " cartas");
+            jugador.robarCartas(chupateDos);
+            this.chupateDos = -1;
+        } else {
+            this.chupateDos += 2;
+        }
+        return cartaSoltada;
+    }
+
+    public String ejecutarJugada() {
+        Jugador jugador = this.getJugadorTurno();
+        String partida = "";
+        Carta cartaSoltada;
+        String jugada = "";
+        if (!this.estaIniciada()) {
+            System.out.println("INICIADA");
+            this.setPartidaIniciada(true);
+            cartaSoltada = jugador.soltarCarta();
+            jugador.robarCarta();
+            jugada = " echa " + cartaSoltada.getStringCarta();
+        } else {
+            Carta centroMesa = this.getCentroMesa();
+            if (centroMesa.getNumero().equals("dos")) {
+                int numeroCartas = jugador.getMano().getCartas().size();
+                cartaSoltada = jugadaEspecialDos(jugador, centroMesa);
+                int cartasChupadas = jugador.getMano().getCartas().size() - numeroCartas;
+                if ((this.chupateDos == -1 && cartasChupadas > 1) || cartasChupadas > 1) {
+                    jugada = " chupa " + cartasChupadas + " cartas";
+                } else {
+                    jugada = (cartaSoltada == null) ? " roba carta"
+                            : (" echa " + cartaSoltada.getStringCarta());
+                }
+            } else {
+                cartaSoltada = jugador.soltarCartaValida(centroMesa);
+                jugada = (cartaSoltada == null) ? " roba carta"
+                        : (" echa " + cartaSoltada.getStringCarta());
+            }
+            jugador.robarCarta();
+        }
+        partida = jugador.getStringJugador() + jugada + (jugada.contains("echa") ? " y roba carta. " : ". ");
+        this.setTurno();
+        jugador = this.getJugadorTurno();
+        String turno = this.getJugadorTurno().esMaquina() ? "Turno del " + jugador.getStringJugador() + "."
+                : "Es tu turno, elige carta.";
+        return partida + turno;
     }
 
     private void puntuarCartas() {

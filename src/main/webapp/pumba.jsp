@@ -19,37 +19,37 @@
       int iniciar = Integer.parseInt(request.getParameter("iniciar"));
       String mensaje;
       Pumba partida;
-      Jugador jugador;
       if (iniciar == 1) {
         int n = Integer.parseInt(request.getParameter("jugadores"));
         partida = new Pumba(n);
         session.setAttribute("partida", partida);
-        mensaje = "Comienza el juego";
+        mensaje = "Comienza el juego. Turno del \"Mano\".";
       } else {
         partida = (Pumba)session.getAttribute("partida");
-        jugador = partida.getJugadorTurno();
-        partida.ejecutarJugada();
-        int turno = partida.setTurno();
-        mensaje = "Turno del jugador " + (turno + 1);
+        mensaje = partida.ejecutarJugada();
       }
       for (Jugador j : partida.getJugadores()) {
           out.print(j);
       }
     %>
-    <h3>Mazo de cartas</h3>
-    <%
-      for (Carta c : partida.getMazo()) {
-        out.print(c);
-      }
-    %>
-    <h3>Descartes</h3>
-    <%
-      for (Carta c : partida.getDescartes()) {
-        out.print(c);
-      }
-    %>
+    <div class="centro-mesa">
+      <div class="mazo">
+      <%
+        for (Carta c : partida.getMazo()) {
+          out.print(c);
+        }
+      %>
+      </div>
+      <div class="descartes">
+      <%
+        for (Carta c : partida.getDescartes()) {
+          out.print(c);
+        }
+      %>
+      </div>
+      </div>
     <br/>
-    <input type="text" readonly value="<%=mensaje%>">
+    <div class="mensaje"><%=mensaje%></div>
     <a href="pumba.jsp?iniciar=0">OK</a>
     <a href="index.html" class="atras">Atrás</a>
     <footer>Autora: Marina Ruiz Artacho</footer>

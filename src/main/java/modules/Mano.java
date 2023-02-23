@@ -1,6 +1,7 @@
 package modules;
 
 import java.util.ArrayList;
+import modules.Enums.Palos;
 
 public class Mano {
     private Jugador jugador;
@@ -20,14 +21,11 @@ public class Mano {
         return this.cartas;
     }
 
-    public ArrayList<Carta> getCartasValidas() {
-        Carta centroMesa = jugador.verCentroMesa();
-        /* System.out.println("centro mesa: " + centroMesa); */
+    public ArrayList<Carta> getCartasValidas(Carta centroMesa, String palo) {
         cartasValidas = new ArrayList<Carta>();
         for (Carta c : cartas) {
-            if (c.esValida(centroMesa)) {
+            if (c.esValida(centroMesa, palo))
                 cartasValidas.add(c);
-            }
         }
         return this.cartasValidas;
     }
@@ -47,5 +45,14 @@ public class Mano {
         if (carta != null) {
             cartas.add(carta);
         }
+    }
+
+    @Override
+    public String toString() {
+        String mano = "<div class=\"mano\">";
+        for (Carta c : this.cartas) {
+            mano += c;
+        }
+        return mano + "</div>";
     }
 }

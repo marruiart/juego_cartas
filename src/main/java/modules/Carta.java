@@ -45,18 +45,31 @@ public class Carta {
         this.imagen = "assets/img/" + (this.descubierta ? (getNumero() + "_" + getPalo()) : "reverso") + ".png";
     }
 
+    public String getStringCarta() {
+        return this.getNumero() + " de " + this.getPalo();
+    }
+
     public void girarCarta() {
         this.descubierta = this.descubierta ? false : true;
         this.imagen = "assets/img/" + (this.descubierta ? (getNumero() + "_" + getPalo()) : "reverso") + ".png";
     }
 
-    public boolean esValida(Carta c) {
+    public boolean esValida(Carta c, String palo) {
+        if (palo != null && this.getPalo().equals(palo))
+            return true;
+        if (c.getNumero().equals("dos")) {
+            if (this.getNumero().equals("dos"))
+                return true;
+            else
+                return false;
+        }
+        if (this.getNumero().equals("sota")) {
+            return true;
+        }
         if (c.getNumero().equals(this.getNumero()) || c.getPalo().equals(this.getPalo())) {
             return true;
         }
         return false;
-        /* || this.getNumero().equals(Numeros.SIETE.toString().toLowerCase())
-        || this.getNumero().equals(Numeros.DOS.toString().toLowerCase()) */
     }
 
     @Override
@@ -66,6 +79,6 @@ public class Carta {
 
     @Override
     public String toString() {
-        return "<img src=" + imagen + " width='100'>";
+        return "<img class=\"carta\" src=" + imagen + " width='100'>";
     }
 }

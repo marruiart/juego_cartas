@@ -23,4 +23,9 @@ public class Enums {
             return numeros[random.nextInt(numeros.length)];
         }
     }
+
+    @Override
+    public String toString() {
+        return this.toString().toLowerCase();
+    }
 }
