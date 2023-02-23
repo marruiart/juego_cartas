@@ -95,7 +95,7 @@ public class Jugador {
     }
 
     public void robarCartas(int n) {
-        Carta[] cartasRobadas = partida.robarCartasMazo(n);
+        ArrayList<Carta> cartasRobadas = partida.robarCartasMazo(n);
         for (Carta c : cartasRobadas) {
             if (!this.esMaquina)
                 c.setDescubierta(true);

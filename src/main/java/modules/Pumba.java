@@ -49,8 +49,11 @@ public class Pumba {
 
     public int setTurno() {
         this.turno += sentidoTurno;
-        turno = (this.turno) % this.numeroJugadores;
-        System.out.println(turno);
+        if ((this.turno) % this.numeroJugadores == -1)
+            this.turno = this.numeroJugadores - 1;
+        else
+            this.turno = (this.turno) % this.numeroJugadores;
+        System.out.println(turno + 1);
         return this.turno;
     }
 
@@ -71,18 +74,18 @@ public class Pumba {
     }
 
     public Carta robarCartaMazo() {
-        return robarCartasMazo(1)[0];
+        return robarCartasMazo(1).get(0);
     }
 
-    public Carta[] robarCartasMazo(int n) {
-        Carta[] cartasRobadas = new Carta[n];
+    public ArrayList<Carta> robarCartasMazo(int n) {
+        ArrayList<Carta> cartasRobadas = new ArrayList<>();
         for (int i = 0; i < n; i++) {
             Carta c = mazo.sacarPrimeraCarta();
             if (c == null) {
                 this.voltearDescartes();
                 c = mazo.sacarPrimeraCarta();
             }
-            cartasRobadas[i] = c;
+            cartasRobadas.add(c);
         }
         return cartasRobadas;
     }
@@ -97,6 +100,7 @@ public class Pumba {
     }
 
     public void cambioSentido() {
+        System.out.println("CAMBIO SENTIDO");
         this.sentidoTurno *= -1;
     }
 
@@ -112,7 +116,7 @@ public class Pumba {
         if (this.chupateDos != 8)
             cartaSoltada = jugador.soltarCartaValida(centroMesa);
         if (cartaSoltada == null) {
-            System.out.println("Chupa: " + this.chupateDos + " cartas");
+            /* System.out.println("Chupa: " + this.chupateDos + " cartas"); */
             jugador.robarCartas(chupateDos);
             this.chupateDos = -1;
         } else {
@@ -152,6 +156,8 @@ public class Pumba {
             jugador.robarCarta();
         }
         partida = jugador.getStringJugador() + jugada + (jugada.contains("echa") ? " y roba carta. " : ". ");
+        if (cartaSoltada != null && cartaSoltada.getNumero().equals("siete"))
+            this.cambioSentido();
         this.setTurno();
         jugador = this.getJugadorTurno();
         String turno = this.getJugadorTurno().esMaquina() ? "Turno del " + jugador.getStringJugador() + "."
