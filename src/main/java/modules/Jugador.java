@@ -2,8 +2,6 @@ package modules;
 
 import java.util.ArrayList;
 
-import modules.Enums.Palos;
-
 public class Jugador {
     private Pumba partida;
     private int numero;
@@ -28,6 +26,10 @@ public class Jugador {
 
     public Mano getMano() {
         return this.cartas;
+    }
+
+    public int getCartasEnMano() {
+        return this.cartas.getCartas().size();
     }
 
     public String getStringJugador() {

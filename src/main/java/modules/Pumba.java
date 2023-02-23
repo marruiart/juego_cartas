@@ -53,7 +53,6 @@ public class Pumba {
             this.turno = this.numeroJugadores - 1;
         else
             this.turno = (this.turno) % this.numeroJugadores;
-        System.out.println(turno + 1);
         return this.turno;
     }
 
@@ -85,14 +84,15 @@ public class Pumba {
                 this.voltearDescartes();
                 c = mazo.sacarPrimeraCarta();
             }
-            cartasRobadas.add(c);
+            if (c != null) {
+                cartasRobadas.add(c);
+            }
         }
         return cartasRobadas;
     }
 
     public void voltearDescartes() {
         Carta ultima = this.descartes.remove(this.descartes.size() - 1);
-        /* System.out.println(ultima.getPalo() + ultima.getNumero()); */
         mazo.devolverCartas(this.descartes);
         mazo.barajar();
         this.descartes = new ArrayList<>();
@@ -100,7 +100,6 @@ public class Pumba {
     }
 
     public void cambioSentido() {
-        System.out.println("CAMBIO SENTIDO");
         this.sentidoTurno *= -1;
     }
 
@@ -116,7 +115,6 @@ public class Pumba {
         if (this.chupateDos != 8)
             cartaSoltada = jugador.soltarCartaValida(centroMesa);
         if (cartaSoltada == null) {
-            /* System.out.println("Chupa: " + this.chupateDos + " cartas"); */
             jugador.robarCartas(chupateDos);
             this.chupateDos = -1;
         } else {
@@ -131,31 +129,36 @@ public class Pumba {
         Carta cartaSoltada;
         String jugada = "";
         if (!this.estaIniciada()) {
-            System.out.println("INICIADA");
             this.setPartidaIniciada(true);
             cartaSoltada = jugador.soltarCarta();
-            jugador.robarCarta();
             jugada = " echa " + cartaSoltada.getStringCarta();
         } else {
             Carta centroMesa = this.getCentroMesa();
             if (centroMesa.getNumero().equals("dos")) {
-                int numeroCartas = jugador.getMano().getCartas().size();
+                int numeroCartas = jugador.getCartasEnMano();
                 cartaSoltada = jugadaEspecialDos(jugador, centroMesa);
-                int cartasChupadas = jugador.getMano().getCartas().size() - numeroCartas;
+                int cartasChupadas = jugador.getCartasEnMano() - numeroCartas;
                 if ((this.chupateDos == -1 && cartasChupadas > 1) || cartasChupadas > 1) {
-                    jugada = " chupa " + cartasChupadas + " cartas";
+                    jugada = " chupa " + cartasChupadas + " cartas. ";
                 } else {
-                    jugada = (cartaSoltada == null) ? " roba carta"
-                            : (" echa " + cartaSoltada.getStringCarta());
+                    if (cartaSoltada == null) {
+                        jugador.robarCarta();
+                        jugada = " roba carta. ";
+                    } else {
+                        jugada = " echa " + cartaSoltada.getStringCarta() + ". ";
+                    }
                 }
             } else {
                 cartaSoltada = jugador.soltarCartaValida(centroMesa);
-                jugada = (cartaSoltada == null) ? " roba carta"
-                        : (" echa " + cartaSoltada.getStringCarta());
+                if (cartaSoltada == null) {
+                    jugador.robarCarta();
+                    jugada = " roba carta. ";
+                } else {
+                    jugada = " echa " + cartaSoltada.getStringCarta() + ". ";
+                }
             }
-            jugador.robarCarta();
         }
-        partida = jugador.getStringJugador() + jugada + (jugada.contains("echa") ? " y roba carta. " : ". ");
+        partida = jugador.getStringJugador() + jugada;
         if (cartaSoltada != null && cartaSoltada.getNumero().equals("siete"))
             this.cambioSentido();
         this.setTurno();
