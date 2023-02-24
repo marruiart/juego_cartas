@@ -79,6 +79,6 @@ public class Carta {
 
     @Override
     public String toString() {
-        return "<img class=\"carta\" src=" + imagen + " width='100'>";
+        return "<img class='carta' src=" + imagen + ">";
     }
 }

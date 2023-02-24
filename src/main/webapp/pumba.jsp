@@ -13,51 +13,70 @@
     <link rel="stylesheet" href="./assets/css/style.css" type="text/css" />
   </head>
 
-  <body>
-    <h1>Partida</h1>
-    <%
-      int iniciar = Integer.parseInt(request.getParameter("iniciar"));
-      String mensaje;
-      Pumba partida;
-      if (iniciar == 1) {
-        int n = Integer.parseInt(request.getParameter("jugadores"));
-        partida = new Pumba(n);
-        session.setAttribute("partida", partida);
-        mensaje = "Comienza el juego. Turno del \"Mano\".";
-      } else {
-        partida = (Pumba)session.getAttribute("partida");
-        mensaje = partida.ejecutarJugada();
-      }
-      for (Jugador j : partida.getJugadores()) {
-          out.print(j);
-      }
-    %>
-    <div class="centro-mesa">
-      <div class="mazo">
-      <%
-        for (Carta c : partida.getMazo()) {
-          out.print(c);
-        }
-      %>
-      </div>
-      <div class="descartes">
-      <%
-        for (Carta c : partida.getDescartes()) {
-          out.print(c);
-        }
-      %>
-      </div>
-      </div>
-    <br/>
-    <div class="mensaje"><%=mensaje%></div>
-    <%
-    if (mensaje.contains("FIN")) {%>
-      <a href="index.html" class="atras">Atrás</a>
-    <%} else {%>
-      <a href="pumba.jsp?iniciar=0">OK</a>
-      <a href="index.html" class="atras">Atrás</a>
-    <%}
-    %>
-    <footer>Autora: Marina Ruiz Artacho</footer>
+  <body class="container partida">
+    <header>
+      <h1>Pumba!</h1>
+    </header>
+    <main class="partida">
+      <%int iniciar = Integer.parseInt(request.getParameter("iniciar"));
+        String mensaje;
+        Pumba partida;
+        Jugador persona = null;
+        if (iniciar == 1) {
+          int n = Integer.parseInt(request.getParameter("jugadores"));
+          partida = new Pumba(n);
+          session.setAttribute("partida", partida);
+          mensaje = "Comienza el juego. Turno del \"Mano\".";
+        } else {
+          partida = (Pumba)session.getAttribute("partida");
+          mensaje = partida.ejecutarJugada();
+      }%>
+      <section class="mesa">
+        <%
+          for (Jugador j : partida.getJugadores()) {
+            if (!j.esMaquina())
+              persona = j;
+            else
+              out.print(j);
+          }
+        %>
+        <div class="centro-mesa">
+          <div class="mazo">
+          <%
+            for (Carta c : partida.getMazo()) {
+              out.print(c);
+            }
+          %>
+          </div>
+          <div class="descartes">
+          <%
+            for (Carta c : partida.getDescartes()) {
+              out.print(c);
+            }
+          %>
+          </div>
+        </div>  
+      </section>
+      <section class="display">
+        <%=persona%>
+        <div class="info">
+          <div class="mensaje"><%=mensaje%></div>
+          <div class="botones">
+            <%
+              if (mensaje.contains("FIN")) {%>
+                <a class="btn" href="index.html" class="atras">Atrás</a>
+            <%} else {%>
+                <a class="btn" href="pumba.jsp?iniciar=0">OK</a>
+                <a class="btn" href="index.html" class="atras">Atrás</a>
+            <%}
+            %>
+          </div>
+        </div>
+      </section>
+    </main>
+    <footer>
+      <p>Diseñado y desarrollado por Marina Ruiz</p>
+      <small>Fuente:<a href="https://www.nhfournier.es/como-jugar/pumba/">www.nhfournier.es</a></small>
+    </footer>
   </body>
 </html>

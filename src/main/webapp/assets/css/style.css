@@ -1,3 +1,5 @@
+/********* ESTILOS GENERALES *********/
+
 @font-face {
     font-family: old-school;
     src: url(../fonts/VT323-Regular.ttf);
@@ -6,16 +8,89 @@
 * {
     padding: 0;
     margin: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --principal: #448D76;
+    --secondary: #AE0D7A;
+    --dark: #093426;
+    --semidark: #3d3d3d;
+    --light: #F7EDD4;
+    --emphasis: #FCBA12;
+}
+
+body.container {
+    display: grid;
+    grid-template-rows: 5rem 1fr 4rem;
+    grid-template-columns: repeat(12, 1fr);
+    height: 100vh;
+    width: 100%;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+/* GRID DISPLAY */
+
+header {
+    grid-row: 1 / span 1;
+    grid-column: 1 / span 12;
+}
+
+main {
+    grid-row: 2 / span 1;
+    grid-column: 1 / span 12;
+}
+
+footer {
+    grid-row: 3 / span 1;
+    grid-column: 1 / span 12;
+}
+
+/********* HEADER *********/
+
+header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--dark);
+    color: white;
+    padding: 0.5rem 1rem;
+    min-height: min-content;
+}
+
+/********* CENTRO DE LA PÁGINA (ZONA DE JUEGO) *********/
+
+main {
+    padding: 1rem;
+}
+
+main.inicio {
+    background-color: var(--light);
+}
+
+main.partida {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--principal);
+}
+
+main .mesa {
+    height: 100%;
 }
 
 .centro-mesa {
+    position: absolute;
+    top: 40%;
+    left: 45%;
+    transform: translate(-50%, -50%);
     display: flex;
     align-items: center;
-    justify-content: center;
-    height: 400px;
-    width: 400px;
-    margin: 0 auto;
-    column-gap: 150px;
+    justify-content: space-around;
+    min-width: 17rem;
 }
 
 .mazo,
@@ -28,26 +103,136 @@
     position: absolute;
     top: 0;
     left: 0;
+    width: 7rem;
+}
+
+.jugador {
+    width: fit-content;
 }
 
 .mano {
     display: flex;
-    max-width: 600px;
-    padding-left: 100px;
-    justify-content: space-evenly;
+    justify-content: center;
+    max-width: 15rem;
+    padding-left: 11.5rem;
 }
 
 .mano .carta {
     margin-left: -50%;
+    width: 5rem;
+}
+
+/********* DISPLAY DE INFERIOR DE INFORMACIÓN *********/
+
+/* CARTAS DEL JUGADOR */
+
+section.display {
+    display: flex;
+    justify-content: space-evenly;
+    min-height: 220px;
+}
+
+section.display .jugador {
+    width: 100%;
+    min-width: 736px;
+}
+
+.mano.jugador1 {
+    max-width: 46rem;
+    padding-left: 55%;
+    transform: translateX(-15.5%);
+}
+
+.mano.jugador1 .carta {
+    margin-left: -30%;
+    width: 7rem;
+}
+
+/* INFORMACIÓN MOSTRADA */
+
+main .info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+    width: 30%;
+    min-width: 187px;
+    max-width: 370px;
+    padding: 1rem;
+    background-color: var(--light);
+    font-family: old-school, monospace, 'Courier New', Courier;
+    border: 2px solid var(--semidark);
+    border-radius: 10px;
+    box-shadow:
+        0px 3.1px 2.2px rgba(0, 0, 0, 0.021),
+        0px 5.7px 5.3px rgba(0, 0, 0, 0.031),
+        0px 8px 10px rgba(0, 0, 0, 0.038),
+        0px 10.2px 17.9px rgba(0, 0, 0, 0.046),
+        0px 13.6px 33.4px rgba(0, 0, 0, 0.055),
+        0px 25px 80px rgba(0, 0, 0, 0.07);
 }
 
 .mensaje {
-    height: 200px;
-    width: 700px;
-    background-color: lightgoldenrodyellow;
-    font-family: old-school, monospace, 'Courier New', Courier;
-    font-size: 2rem;
+    width: 100%;
+    padding: 1rem 0.5rem;
+    margin-bottom: 1.5rem;
+    background-color: rgb(255, 255, 229);
+    font-size: 1.3rem;
     border-radius: 10px;
-    border: 2px solid rgb(61, 61, 61);
+    border: 2px solid var(--semidark);
     overflow-wrap: break-word;
+}
+
+.botones {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 100%;
+}
+
+.btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--secondary);
+    color: white;
+    height: 3rem;
+    width: 100%;
+    min-width: max-content;
+    padding: 0.5rem;
+    margin: 0 0.5rem 1rem 0.5rem;
+    border: 2px solid var(--semidark);
+    border-radius: 10px;
+    font-size: 1.5rem;
+}
+
+.btn:hover {
+    background-color: var(--emphasis);
+    color: var(--dark);
+}
+
+/********* FOOTER *********/
+
+footer {
+    background-color: var(--dark);
+    color: var(--light);
+    padding: 0.5rem 1rem;
+    min-height: min-content;
+}
+
+@media only screen and (min-width: 530px) {}
+
+@media only screen and (min-width: 768px) {}
+
+@media only screen and (min-width: 1024px) {}
+
+@media only screen and (max-width: 1440px) {
+    .mano.jugador1 {
+        transform: translateX(-23%);
+    }
+
+    .mano.jugador1 .carta {
+        margin-left: -25%;
+    }
 }
