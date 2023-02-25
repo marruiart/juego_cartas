@@ -13,7 +13,7 @@ public class Baraja {
 
     public ArrayList<Carta> getCartas() {
         for (Carta c : this.cartas)
-            c.setDescubierta(false);
+            c.setDescubierta(false).setEnlace(null);
         return this.cartas;
     }
 
@@ -54,7 +54,7 @@ public class Baraja {
 
     public void devolverCartas(ArrayList<Carta> cartas) {
         for (Carta c : cartas) {
-            c.setDescubierta(false);
+            c.setDescubierta(false).setEnlace(null);
             this.cartas.add(c);
         }
     }

@@ -2,32 +2,33 @@
 <html lang="es">
   <head>
     <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>Menú</title>
-    <link
-      rel="shortcut icon"
-      href="assets/img/favicon.ico"
-      type="image/x-icon"
-    />
+    <title>Pumba!</title>
+    <link rel="shortcut icon" href="assets/img/favicon.ico" type="image/x-icon"/>
     <link rel="stylesheet" href="./assets/css/style.css" type="text/css" />
   </head>
 
   <body class="container inicio">
     <header>
       <h1>Pumba!</h1>
+      <section class="hero">
+        <div class="hero_img">
+          <article class="foto">
+            <img src="assets/img/playing.jpg" alt="Grupo de personas jugando a las cartas">
+            <span>Jugando al Pumba con los amigos, vaya risas... ¡una tarde inolvidable!</span>
+          </article>
+        </div>
+        <p class="hero_text">
+          El Pumba, es un juego muy divertido cuya finalidad es muy diferente a la
+          del resto de juegos que conocemos. No se trata de ganar bazas o hacer
+          combinaciones con las cartas, en el Pumba, hay que intentar ser el
+          primero en descartarse de las cartas de la mano, ganando de este modo la
+          partida.
+        </p>
+      </section>
     </header>
     <main class="inicio">
-      <p>
-        El Pumba, es un juego muy divertido cuya finalidad es muy diferente a la
-        del resto de juegos que conocemos. No se trata de ganar bazas o hacer
-        combinaciones con las cartas, en el Pumba, hay que intentar ser el
-        primero en descartarse de las cartas de la mano, ganando de este modo la
-        partida.
-      </p>
       <section>
         <h2>Objetivo del juego</h2>
         <p>
@@ -162,7 +163,7 @@
         </p>
       </section>
       <section>
-        <form method="POST" action="pumba.jsp">
+        <form class="form" method="POST" action="pumba.jsp">
           <div>
             <label for="jugadores">Elija el número de jugadores: </label>
             <select name="jugadores" id="jugadores">
@@ -179,8 +180,11 @@
       </section>
     </main>
     <footer>
-      <p>Diseñado y desarrollado por Marina Ruiz</p>
-      <small>Fuente:<a href="https://www.nhfournier.es/como-jugar/pumba/">www.nhfournier.es</a></small>
+      <div>Diseñado y desarrollado por Marina Ruiz</div>
+      <small>
+        Fuente:<a href="https://www.nhfournier.es/como-jugar/pumba/">www.nhfournier.es</a><br/>
+        Imágenes: <a href="https://www.freepik.es/">Freepik</a>
+      </small>
     </footer>
   </body>
 </html>

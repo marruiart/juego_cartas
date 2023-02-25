@@ -9,6 +9,7 @@ public class Carta {
     private String rotacion;
     private Integer puntos;
     private boolean descubierta;
+    private String enlace;
 
     public Carta(Numeros numero, Palos palo) {
         this(numero, palo, false);
@@ -18,8 +19,9 @@ public class Carta {
         this.numero = numero;
         this.palo = palo;
         this.descubierta = descubierta;
+        this.enlace = null;
         this.imagen = "assets/img/" + (this.descubierta ? (getNumero() + "_" + getPalo()) : "reverso") + ".png";
-        this.rotacion = "style='transform-origin: bottom center; transform: rotate(0);'";
+        this.rotacion = "style='transform-origin: bottom center; transform: scale(1) rotate(0);'";
     }
 
     public String getNumero() {
@@ -42,9 +44,22 @@ public class Carta {
         return this.descubierta;
     }
 
-    public void setDescubierta(boolean d) {
+    public Carta setDescubierta(boolean d) {
         this.descubierta = d;
         this.imagen = "assets/img/" + (this.descubierta ? (getNumero() + "_" + getPalo()) : "reverso") + ".png";
+        return this;
+    }
+
+    public String getEnlace() {
+        return this.enlace;
+    }
+
+    public void setEnlace(String m) {
+        this.enlace = m;
+    }
+
+    public String getLinkString() {
+        return this.getNumero() + "_" + this.getPalo();
     }
 
     public String getStringCarta() {
@@ -57,7 +72,8 @@ public class Carta {
     }
 
     public void rotarCarta(String posicion, String rotacion) {
-        this.rotacion = String.format("style='transform-origin: bottom %s; transform: rotate(%sturn);'", posicion,
+        this.rotacion = String.format("style='transform-origin: bottom %s; transform: scale(1) rotate(%sturn);'",
+                posicion,
                 rotacion);
     }
 
@@ -90,6 +106,7 @@ public class Carta {
 
     @Override
     public String toString() {
-        return String.format("<img class='carta' src=%s %s>", this.imagen, this.rotacion);
+        return String.format("%s<img class='carta' src=%s %s>%s", this.enlace != null ? this.enlace : "", this.imagen,
+                this.rotacion, this.enlace != null ? "</a>" : "");
     }
 }

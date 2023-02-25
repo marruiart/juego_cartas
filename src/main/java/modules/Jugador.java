@@ -74,7 +74,7 @@ public class Jugador {
     public Carta soltarCarta(Carta c) {
         Carta carta = (c == null) ? this.cartas.removeCarta() : this.cartas.removeCarta(c);
         System.out.println("Suelta " + carta.getStringCarta());
-        carta.setDescubierta(true);
+        carta.setDescubierta(true).setEnlace(null);
         partida.soltarEnDescartes(carta);
         return carta;
     }
@@ -87,8 +87,14 @@ public class Jugador {
         System.out.printf("%s roba %d carta%s\n", this.getNombreJugador(), n, n == 1 ? "" : "s");
         ArrayList<Carta> cartasRobadas = partida.robarCartasMazo(n);
         for (Carta c : cartasRobadas) {
-            if (!this.esMaquina)
-                c.setDescubierta(true);
+            if (!this.esMaquina) {
+                System.out.println("---\nEnlace antes: " + c.getEnlace());
+                String enlace = String
+                        .format("<a href='http://localhost:8080/juegos_cartas/pumba.jsp?iniciar=0&carta=%s'>",
+                                c.getLinkString());
+                c.setDescubierta(true).setEnlace(enlace);
+                System.out.println("Enlace de " + c.getStringCarta() + ": " + c.getEnlace() + "\n---");
+            }
             cartas.addCarta(c);
         }
     }
@@ -109,7 +115,7 @@ public class Jugador {
         String textoMaquina = esMaquina ? "" : " (Tú)";
         String jugador = this.getNombreJugador().replace(" ", "");
         return String.format(
-                "<div class='" + jugador + " " + posicion + "'><h2 class='nombre'>%s %s%s</h2>%s</div>",
-                this.getNombreJugador(), textoMano, textoMaquina, this.cartas.toString());
+                "<div class='" + jugador + " " + posicion + "'><div class='nombre'>%s %s%s</div>%s</div>",
+                this.getNombreJugador(true), textoMano, textoMaquina, this.cartas.toString());
     }
 }

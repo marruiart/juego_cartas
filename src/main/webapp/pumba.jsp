@@ -4,12 +4,10 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>Pumba</title>
+    <title>Pumba!</title>
+    <link rel="shortcut icon" href="assets/img/favicon.ico" type="image/x-icon"/>
     <link rel="stylesheet" href="./assets/css/style.css" type="text/css" />
   </head>
 
@@ -43,6 +41,14 @@
           %>
           <div class="centro-mesa">
             <div class="mazo">
+              <img class="carta marca-posicion" src="assets/img/posicion.png">
+            </div>
+            <div class="descartes">
+              <img class="carta marca-posicion" src="assets/img/posicion.png">
+            </div>
+          </div>  
+          <div class="centro-mesa">
+            <div class="mazo">
             <%
               for (Carta c : partida.getMazo()) {
                 out.print(c);
@@ -60,7 +66,7 @@
         </div>
       </section>
       <section class="display">
-        <div class="persona">
+        <div class="div_jugador1">
           <%=persona%>
         </div>
         <div class="info">
@@ -79,8 +85,10 @@
       </section>
     </main>
     <footer>
-      <p>Diseñado y desarrollado por Marina Ruiz</p>
-      <small>Fuente:<a href="https://www.nhfournier.es/como-jugar/pumba/">www.nhfournier.es</a></small>
+      <div>Diseñado y desarrollado por Marina Ruiz</div>
+      <small>
+        Fuente:<a href="https://www.nhfournier.es/como-jugar/pumba/">www.nhfournier.es</a><br/>
+      </small>
     </footer>
   </body>
 </html>

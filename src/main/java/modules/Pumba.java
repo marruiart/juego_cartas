@@ -36,7 +36,7 @@ public class Pumba {
 
     public ArrayList<Carta> getDescartes() {
         for (Carta c : this.descartes)
-            c.setDescubierta(true);
+            c.setDescubierta(true).setEnlace(null);
         System.out.println("Cartas en descartes: " + this.descartes.size());
         return this.descartes;
     }
@@ -293,8 +293,14 @@ public class Pumba {
             ArrayList<Carta> cartas = new ArrayList<>();
             for (int i = 0; i < n; i++) {
                 Carta c = mazo.sacarCarta();
-                if (!j.esMaquina())
-                    c.setDescubierta(true);
+                if (!j.esMaquina()) {
+                    System.out.println("---\nEnlace antes: " + c.getEnlace());
+                    String enlace = String
+                            .format("<a href='http://localhost:8080/juegos_cartas/pumba.jsp?iniciar=0&carta=%s'>",
+                                    c.getLinkString());
+                    c.setDescubierta(true).setEnlace(enlace);
+                    System.out.println("Enlace de " + c.getStringCarta() + ": " + c.getEnlace() + "\n---");
+                }
                 cartas.add(c);
             }
             j.recibirMano(j, cartas);

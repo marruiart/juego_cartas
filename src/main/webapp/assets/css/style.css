@@ -5,10 +5,20 @@
     src: url(../fonts/VT323-Regular.ttf);
 }
 
+@font-face {
+    font-family: handwritten;
+    src: url(../fonts/ReenieBeanie-Regular.ttf);
+}
+
 * {
     padding: 0;
     margin: 0;
     box-sizing: border-box;
+    font-size: 1.1rem;
+}
+
+body {
+    font-family: 'Courier New', Courier, monospace;
 }
 
 :root {
@@ -22,16 +32,22 @@
 
 body.container {
     display: grid;
-    grid-template-rows: 5rem 1fr 4rem;
-    grid-template-columns: repeat(12, 1fr);
     height: 100vh;
     width: 100%;
     overflow-x: hidden;
 }
 
+h2 {
+    margin-top: 2rem;
+}
+
 a {
     color: inherit;
     text-decoration: none;
+}
+
+p {
+    padding: 1rem 0;
 }
 
 /* GRID DISPLAY */
@@ -46,6 +62,11 @@ main {
     grid-column: 1 / span 12;
 }
 
+body.container {
+    grid-template-rows: auto 1fr 4rem;
+    grid-template-columns: repeat(12, 1fr);
+}
+
 footer {
     grid-row: 3 / span 1;
     grid-column: 1 / span 12;
@@ -55,28 +76,131 @@ footer {
 
 header {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     background-color: var(--dark);
     color: white;
     padding: 0.5rem 1rem;
-    min-height: min-content;
 }
 
-/********* CENTRO DE LA PÁGINA (ZONA DE JUEGO) *********/
+.partida header {
+    padding: 0 1rem;
+}
 
-main {
+header h1 {
+    font-size: 4rem;
+    text-shadow: 5px 5px 10px #000000;
+}
+
+.inicio header>h1 {
+    padding: 3rem 0;
+}
+
+/********* INSTRUCCIONES *********/
+
+section.hero {
+    display: flex;
+    justify-content: center;
+    column-gap: 5%;
+    padding: 0 3rem;
+    height: 25rem;
+    width: 100%;
+    background-color: var(--dark);
+    color: white;
+}
+
+.foto {
+    position: relative;
+    background-color: white;
     padding: 1rem;
+    padding-bottom: 4rem;
+    margin: 1rem;
+    border-radius: 4px;
+    box-shadow:
+        1.9px 3.3px 3.7px rgba(0, 0, 0, 0.097),
+        6.5px 10.9px 25.9px rgba(0, 0, 0, 0.143),
+        29px 49px 121px rgba(0, 0, 0, 0.24);
+    height: 100%;
+    rotate: -6deg;
+}
+
+.hero_img {
+    margin: 1rem;
+}
+
+.hero_img img {
+    object-fit: cover;
+    height: 100%;
+    width: 100%;
+    border-radius: 7px;
+}
+
+.foto span {
+    position: absolute;
+    display: block;
+    width: 90%;
+    color: #6b6b6b;
+    font-family: handwritten;
+    font-size: 1.5rem;
+    font-weight: bold;
+    line-height: 1.5rem;
+    text-align: center;
+}
+
+.hero_text {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 60%;
+    margin-top: -3rem;
+    padding: 1rem 2rem;
+    line-height: 2rem;
+    font-size: 1.1rem;
+    font-weight: bold;
+    max-width: 75ch;
 }
 
 main.inicio {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     background-color: var(--light);
+    padding: 7rem 10%;
 }
 
+.inicio section:not(.hero) {
+    width: 100%;
+    max-width: 130ch;
+}
+
+.form {
+    max-width: 25rem;
+    margin: 1rem auto 0;
+    padding: 2rem;
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 15px;
+}
+
+.form select {
+    outline: none;
+    width: 100%;
+    margin: 0.5rem 0 1.5rem;
+    padding: 0.8rem;
+    font-size: 0.9rem;
+    border-radius: 13px;
+    background-color: white;}
+
+/********* CENTRO DE LA PÁGINA (ZONA DE JUEGO) *********/
+
 main.partida {
+    padding: 1rem;
     display: flex;
     flex-direction: column;
     background-color: var(--principal);
+    background: rgb(94, 167, 144);
+    background: radial-gradient(circle, rgba(94, 167, 144, 1) 0%, rgba(41, 96, 78, 1) 100%);
 }
 
 main .mesa {
@@ -101,7 +225,13 @@ main .mesa {
 .personas div[class*="posicion"] {
     position: absolute;
     width: 19vw;
-    margin: 1vh 1vw; 
+    margin: 1vh 1vw;
+}
+
+.nombre {
+    padding-bottom: 1rem;
+    color: white;
+    font-weight: bold;
 }
 
 .posicion0 {
@@ -149,14 +279,24 @@ div[class^="mano"]:not(.mano1) {
 div[class^="mano"]:not(.mano1) .carta {
     margin-left: -70%;
     width: 5rem;
+    box-shadow:
+        0.3px 0.7px 0.4px rgba(0, 0, 0, 0.016),
+        0.6px 1.6px 1px rgba(0, 0, 0, 0.023),
+        1.1px 2.8px 1.7px rgba(0, 0, 0, 0.028),
+        1.7px 4.4px 2.6px rgba(0, 0, 0, 0.033),
+        2.6px 6.5px 3.9px rgba(0, 0, 0, 0.037),
+        3.8px 9.6px 5.6px rgba(0, 0, 0, 0.042),
+        5.6px 14.1px 8.1px rgba(0, 0, 0, 0.047),
+        8.5px 21.6px 11.9px rgba(0, 0, 0, 0.054),
+        15px 38px 20px rgba(0, 0, 0, 0.07);
 }
 
 /* MAZOS */
 
 .centro-mesa {
     position: absolute;
-    bottom: 20%;
-    left: 43%;
+    bottom: 14%;
+    left: 48%;
     transform: translateX(-50%);
     display: flex;
     align-items: center;
@@ -187,6 +327,24 @@ div[class^="mano"]:not(.mano1) .carta {
     width: 7rem;
 }
 
+.mazo .carta:first-child,
+.descartes .carta:first-child {
+    box-shadow:
+        0.3px 0.7px 0.4px rgba(0, 0, 0, 0.016),
+        0.6px 1.6px 1px rgba(0, 0, 0, 0.023),
+        1.1px 2.8px 1.7px rgba(0, 0, 0, 0.028),
+        1.7px 4.4px 2.6px rgba(0, 0, 0, 0.033),
+        2.6px 6.5px 3.9px rgba(0, 0, 0, 0.037),
+        3.8px 9.6px 5.6px rgba(0, 0, 0, 0.042),
+        5.6px 14.1px 8.1px rgba(0, 0, 0, 0.047),
+        8.5px 21.6px 11.9px rgba(0, 0, 0, 0.054),
+        15px 38px 20px rgba(0, 0, 0, 0.07);
+}
+
+.centro-mesa .marca-posicion {
+    box-shadow: none !important;
+}
+
 /********* DISPLAY DE INFERIOR DE INFORMACIÓN *********/
 
 /* CARTAS DEL JUGADOR 1 */
@@ -194,10 +352,10 @@ div[class^="mano"]:not(.mano1) .carta {
 section.display {
     display: flex;
     justify-content: space-evenly;
-    min-height: 250px;
+    min-height: 270px;
 }
 
-.persona {
+.div_jugador1 {
     width: 100%;
     transform: translateY(1rem);
 }
@@ -219,6 +377,21 @@ section.display {
 .mano1 .carta {
     margin-left: -55%;
     width: 7rem;
+    box-shadow:
+        0.3px 0.7px 0.4px rgba(0, 0, 0, 0.016),
+        0.6px 1.6px 1px rgba(0, 0, 0, 0.023),
+        1.1px 2.8px 1.7px rgba(0, 0, 0, 0.028),
+        1.7px 4.4px 2.6px rgba(0, 0, 0, 0.033),
+        2.6px 6.5px 3.9px rgba(0, 0, 0, 0.037),
+        3.8px 9.6px 5.6px rgba(0, 0, 0, 0.042),
+        5.6px 14.1px 8.1px rgba(0, 0, 0, 0.047),
+        8.5px 21.6px 11.9px rgba(0, 0, 0, 0.054),
+        15px 38px 20px rgba(0, 0, 0, 0.07);
+}
+
+.mano1 .carta:hover {
+    scale: 1.2;
+    cursor: pointer;
 }
 
 /* INFORMACIÓN MOSTRADA */
@@ -234,7 +407,7 @@ main .info {
     max-width: 370px;
     padding: 1rem;
     background-color: var(--light);
-    font-family: old-school, monospace, 'Courier New', Courier;
+    font-family: old-school, 'Courier New', Courier, monospace;
     border: 2px solid var(--semidark);
     border-radius: 10px;
     box-shadow:
@@ -266,6 +439,11 @@ main .info {
     width: 100%;
 }
 
+.inicio .btn {
+    margin: 0 auto;
+    width: 6.5rem;
+}
+
 .btn {
     display: flex;
     justify-content: center;
@@ -280,20 +458,27 @@ main .info {
     border: 2px solid var(--semidark);
     border-radius: 10px;
     font-size: 1.5rem;
+    font-family: old-school, 'Courier New', Courier, monospace;
 }
 
 .btn:hover {
     background-color: var(--emphasis);
     color: var(--dark);
+    cursor: pointer;
 }
 
 /********* FOOTER *********/
 
 footer {
+    font-size: 1rem;
     background-color: var(--dark);
     color: var(--light);
     padding: 0.5rem 1rem;
     min-height: min-content;
+}
+
+footer small, footer small>* {
+    font-size: 0.8rem;
 }
 
 @media only screen and (min-width: 530px) {}
