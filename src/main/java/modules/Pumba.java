@@ -2,6 +2,8 @@ package modules;
 
 import java.util.ArrayList;
 
+import modules.Enums.Palos;
+
 public class Pumba {
     private Baraja mazo;
     private ArrayList<Carta> descartes;
@@ -11,6 +13,7 @@ public class Pumba {
     private boolean partidaIniciada;
     private int chupateDos;
     private int sentidoTurno;
+    private String palo;
 
     public Pumba(int numeroJugadores) {
         this.mazo = new Baraja();
@@ -20,6 +23,7 @@ public class Pumba {
         this.partidaIniciada = false;
         this.chupateDos = 2;
         this.sentidoTurno = 1;
+        this.palo = null;
         puntuarCartas();
         generarJugadores();
         repartirCartas();
@@ -38,6 +42,8 @@ public class Pumba {
     }
 
     public Carta getCentroMesa() {
+        if (this.descartes.size() == 0)
+            return null;
         return this.descartes.get(this.descartes.size() - 1);
     }
 
@@ -81,7 +87,7 @@ public class Pumba {
     }
 
     public ArrayList<Carta> robarCartasMazo(int n) {
-        System.out.println(getJugadorTurno().getNombreJugador() + " robando " + n + " cartas...");
+        System.out.printf("%s roba %d carta%s\n", getJugadorTurno().getNombreJugador(), n, n == 1 ? "" : "s");
         ArrayList<Carta> cartasRobadas = new ArrayList<>();
         for (int i = 0; i < n; i++) {
             Carta c = mazo.sacarPrimeraCarta();
@@ -109,6 +115,20 @@ public class Pumba {
         System.out.println("CAMBIO SENTIDO");
         this.sentidoTurno *= -1;
         return this;
+    }
+
+    public String cambioPalo(String paloEnMesa) {
+        String palo;
+        do {
+            palo = Palos.getRandom().toString().toLowerCase();
+        } while (palo.equals(paloEnMesa));
+        return cambioPalo(palo, paloEnMesa);
+    }
+
+    public String cambioPalo(String palo, String paloEnMesa) {
+        this.palo = palo;
+        System.out.println("---CAMBIO DE PALO A " + palo.toUpperCase());
+        return this.palo;
     }
 
     public Carta jugadaEspecialDos(Jugador jugador, Carta centroMesa) {
@@ -140,58 +160,69 @@ public class Pumba {
         String jugada = "";
         String turno = "";
         boolean repiteTurno = true;
+        Carta centroMesa = this.getCentroMesa();
         if (!this.estaIniciada()) {
             this.setPartidaIniciada(true);
             cartaSoltada = jugador.soltarCarta();
-            jugada = " echa " + cartaSoltada.getStringCarta() + ". ";
+            jugada = String.format(" echa %s", cartaSoltada.getStringCarta());
         } else {
-            Carta centroMesa = this.getCentroMesa();
             if (centroMesa.getNumero().equals("dos")) {
                 int numeroCartas = jugador.getCartasEnMano();
                 cartaSoltada = jugadaEspecialDos(jugador, centroMesa);
                 int cartasChupadas = jugador.getCartasEnMano() - numeroCartas;
                 if ((this.chupateDos == -1 && cartasChupadas > 1) || cartasChupadas > 1) {
-                    jugada = String.format(" chupa %d cartas. ", cartasChupadas);
+                    jugada = String.format(" chupa %d cartas", cartasChupadas);
                 } else {
                     if (cartaSoltada == null) {
                         jugador.robarCarta();
-                        jugada = " roba carta. ";
+                        jugada = " roba carta";
                     } else {
-                        jugada = String.format(" echa %s. ", cartaSoltada.getStringCarta());
+                        jugada = String.format(" echa %s", cartaSoltada.getStringCarta());
                     }
                 }
             } else {
-                cartaSoltada = jugador.soltarCartaValida(centroMesa);
+                cartaSoltada = jugador.soltarCartaValida(centroMesa, this.palo);
+                if (this.palo != null && cartaSoltada != null) {
+                    System.out.println("-Reset palo");
+                    this.palo = null;
+                }
                 if (cartaSoltada == null) {
                     if (centroMesa.getNumero().equals("rey")) {
                         System.out.println("--YA NO REPITE TURNO");
                         repiteTurno = false;
                     }
                     jugador.robarCarta();
-                    jugada = " roba carta. ";
+                    jugada = " roba carta";
                 } else {
-                    jugada = String.format(" echa %s. ", cartaSoltada.getStringCarta());
+                    jugada = String.format(" echa %s", cartaSoltada.getStringCarta());
                 }
             }
         }
-        partida = jugador.getStringJugador(true) + jugada;
         if (jugador.getCartasEnMano() == 0) {
-            return "FIN DE LA PARTIDA, ¡GANA EL JUGADOR " + jugador.getNombreJugador().toUpperCase() + "!";
-        } else if (cartaSoltada != null && cartaSoltada.getNumero().equals("siete")) {
-            this.cambioSentido();
-            partida += "Cambio de sentido. ";
-        } else if (cartaSoltada != null && cartaSoltada.getNumero().equals("caballo")) {
-            System.out.println("SALTA TURNO: no juega " + this.getJugadorTurno().getNombreJugador());
-            this.setTurno();
-            partida += String.format("Salta el turno del %s. ", this.getJugadorTurno().getNombreJugador());
+            System.out.println("GANA " + jugador.getNombreJugador().toUpperCase());
+            return String.format("FIN DE LA PARTIDA, ¡GANA EL JUGADOR %s!", jugador.getNombreJugador().toUpperCase());
+        }
+        partida = jugador.getStringJugador(true) + jugada;
+        if (cartaSoltada != null) {
+            if (cartaSoltada.getNumero().equals("siete")) {
+                this.cambioSentido();
+                partida += ". Cambio de sentido";
+            } else if (cartaSoltada.getNumero().equals("caballo")) {
+                System.out.println("SALTA TURNO: no juega " + this.getJugadorTurno().getNombreJugador());
+                this.setTurno();
+                partida += String.format(". Salta el turno del %s", this.getJugadorTurno().getNombreJugador());
+            } else if (cartaSoltada.getNumero().equals("sota")) {
+                partida += String.format(" y cambia de palo a %s", this.cambioPalo(cartaSoltada.getPalo()));
+            }
         }
         jugador = this.setTurno().getJugadorTurno();
-        turno = this.getJugadorTurno().esMaquina() ? String.format("Turno del %s.", jugador.getNombreJugador())
-                : "Es tu turno, elige carta.";
+        turno = jugador.esMaquina() ? String.format(". Turno del %s.", jugador.getNombreJugador())
+                : ". Es tu turno, elige carta.";
         if (cartaSoltada != null && repiteTurno && cartaSoltada.getNumero().equals("rey")) {
-            cambioSentido().setTurno();
+            jugador = cambioSentido().setTurno().getJugadorTurno();
             System.out.println("REY - VUELVE A JUGAR: " + this.getJugadorTurno().getNombreJugador());
-            turno = String.format("Vuelve a jugar el %s. ", this.getJugadorTurno().getNombreJugador());
+            turno = jugador.esMaquina() ? String.format(". Vuelve a jugar el %s.", jugador.getNombreJugador())
+                    : ". Vuelves a jugar.";
         }
         return partida + turno;
     }
