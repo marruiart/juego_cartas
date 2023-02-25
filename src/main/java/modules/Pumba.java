@@ -51,6 +51,14 @@ public class Pumba {
         return this.jugadores;
     }
 
+    public int getNumeroJugadores() {
+        return this.numeroJugadores;
+    }
+
+    public void setNumeroJugadores(int numeroJugadores) {
+        this.numeroJugadores = numeroJugadores;
+    }
+
     public int getTurno() {
         return this.turno;
     }
@@ -87,7 +95,6 @@ public class Pumba {
     }
 
     public ArrayList<Carta> robarCartasMazo(int n) {
-        System.out.printf("%s roba %d carta%s\n", getJugadorTurno().getNombreJugador(), n, n == 1 ? "" : "s");
         ArrayList<Carta> cartasRobadas = new ArrayList<>();
         for (int i = 0; i < n; i++) {
             Carta c = mazo.sacarPrimeraCarta();
@@ -129,6 +136,16 @@ public class Pumba {
         this.palo = palo;
         System.out.println("---CAMBIO DE PALO A " + palo.toUpperCase());
         return this.palo;
+    }
+
+    public Jugador elegirJugador() {
+        int n;
+        do {
+            n = (int) (Math.random() * this.getNumeroJugadores());
+        } while (this.getTurno() == n);
+        Jugador elegido = jugadores.get(n);
+        System.out.println("--" + elegido.getNombreJugador(true) + " elegido para robar");
+        return elegido;
     }
 
     public Carta jugadaEspecialDos(Jugador jugador, Carta centroMesa) {
@@ -202,7 +219,7 @@ public class Pumba {
             System.out.println("GANA " + jugador.getNombreJugador().toUpperCase());
             return String.format("FIN DE LA PARTIDA, ¡GANA EL JUGADOR %s!", jugador.getNombreJugador().toUpperCase());
         }
-        partida = jugador.getStringJugador(true) + jugada;
+        partida = jugador.getNombreJugador(true) + jugada;
         if (cartaSoltada != null) {
             if (cartaSoltada.getNumero().equals("siete")) {
                 this.cambioSentido();
@@ -213,6 +230,10 @@ public class Pumba {
                 partida += String.format(". Salta el turno del %s", this.getJugadorTurno().getNombreJugador());
             } else if (cartaSoltada.getNumero().equals("sota")) {
                 partida += String.format(" y cambia de palo a %s", this.cambioPalo(cartaSoltada.getPalo()));
+            } else if (cartaSoltada.getNumero().equals("as")) {
+                Jugador elegidoRoba = this.elegirJugador();
+                elegidoRoba.robarCarta();
+                partida += String.format(". Elige al jugador %s para que robe carta", elegidoRoba.getNombreJugador());
             }
         }
         jugador = this.setTurno().getJugadorTurno();

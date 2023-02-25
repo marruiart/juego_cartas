@@ -33,10 +33,10 @@ public class Jugador {
     }
 
     public String getNombreJugador() {
-        return getStringJugador(false);
+        return getNombreJugador(false);
     }
 
-    public String getStringJugador(boolean primeraMayus) {
+    public String getNombreJugador(boolean primeraMayus) {
         if (primeraMayus)
             return String.format("Jugador %d", numero);
         else
@@ -84,6 +84,7 @@ public class Jugador {
     }
 
     public void robarCartas(int n) {
+        System.out.printf("%s roba %d carta%s\n", this.getNombreJugador(), n, n == 1 ? "" : "s");
         ArrayList<Carta> cartasRobadas = partida.robarCartasMazo(n);
         for (Carta c : cartasRobadas) {
             if (!this.esMaquina)
