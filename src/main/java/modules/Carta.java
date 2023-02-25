@@ -57,12 +57,17 @@ public class Carta {
     }
 
     public void rotarCarta(String posicion, String rotacion) {
-        this.rotacion = String.format("style='transform-origin: bottom %s; transform: rotate(%sturn);'", posicion, rotacion);
+        this.rotacion = String.format("style='transform-origin: bottom %s; transform: rotate(%sturn);'", posicion,
+                rotacion);
     }
 
     public boolean esValida(Carta c, String palo) {
-        if (palo != null && this.getPalo().equals(palo))
-            return true;
+        if (palo != null) {
+            if (this.getPalo().equals(palo))
+                return true;
+            else
+                return false;
+        }
         if (c.getNumero().equals("dos")) {
             if (this.getNumero().equals("dos"))
                 return true;
