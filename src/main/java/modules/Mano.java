@@ -48,7 +48,7 @@ public class Mano {
 
     @Override
     public String toString() {
-        String jugador = getJugador().getStringJugador().replace(" ", "");
+        String jugador = "mano" + getJugador().getNumero();
         String mano = "<div class='mano " + jugador + "'>";
         for (Carta c : this.cartas) {
             mano += c;

@@ -84,7 +84,7 @@ main .mesa {
 
 .centro-mesa {
     position: absolute;
-    top: 40%;
+    top: 52%;
     left: 45%;
     transform: translate(-50%, -50%);
     display: flex;
@@ -95,30 +95,47 @@ main .mesa {
 
 .mazo,
 .descartes {
-    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 26.1rem;
+    padding-left: 39%;
+}
+
+.mazo {
+    transform: translateX(30%);
+    flex-direction: row-reverse;
+    z-index: 200;
+}
+
+.descartes {
+    transform: translateX(-30%);
 }
 
 .mazo .carta,
 .descartes .carta {
-    position: absolute;
-    top: 0;
-    left: 0;
+    margin-left: -121%;
     width: 7rem;
 }
 
-.jugador {
-    width: fit-content;
+.jugador:not(.jugador1) {
+    width: 19vw;
+    text-align: center;
 }
 
-.mano {
+/* .mano {
+    transform-origin: bottom center;
+} */
+
+.mano:not(.mano1) {
     display: flex;
-    justify-content: center;
-    max-width: 15rem;
-    padding-left: 11.5rem;
+    justify-content: space-evenly;
+    width: 19vw;
+    margin-left: 36%;
 }
 
-.mano .carta {
-    margin-left: -50%;
+.mano:not(.mano1) .carta {
+    margin-left: -70%;
     width: 5rem;
 }
 
@@ -129,22 +146,29 @@ main .mesa {
 section.display {
     display: flex;
     justify-content: space-evenly;
-    min-height: 220px;
+    min-height: 250px;
 }
 
-section.display .jugador {
+.persona {
     width: 100%;
-    min-width: 736px;
 }
 
-.mano.jugador1 {
-    max-width: 46rem;
-    padding-left: 55%;
-    transform: translateX(-15.5%);
+.jugador1 {
+    height: 100%;
+    width: 35vw;
+    margin: 0 auto;
+    text-align: center;
 }
 
-.mano.jugador1 .carta {
-    margin-left: -30%;
+.mano1 {
+    display: flex;
+    justify-content: space-evenly;
+    width: 35vw;
+    margin-left: 28%;
+}
+
+.mano1 .carta {
+    margin-left: -55%;
     width: 7rem;
 }
 
@@ -156,7 +180,7 @@ main .info {
     justify-content: space-between;
     align-items: center;
     height: 100%;
-    width: 30%;
+    width: 40%;
     min-width: 187px;
     max-width: 370px;
     padding: 1rem;
@@ -174,6 +198,7 @@ main .info {
 }
 
 .mensaje {
+    height: 100%;
     width: 100%;
     padding: 1rem 0.5rem;
     margin-bottom: 1.5rem;
@@ -182,6 +207,7 @@ main .info {
     border-radius: 10px;
     border: 2px solid var(--semidark);
     overflow-wrap: break-word;
+    overflow-Y: auto;
 }
 
 .botones {
@@ -227,12 +253,12 @@ footer {
 
 @media only screen and (min-width: 1024px) {}
 
-@media only screen and (max-width: 1440px) {
-    .mano.jugador1 {
+/* @media only screen and (max-width: 1440px) {
+    .mano1 {
         transform: translateX(-23%);
     }
 
-    .mano.jugador1 .carta {
+    .mano1 .carta {
         margin-left: -25%;
     }
-}
+} */

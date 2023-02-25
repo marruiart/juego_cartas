@@ -123,7 +123,8 @@ public class Jugador {
     public String toString() {
         String textoMano = esMano ? " (Mano)" : "";
         String textoMaquina = esMaquina ? "" : " (Tú)";
-        return String.format("<div class=\"jugador\"><h2>%s %s%s</h2>%s</div>",
+        String jugador = this.getStringJugador().replace(" ", "");
+        return String.format("<div class='jugador " + jugador + "'><h2 class='nombre'>%s %s%s</h2>%s</div>",
                 this.getStringJugador(), textoMano, textoMaquina, this.cartas.toString());
     }
 }

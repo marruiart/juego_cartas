@@ -58,7 +58,9 @@
         </div>  
       </section>
       <section class="display">
-        <%=persona%>
+        <div class="persona">
+          <%=persona%>
+        </div>
         <div class="info">
           <div class="mensaje"><%=mensaje%></div>
           <div class="botones">
