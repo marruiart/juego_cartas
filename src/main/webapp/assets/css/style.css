@@ -352,12 +352,13 @@ div[class^="mano"]:not(.mano1) .carta {
 section.display {
     display: flex;
     justify-content: space-evenly;
+    align-items: center;
     min-height: 270px;
 }
 
 .div_jugador1 {
+    height: 100%;
     width: 100%;
-    transform: translateY(1rem);
 }
 
 .jugador1 {
@@ -392,6 +393,10 @@ section.display {
 .mano1 .carta:hover {
     scale: 1.2;
     cursor: pointer;
+}
+
+.mano1 a {
+    margin-left: -40%;
 }
 
 /* INFORMACIÓN MOSTRADA */
