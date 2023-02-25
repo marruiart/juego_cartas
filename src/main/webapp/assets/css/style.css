@@ -88,18 +88,20 @@ main .mesa {
 .personas {
     position: relative;
     height: 90%;
-    min-height: 440px;
+    min-height: 495px;
     width: 95vw;
     max-width: 1740px;
     margin: 0 auto;
     text-align: center;
     border-top-left-radius: 100vh;
     border-top-right-radius: 100vh;
+    margin-bottom: 1rem;
 }
 
-.personas div[class^="jugador"] {
+.personas div[class*="posicion"] {
     position: absolute;
     width: 19vw;
+    margin: 1vh 1vw; 
 }
 
 .posicion0 {
@@ -173,7 +175,6 @@ div[class^="mano"]:not(.mano1) .carta {
 
 .mazo {
     transform: translateX(30%);
-    flex-direction: row-reverse;
 }
 
 .descartes {
@@ -198,6 +199,7 @@ section.display {
 
 .persona {
     width: 100%;
+    transform: translateY(1rem);
 }
 
 .jugador1 {
@@ -300,12 +302,4 @@ footer {
 
 @media only screen and (min-width: 1024px) {}
 
-/* @media only screen and (max-width: 1440px) {
-    .mano1 {
-        transform: translateX(-23%);
-    }
-
-    .mano1 .carta {
-        margin-left: -25%;
-    }
-} */
+@media only screen and (max-width: 1440px) {}

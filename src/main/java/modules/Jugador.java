@@ -29,7 +29,7 @@ public class Jugador {
     }
 
     public int getCartasEnMano() {
-        return this.cartas.getCartas().size();
+        return this.cartas.getNumeroCartas();
     }
 
     public String getStringJugador() {

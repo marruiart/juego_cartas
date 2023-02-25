@@ -20,6 +20,10 @@ public class Mano {
         return this.cartas;
     }
 
+    public int getNumeroCartas() {
+        return this.cartas.size();
+    }
+
     public ArrayList<Carta> getCartasValidas(Carta centroMesa, String palo) {
         cartasValidas = new ArrayList<Carta>();
         for (Carta c : cartas) {
@@ -49,9 +53,24 @@ public class Mano {
     @Override
     public String toString() {
         String jugador = "mano" + getJugador().getNumero();
-        String mano = "<div class='" + jugador + "'>";
-        for (Carta c : this.cartas) {
-            mano += c;
+        String mano = String.format("<div class='%s'>", jugador);
+        float n = getNumeroCartas() / 2;
+        float rotacion = (float)Math.floor(n) * -0.02f;
+        System.out.println((float)Math.floor(n));
+        System.out.println(rotacion);
+        for (int i = 0; i < getNumeroCartas(); i++) {
+            System.out.println("carta " + (i + 1) + " " + rotacion);
+            rotacion = (getNumeroCartas() % 2 == 0 && rotacion == 0) ? 0.02f : rotacion;
+            if ((i + 0.5) < n) {
+                this.cartas.get(i).rotarCarta("right", Float.toString(rotacion));
+            } else if ((i + 0.5) > n) {
+                this.cartas.get(i).rotarCarta("left", Float.toString(rotacion));
+            } else {
+                this.cartas.get(i).rotarCarta("center", "0");
+                System.out.println("rotación" + rotacion);
+            }
+            mano += this.cartas.get(i);
+            rotacion += 0.02f; 
         }
         return mano + "</div>";
     }

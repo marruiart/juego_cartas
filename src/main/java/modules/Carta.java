@@ -6,6 +6,7 @@ public class Carta {
     private Numeros numero;
     private Palos palo;
     private String imagen;
+    private String rotacion;
     private Integer puntos;
     private boolean descubierta;
 
@@ -18,6 +19,7 @@ public class Carta {
         this.palo = palo;
         this.descubierta = descubierta;
         this.imagen = "assets/img/" + (this.descubierta ? (getNumero() + "_" + getPalo()) : "reverso") + ".png";
+        this.rotacion = "style='transform-origin: bottom center; transform: rotate(0);'";
     }
 
     public String getNumero() {
@@ -49,9 +51,13 @@ public class Carta {
         return this.getNumero() + " de " + this.getPalo();
     }
 
-    public void girarCarta() {
+    public void voltearCarta() {
         this.descubierta = this.descubierta ? false : true;
         this.imagen = "assets/img/" + (this.descubierta ? (getNumero() + "_" + getPalo()) : "reverso") + ".png";
+    }
+
+    public void rotarCarta(String posicion, String rotacion) {
+        this.rotacion = String.format("style='transform-origin: bottom %s; transform: rotate(%sturn);'", posicion, rotacion);
     }
 
     public boolean esValida(Carta c, String palo) {
@@ -79,6 +85,6 @@ public class Carta {
 
     @Override
     public String toString() {
-        return "<img class='carta' src=" + imagen + ">";
+        return String.format("<img class='carta' src=%s %s>", this.imagen, this.rotacion);
     }
 }

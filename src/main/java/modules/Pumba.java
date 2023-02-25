@@ -72,6 +72,7 @@ public class Pumba {
     }
 
     public void soltarEnDescartes(Carta carta) {
+        carta.rotarCarta("center", "0");
         descartes.add(carta);
     }
 
