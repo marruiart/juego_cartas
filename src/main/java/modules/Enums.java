@@ -24,8 +24,4 @@ public class Enums {
         }
     }
 
-    @Override
-    public String toString() {
-        return this.toString().toLowerCase();
-    }
 }
