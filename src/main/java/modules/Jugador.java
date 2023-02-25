@@ -72,11 +72,8 @@ public class Jugador {
     }
 
     public Carta soltarCarta(Carta c) {
-        Carta carta;
-        if (c == null)
-            carta = this.cartas.removeCarta();
-        else
-            carta = this.cartas.removeCarta(c);
+        Carta carta = (c == null) ? this.cartas.removeCarta() : this.cartas.removeCarta(c);
+        System.out.println("Suelta " + carta.getStringCarta());
         carta.setDescubierta(true);
         partida.soltarEnDescartes(carta);
         return carta;
