@@ -47,12 +47,9 @@ public class Baraja {
     }
 
     public void devolverCarta(Carta carta) {
-        devolverCarta(cartas.size(), carta);
-    }
-
-    public void devolverCarta(int posicion, Carta carta) {
-        carta.setDescubierta(false);
-        cartas.add(posicion, carta);
+        ArrayList<Carta> cartas = new ArrayList<>();
+        cartas.add(carta);
+        devolverCartas(cartas);
     }
 
     public void devolverCartas(ArrayList<Carta> cartas) {

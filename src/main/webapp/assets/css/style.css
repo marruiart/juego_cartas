@@ -167,7 +167,7 @@ div[class^="mano"]:not(.mano1) .carta {
 .mazo,
 .descartes {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     width: 26.1rem;
     padding-left: 39%;

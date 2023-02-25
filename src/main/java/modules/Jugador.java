@@ -32,7 +32,7 @@ public class Jugador {
         return this.cartas.getNumeroCartas();
     }
 
-    public String getStringJugador() {
+    public String getNombreJugador() {
         return getStringJugador(false);
     }
 
@@ -68,35 +68,18 @@ public class Jugador {
     }
 
     public Carta soltarCarta() {
-        return this.soltarCartas(1).get(0);
+        return this.soltarCarta(null);
     }
 
     public Carta soltarCarta(Carta c) {
-        ArrayList<Carta> carta = new ArrayList<>();
-        carta.add(c);
-        return this.soltarCartas(carta).get(0);
-    }
-
-    public ArrayList<Carta> soltarCartas(int n) {
-        ArrayList<Carta> cartasSoltadas = new ArrayList<>();
-        for (int i = 0; i < n; i++) {
-            Carta carta = cartas.removeCarta();
-            cartasSoltadas.add(carta);
-            carta.setDescubierta(true);
-            /* System.out.println(c); */
-            partida.soltarEnDescartes(carta);
-        }
-        return cartasSoltadas;
-    }
-
-    public ArrayList<Carta> soltarCartas(ArrayList<Carta> cartasSoltadas) {
-        for (Carta c : cartasSoltadas) {
-            Carta carta = this.cartas.removeCarta(c);
-            carta.setDescubierta(true);
-            /* System.out.println(c); */
-            partida.soltarEnDescartes(carta);
-        }
-        return cartasSoltadas;
+        Carta carta;
+        if (c == null)
+            carta = this.cartas.removeCarta();
+        else
+            carta = this.cartas.removeCarta(c);
+        carta.setDescubierta(true);
+        partida.soltarEnDescartes(carta);
+        return carta;
     }
 
     public void robarCarta() {
@@ -108,8 +91,6 @@ public class Jugador {
         for (Carta c : cartasRobadas) {
             if (!this.esMaquina)
                 c.setDescubierta(true);
-            else
-                c.setDescubierta(false);
             cartas.addCarta(c);
         }
     }
@@ -128,9 +109,9 @@ public class Jugador {
         }
         String textoMano = esMano ? " (Mano)" : "";
         String textoMaquina = esMaquina ? "" : " (Tú)";
-        String jugador = this.getStringJugador().replace(" ", "");
+        String jugador = this.getNombreJugador().replace(" ", "");
         return String.format(
                 "<div class='" + jugador + " " + posicion + "'><h2 class='nombre'>%s %s%s</h2>%s</div>",
-                this.getStringJugador(), textoMano, textoMaquina, this.cartas.toString());
+                this.getNombreJugador(), textoMano, textoMaquina, this.cartas.toString());
     }
 }
