@@ -49,7 +49,7 @@ public class Mano {
     @Override
     public String toString() {
         String jugador = "mano" + getJugador().getNumero();
-        String mano = "<div class='mano " + jugador + "'>";
+        String mano = "<div class='" + jugador + "'>";
         for (Carta c : this.cartas) {
             mano += c;
         }

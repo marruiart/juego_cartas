@@ -26,6 +26,7 @@ body.container {
     grid-template-columns: repeat(12, 1fr);
     height: 100vh;
     width: 100%;
+    overflow-x: hidden;
 }
 
 a {
@@ -82,11 +83,79 @@ main .mesa {
     height: 100%;
 }
 
+/* JUGADORES */
+
+.personas {
+    position: relative;
+    height: 90%;
+    min-height: 440px;
+    width: 95vw;
+    max-width: 1740px;
+    margin: 0 auto;
+    text-align: center;
+    border-top-left-radius: 100vh;
+    border-top-right-radius: 100vh;
+}
+
+.personas div[class^="jugador"] {
+    position: absolute;
+    width: 19vw;
+}
+
+.posicion0 {
+    bottom: 0;
+    left: 0;
+}
+
+.posicion1 {
+    top: 28%;
+    left: 9%;
+}
+
+.posicion2 {
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.posicion3 {
+    top: 28%;
+    right: 9%;
+}
+
+.posicion4 {
+    bottom: 0;
+    right: 0;
+}
+
+div[class^="jugador"]:not(.jugador1):not() {
+    width: 19vw;
+    text-align: center;
+}
+
+/* .mano {
+    transform-origin: bottom center;
+} */
+
+div[class^="mano"]:not(.mano1) {
+    display: flex;
+    justify-content: space-evenly;
+    width: 19vw;
+    margin-left: 36%;
+}
+
+div[class^="mano"]:not(.mano1) .carta {
+    margin-left: -70%;
+    width: 5rem;
+}
+
+/* MAZOS */
+
 .centro-mesa {
     position: absolute;
-    top: 52%;
-    left: 45%;
-    transform: translate(-50%, -50%);
+    bottom: 20%;
+    left: 43%;
+    transform: translateX(-50%);
     display: flex;
     align-items: center;
     justify-content: space-around;
@@ -105,7 +174,6 @@ main .mesa {
 .mazo {
     transform: translateX(30%);
     flex-direction: row-reverse;
-    z-index: 200;
 }
 
 .descartes {
@@ -118,30 +186,9 @@ main .mesa {
     width: 7rem;
 }
 
-.jugador:not(.jugador1) {
-    width: 19vw;
-    text-align: center;
-}
-
-/* .mano {
-    transform-origin: bottom center;
-} */
-
-.mano:not(.mano1) {
-    display: flex;
-    justify-content: space-evenly;
-    width: 19vw;
-    margin-left: 36%;
-}
-
-.mano:not(.mano1) .carta {
-    margin-left: -70%;
-    width: 5rem;
-}
-
 /********* DISPLAY DE INFERIOR DE INFORMACIÓN *********/
 
-/* CARTAS DEL JUGADOR */
+/* CARTAS DEL JUGADOR 1 */
 
 section.display {
     display: flex;

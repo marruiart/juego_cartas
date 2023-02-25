@@ -32,30 +32,32 @@
           mensaje = partida.ejecutarJugada();
       }%>
       <section class="mesa">
-        <%
-          for (Jugador j : partida.getJugadores()) {
-            if (!j.esMaquina())
-              persona = j;
-            else
-              out.print(j);
-          }
-        %>
-        <div class="centro-mesa">
-          <div class="mazo">
+        <div class="personas">
           <%
-            for (Carta c : partida.getMazo()) {
-              out.print(c);
+            for (Jugador j : partida.getJugadores()) {
+              if (!j.esMaquina())
+                persona = j;
+              else
+                out.print(j);
             }
           %>
-          </div>
-          <div class="descartes">
-          <%
-            for (Carta c : partida.getDescartes()) {
-              out.print(c);
-            }
-          %>
-          </div>
-        </div>  
+          <div class="centro-mesa">
+            <div class="mazo">
+            <%
+              for (Carta c : partida.getMazo()) {
+                out.print(c);
+              }
+            %>
+            </div>
+            <div class="descartes">
+            <%
+              for (Carta c : partida.getDescartes()) {
+                out.print(c);
+              }
+            %>
+            </div>
+          </div>  
+        </div>
       </section>
       <section class="display">
         <div class="persona">

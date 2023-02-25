@@ -121,10 +121,16 @@ public class Jugador {
 
     @Override
     public String toString() {
+        int[][] posiciones = { { 2 }, { 1, 3 }, { 0, 2, 4 }, { 0, 1, 3, 4 }, { 0, 1, 2, 3, 4 } };
+        String posicion = "";
+        if (this.esMaquina()) {
+            posicion = "posicion" + posiciones[partida.getJugadores().size() - 2][this.getNumero() - 2];
+        }
         String textoMano = esMano ? " (Mano)" : "";
         String textoMaquina = esMaquina ? "" : " (Tú)";
         String jugador = this.getStringJugador().replace(" ", "");
-        return String.format("<div class='jugador " + jugador + "'><h2 class='nombre'>%s %s%s</h2>%s</div>",
+        return String.format(
+                "<div class='" + jugador + " " + posicion + "'><h2 class='nombre'>%s %s%s</h2>%s</div>",
                 this.getStringJugador(), textoMano, textoMaquina, this.cartas.toString());
     }
 }
