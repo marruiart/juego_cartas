@@ -11,53 +11,54 @@
     <link rel="stylesheet" href="./assets/css/style.css" type="text/css" />
   </head>
 
-  <body class="container partida">
+  <body class="container game">
     <header>
       <h1>Pumba!</h1>
     </header>
-    <main class="partida">
-      <%int iniciar = Integer.parseInt(request.getParameter("iniciar"));
-        String mensaje;
-        Pumba partida;
-        Jugador persona = null;
-        if (iniciar == 1) {
-          int n = Integer.parseInt(request.getParameter("jugadores"));
-          partida = new Pumba(n);
-          session.setAttribute("partida", partida);
-          mensaje = "Comienza el juego. Turno del \"Mano\".";
+    <main class="main-game">
+      <% int start = Integer.parseInt(request.getParameter("start"));
+        String message;
+        Pumba game;
+        Player personPlayer = null;
+        if (start == 1) {
+          int n = Integer.parseInt(request.getParameter("players"));
+          game = new Pumba(n);
+          session.setAttribute("game", game);
+          message = "Comienza el juego. Turno del \"Mano\".";
         } else {
-          partida = (Pumba)session.getAttribute("partida");
-          mensaje = partida.ejecutarJugada();
+          String playedCard = request.getParameter("card");
+          game = (Pumba)session.getAttribute("game");
+          message = game.runPlay(playedCard);
       }%>
-      <section class="mesa">
-        <div class="personas">
+      <section class="table">
+        <div class="all-players">
           <%
-            for (Jugador j : partida.getJugadores()) {
-              if (!j.esMaquina())
-                persona = j;
+            for (Player j : game.getPlayers()) {
+              if (!j.isMachine())
+                personPlayer = j;
               else
                 out.print(j);
             }
           %>
-          <div class="centro-mesa">
-            <div class="mazo">
-              <img class="carta marca-posicion" src="assets/img/posicion.png">
+          <div class="table-center">
+            <div class="draw-pile">
+              <img id="positional-mark" class="card" src="assets/img/posicion.png">
             </div>
-            <div class="descartes">
-              <img class="carta marca-posicion" src="assets/img/posicion.png">
+            <div class="discards-pile">
+              <img id="positional-mark" class="card" src="assets/img/posicion.png">
             </div>
           </div>  
-          <div class="centro-mesa">
-            <div class="mazo">
+          <div class="table-center">
+            <div class="draw-pile">
             <%
-              for (Carta c : partida.getMazo()) {
+              for (Card c : game.getDrawPile()) {
                 out.print(c);
               }
             %>
             </div>
-            <div class="descartes">
+            <div class="discards-pile">
             <%
-              for (Carta c : partida.getDescartes()) {
+              for (Card c : game.getDiscardPile()) {
                 out.print(c);
               }
             %>
@@ -67,17 +68,17 @@
       </section>
       <section class="display">
         <div class="div_jugador1">
-          <%=persona%>
+          <%=personPlayer%>
         </div>
         <div class="info">
-          <div class="mensaje"><%=mensaje%></div>
-          <div class="botones">
+          <div class="message"><%=message%></div>
+          <div class="buttons">
             <%
-              if (mensaje.contains("FIN")) {%>
-                <a class="btn" href="index.html" class="atras">Atrás</a>
+              if (message.contains("FIN")) {%>
+                <a class="btn" href="index.html">Atrás</a>
             <%} else {%>
-                <a class="btn" href="pumba.jsp?iniciar=0">OK</a>
-                <a class="btn" href="index.html" class="atras">Atrás</a>
+                <a class="btn" href="pumba.jsp?start=0">OK</a>
+                <a class="btn" href="index.html">Atrás</a>
             <%}
             %>
           </div>

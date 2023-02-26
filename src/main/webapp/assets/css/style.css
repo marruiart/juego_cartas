@@ -84,7 +84,7 @@ header {
     padding: 0.5rem 1rem;
 }
 
-.partida header {
+.game header {
     padding: 0 1rem;
 }
 
@@ -93,7 +93,7 @@ header h1 {
     text-shadow: 5px 5px 10px #000000;
 }
 
-.inicio header>h1 {
+.landing header>h1 {
     padding: 3rem 0;
 }
 
@@ -110,7 +110,7 @@ section.hero {
     color: white;
 }
 
-.foto {
+.photo {
     position: relative;
     background-color: white;
     padding: 1rem;
@@ -136,7 +136,7 @@ section.hero {
     border-radius: 7px;
 }
 
-.foto span {
+.photo span {
     position: absolute;
     display: block;
     width: 90%;
@@ -161,7 +161,7 @@ section.hero {
     max-width: 75ch;
 }
 
-main.inicio {
+.main-landing {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -169,7 +169,7 @@ main.inicio {
     padding: 7rem 10%;
 }
 
-.inicio section:not(.hero) {
+.main-landing section {
     width: 100%;
     max-width: 130ch;
 }
@@ -190,11 +190,12 @@ main.inicio {
     padding: 0.8rem;
     font-size: 0.9rem;
     border-radius: 13px;
-    background-color: white;}
+    background-color: white;
+}
 
 /********* CENTRO DE LA PÁGINA (ZONA DE JUEGO) *********/
 
-main.partida {
+.main-game {
     padding: 1rem;
     display: flex;
     flex-direction: column;
@@ -203,13 +204,13 @@ main.partida {
     background: radial-gradient(circle, rgba(94, 167, 144, 1) 0%, rgba(41, 96, 78, 1) 100%);
 }
 
-main .mesa {
+main .table {
     height: 100%;
 }
 
 /* JUGADORES */
 
-.personas {
+.all-players {
     position: relative;
     height: 90%;
     min-height: 495px;
@@ -222,61 +223,61 @@ main .mesa {
     margin-bottom: 1rem;
 }
 
-.personas div[class*="posicion"] {
+.all-players div[class*="seat"] {
     position: absolute;
     width: 19vw;
     margin: 1vh 1vw;
 }
 
-.nombre {
+.name {
     padding-bottom: 1rem;
     color: white;
     font-weight: bold;
 }
 
-.posicion0 {
+.position0 {
     bottom: 0;
     left: 0;
 }
 
-.posicion1 {
+.position1 {
     top: 28%;
     left: 9%;
 }
 
-.posicion2 {
+.position2 {
     top: 0;
     left: 50%;
     transform: translateX(-50%);
 }
 
-.posicion3 {
+.position3 {
     top: 28%;
     right: 9%;
 }
 
-.posicion4 {
+.position4 {
     bottom: 0;
     right: 0;
 }
 
-div[class^="jugador"]:not(.jugador1):not() {
+div[class^="player"]:not(.player1):not() {
     width: 19vw;
     text-align: center;
 }
 
-/* .mano {
+/* .hand {
     transform-origin: bottom center;
 } */
 
-div[class^="mano"]:not(.mano1) {
+div[class^="hand"]:not(.hand1) {
     display: flex;
     justify-content: space-evenly;
     width: 19vw;
     margin-left: 36%;
 }
 
-div[class^="mano"]:not(.mano1) .carta {
+div[class^="hand"]:not(.hand1) .card {
     margin-left: -70%;
     width: 5rem;
     box-shadow:
@@ -293,7 +294,7 @@ div[class^="mano"]:not(.mano1) .carta {
 
 /* MAZOS */
 
-.centro-mesa {
+.table-center {
     position: absolute;
     bottom: 14%;
     left: 48%;
@@ -304,8 +305,8 @@ div[class^="mano"]:not(.mano1) .carta {
     min-width: 17rem;
 }
 
-.mazo,
-.descartes {
+.draw-pile,
+.discards-pile {
     display: flex;
     justify-content: flex-start;
     align-items: center;
@@ -313,22 +314,22 @@ div[class^="mano"]:not(.mano1) .carta {
     padding-left: 39%;
 }
 
-.mazo {
+.draw-pile {
     transform: translateX(30%);
 }
 
-.descartes {
+.discards-pile {
     transform: translateX(-30%);
 }
 
-.mazo .carta,
-.descartes .carta {
+.draw-pile .card,
+.discards-pile .card {
     margin-left: -121%;
     width: 7rem;
 }
 
-.mazo .carta:first-child,
-.descartes .carta:first-child {
+.draw-pile .card:first-child,
+.discards-pile .card:first-child {
     box-shadow:
         0.3px 0.7px 0.4px rgba(0, 0, 0, 0.016),
         0.6px 1.6px 1px rgba(0, 0, 0, 0.023),
@@ -341,8 +342,8 @@ div[class^="mano"]:not(.mano1) .carta {
         15px 38px 20px rgba(0, 0, 0, 0.07);
 }
 
-.centro-mesa .marca-posicion {
-    box-shadow: none !important;
+#positional-mark {
+    box-shadow: none;
 }
 
 /********* DISPLAY DE INFERIOR DE INFORMACIÓN *********/
@@ -356,26 +357,26 @@ section.display {
     min-height: 270px;
 }
 
-.div_jugador1 {
+.div_player1 {
     height: 100%;
     width: 100%;
 }
 
-.jugador1 {
+.player1 {
     height: 100%;
     width: 35vw;
     margin: 0 auto;
     text-align: center;
 }
 
-.mano1 {
+.hand1 {
     display: flex;
     justify-content: space-evenly;
     width: 35vw;
     margin-left: 28%;
 }
 
-.mano1 .carta {
+.hand1 .card {
     margin-left: -55%;
     width: 7rem;
     box-shadow:
@@ -390,13 +391,14 @@ section.display {
         15px 38px 20px rgba(0, 0, 0, 0.07);
 }
 
-.mano1 .carta:hover {
+.hand1 a:not(.disabled) .card:hover {
     scale: 1.2;
     cursor: pointer;
 }
 
-.mano1 a {
+.hand1 a {
     margin-left: -40%;
+    cursor: auto;
 }
 
 /* INFORMACIÓN MOSTRADA */
@@ -424,7 +426,7 @@ main .info {
         0px 25px 80px rgba(0, 0, 0, 0.07);
 }
 
-.mensaje {
+.message {
     height: 100%;
     width: 100%;
     padding: 1rem 0.5rem;
@@ -437,14 +439,14 @@ main .info {
     overflow-Y: auto;
 }
 
-.botones {
+.buttons {
     display: flex;
     justify-content: space-evenly;
     align-items: center;
     width: 100%;
 }
 
-.inicio .btn {
+.main-landing .btn {
     margin: 0 auto;
     width: 6.5rem;
 }
@@ -482,7 +484,8 @@ footer {
     min-height: min-content;
 }
 
-footer small, footer small>* {
+footer small,
+footer small>* {
     font-size: 0.8rem;
 }
 

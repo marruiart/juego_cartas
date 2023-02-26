@@ -1,309 +1,307 @@
 package modules;
 
 import java.util.ArrayList;
-
-import modules.Enums.Palos;
+import modules.Enums.Suits;
 
 public class Pumba {
-    private Baraja mazo;
-    private ArrayList<Carta> descartes;
-    private ArrayList<Jugador> jugadores;
-    private int turno;
-    private int numeroJugadores;
-    private boolean partidaIniciada;
-    private int chupateDos;
-    private int sentidoTurno;
-    private String palo;
+    private CardsDeck drawPile;
+    private ArrayList<Card> discardPile;
+    private ArrayList<Player> players;
+    private int turn;
+    private int numberOfPlayers;
+    private boolean isGameStarted;
+    private int draw2;
+    private int playDirection;
+    private String suit;
 
-    public Pumba(int numeroJugadores) {
-        this.mazo = new Baraja();
-        this.descartes = new ArrayList<>();
-        this.jugadores = new ArrayList<>();
-        this.numeroJugadores = numeroJugadores;
-        this.partidaIniciada = false;
-        this.chupateDos = 2;
-        this.sentidoTurno = 1;
-        this.palo = null;
-        puntuarCartas();
-        generarJugadores();
-        repartirCartas();
+    public Pumba(int _numberOfPlayers) {
+        this.drawPile = new CardsDeck();
+        this.discardPile = new ArrayList<>();
+        this.players = new ArrayList<>();
+        this.numberOfPlayers = _numberOfPlayers;
+        this.isGameStarted = false;
+        this.draw2 = 2;
+        this.playDirection = 1;
+        this.suit = null;
+        scoreCards();
+        generatePlayers();
+        dealCards();
     }
 
-    public ArrayList<Carta> getMazo() {
-        System.out.println("Cartas en mazo: " + this.mazo.getCartas().size());
-        return this.mazo.getCartas();
+    public ArrayList<Card> getDrawPile() {
+        System.out.println("Cartas en mazo: " + this.drawPile.getCards().size());
+        return this.drawPile.getCards();
     }
 
-    public ArrayList<Carta> getDescartes() {
-        for (Carta c : this.descartes)
-            c.setDescubierta(true).setEnlace(null);
-        System.out.println("Cartas en descartes: " + this.descartes.size());
-        return this.descartes;
+    public ArrayList<Card> getDiscardPile() {
+        for (Card c : this.discardPile)
+            c.setUncovered(true).setLink(null);
+        System.out.println("Cartas en descartes: " + this.discardPile.size());
+        return this.discardPile;
     }
 
-    public Carta getCentroMesa() {
-        if (this.descartes.size() == 0)
+    public Card getTableCenter() {
+        if (this.discardPile.size() == 0)
             return null;
-        return this.descartes.get(this.descartes.size() - 1);
+        return this.discardPile.get(this.discardPile.size() - 1);
     }
 
-    public ArrayList<Jugador> getJugadores() {
-        return this.jugadores;
+    public ArrayList<Player> getPlayers() {
+        return this.players;
     }
 
-    public int getNumeroJugadores() {
-        return this.numeroJugadores;
+    public int getNumberOfPlayers() {
+        return this.numberOfPlayers;
     }
 
-    public void setNumeroJugadores(int numeroJugadores) {
-        this.numeroJugadores = numeroJugadores;
+    public void setNumberOfPlayers(int _numberOfPlayers) {
+        this.numberOfPlayers = _numberOfPlayers;
     }
 
-    public int getTurno() {
-        return this.turno;
+    public int getTurn() {
+        return this.turn;
     }
 
-    public Pumba setTurno() {
-        this.turno += sentidoTurno;
-        if ((this.turno) % this.numeroJugadores == -1)
-            this.turno = this.numeroJugadores - 1;
+    public Pumba setTurn() {
+        this.turn += playDirection;
+        if ((this.turn) % this.numberOfPlayers == -1)
+            this.turn = this.numberOfPlayers - 1;
         else
-            this.turno = (this.turno) % this.numeroJugadores;
-        System.out.println("-------SET: " + this.getJugadorTurno().getNombreJugador().toUpperCase());
+            this.turn = (this.turn) % this.numberOfPlayers;
+        System.out.println("-------SET: " + this.getPlayerOfTurn().getPlayerName().toUpperCase());
         return this;
     }
 
-    public boolean estaIniciada() {
-        return this.partidaIniciada;
+    public boolean isStarted() {
+        return this.isGameStarted;
     }
 
-    public void setPartidaIniciada(boolean partidaIniciada) {
-        this.partidaIniciada = partidaIniciada;
+    public void setGameStarted(boolean _isGameStarted) {
+        this.isGameStarted = _isGameStarted;
     }
 
-    public Jugador getJugadorTurno() {
-        return this.jugadores.get(turno);
+    public Player getPlayerOfTurn() {
+        return this.players.get(turn);
     }
 
-    public void soltarEnDescartes(Carta carta) {
-        carta.rotarCarta("center", "0");
-        descartes.add(carta);
+    public void dropOnDiscardPile(Card _card) {
+        _card.rotateCard("center", "0");
+        discardPile.add(_card);
     }
 
-    public Carta robarCartaMazo() {
-        return robarCartasMazo(1).get(0);
+    public Card drawCardFromDeck() {
+        return drawCardsFromDeck(1).get(0);
     }
 
-    public ArrayList<Carta> robarCartasMazo(int n) {
-        ArrayList<Carta> cartasRobadas = new ArrayList<>();
+    public ArrayList<Card> drawCardsFromDeck(int n) {
+        ArrayList<Card> drawnCards = new ArrayList<>();
         for (int i = 0; i < n; i++) {
-            Carta c = mazo.sacarPrimeraCarta();
+            Card c = drawPile.drawFirstCard();
             if (c == null) {
-                this.voltearDescartes();
-                c = mazo.sacarPrimeraCarta();
+                this.flipDiscardsPile();
+                c = drawPile.drawFirstCard();
             }
             if (c != null) {
-                cartasRobadas.add(c);
+                drawnCards.add(c);
             }
         }
-        return cartasRobadas;
+        return drawnCards;
     }
 
-    public void voltearDescartes() {
+    public void flipDiscardsPile() {
         System.out.println("VOLTEAR DESCARTES");
-        Carta ultima = this.descartes.remove(this.descartes.size() - 1);
-        mazo.devolverCartas(this.descartes);
-        mazo.barajar();
-        this.descartes = new ArrayList<>();
-        this.descartes.add(ultima);
+        Card lastCard = this.discardPile.remove(this.discardPile.size() - 1);
+        drawPile.returnCards(this.discardPile);
+        drawPile.shuffle();
+        this.discardPile = new ArrayList<>();
+        this.discardPile.add(lastCard);
     }
 
-    public Pumba cambioSentido() {
+    public Pumba reverseDirection() {
         System.out.println("CAMBIO SENTIDO");
-        this.sentidoTurno *= -1;
+        this.playDirection *= -1;
         return this;
     }
 
-    public String cambioPalo(String paloEnMesa) {
-        String palo;
+    public String changeSuit(String _suitOnTable) {
+        String suit;
         do {
-            palo = Palos.getRandom().toString().toLowerCase();
-        } while (palo.equals(paloEnMesa));
-        return cambioPalo(palo, paloEnMesa);
+            suit = Suits.getRandom().toString().toLowerCase();
+        } while (suit.equals(_suitOnTable));
+        return changeSuit(suit, _suitOnTable);
     }
 
-    public String cambioPalo(String palo, String paloEnMesa) {
-        this.palo = palo;
-        System.out.println("---CAMBIO DE PALO A " + palo.toUpperCase());
-        return this.palo;
+    public String changeSuit(String _suit, String _suitOnTable) {
+        this.suit = _suit;
+        System.out.println("---CAMBIO DE PALO A " + _suit.toUpperCase());
+        return this.suit;
     }
 
-    public Jugador elegirJugador() {
+    public Player choosePlayer() {
         int n;
         do {
-            n = (int) (Math.random() * this.getNumeroJugadores());
-        } while (this.getTurno() == n);
-        Jugador elegido = jugadores.get(n);
-        System.out.println("--" + elegido.getNombreJugador(true) + " elegido para robar");
-        return elegido;
+            n = (int) (Math.random() * this.getNumberOfPlayers());
+        } while (this.getTurn() == n);
+        Player chosenPlayer = players.get(n);
+        System.out.println("--" + chosenPlayer.getPlayerName(true) + " elegido para robar");
+        return chosenPlayer;
     }
 
-    public Carta jugadaEspecialDos(Jugador jugador, Carta centroMesa) {
-        Carta cartaSoltada = null;
-        if (this.chupateDos == -1) {
-            cartaSoltada = jugador.soltarCartaValida(centroMesa, centroMesa.getPalo());
-            if (cartaSoltada != null) {
-                this.chupateDos = 2;
+    public Card special2Play(Player _player, Card _tableCenter) {
+        Card droppedCard = null;
+        if (this.draw2 == -1) {
+            droppedCard = _player.dropValidCard(_tableCenter, _tableCenter.getSuit());
+            if (droppedCard != null) {
+                this.draw2 = 2;
             }
-            return cartaSoltada;
+            return droppedCard;
         }
-        if (this.chupateDos != 8)
-            cartaSoltada = jugador.soltarCartaValida(centroMesa);
-        if (cartaSoltada == null) {
-            System.out.println("---" + jugador.getNombreJugador() + " chupa: " + this.chupateDos + " cartas---");
-            jugador.robarCartas(chupateDos);
-            this.chupateDos = -1;
+        if (this.draw2 != 8)
+            droppedCard = _player.dropValidCard(_tableCenter);
+        if (droppedCard == null) {
+            System.out.println("---" + _player.getPlayerName() + " chupa: " + this.draw2 + " cartas---");
+            _player.drawCards(draw2);
+            this.draw2 = -1;
         } else {
-            this.chupateDos += 2;
+            this.draw2 += 2;
         }
-        return cartaSoltada;
+        return droppedCard;
     }
 
-    public String ejecutarJugada() {
-        Jugador jugador = this.getJugadorTurno();
-        System.out.println("\nTURNO: " + jugador.getNombreJugador().toUpperCase());
-        String partida = "";
-        Carta cartaSoltada;
-        String jugada = "";
-        String turno = "";
-        boolean repiteTurno = true;
-        Carta centroMesa = this.getCentroMesa();
-        if (!this.estaIniciada()) {
-            this.setPartidaIniciada(true);
-            cartaSoltada = jugador.soltarCarta();
-            jugada = String.format(" echa %s", cartaSoltada.getStringCarta());
+    public String runPlay(String _playedCard) {
+        Player player = this.getPlayerOfTurn();
+        System.out.println("\nTURNO: " + player.getPlayerName().toUpperCase());
+        String game = "";
+        Card droppedCard;
+        String play = "";
+        String turn = "";
+        boolean playAgain = true;
+        Card tableCenter = this.getTableCenter();
+        System.out.println("Esta es la carta jugada: " + _playedCard);
+        if (!this.isStarted()) {
+            this.setGameStarted(true);
+            droppedCard = player.dropCard();
+            play = String.format(" echa %s", droppedCard.getStringCard());
         } else {
-            if (centroMesa.getNumero().equals("dos")) {
-                int numeroCartas = jugador.getCartasEnMano();
-                cartaSoltada = jugadaEspecialDos(jugador, centroMesa);
-                int cartasChupadas = jugador.getCartasEnMano() - numeroCartas;
-                if ((this.chupateDos == -1 && cartasChupadas > 1) || cartasChupadas > 1) {
-                    jugada = String.format(" chupa %d cartas", cartasChupadas);
+            if (tableCenter.getNumber().equals("dos")) {
+                int numberOfCards = player.getNumberOfCardsInHand();
+                droppedCard = special2Play(player, tableCenter);
+                int drawnCards = player.getNumberOfCardsInHand() - numberOfCards;
+                if ((this.draw2 == -1 && drawnCards > 1) || drawnCards > 1) {
+                    play = String.format(" chupa %d cartas", drawnCards);
                 } else {
-                    if (cartaSoltada == null) {
-                        jugador.robarCarta();
-                        jugada = " roba carta";
+                    if (droppedCard == null) {
+                        player.drawCard();
+                        play = " roba carta";
                     } else {
-                        jugada = String.format(" echa %s", cartaSoltada.getStringCarta());
+                        play = String.format(" echa %s", droppedCard.getStringCard());
                     }
                 }
             } else {
-                cartaSoltada = jugador.soltarCartaValida(centroMesa, this.palo);
-                if (this.palo != null && cartaSoltada != null) {
+                droppedCard = player.dropValidCard(tableCenter, this.suit);
+                if (this.suit != null && droppedCard != null) {
                     System.out.println("-Reset palo");
-                    this.palo = null;
+                    this.suit = null;
                 }
-                if (cartaSoltada == null) {
-                    if (centroMesa.getNumero().equals("rey")) {
+                if (droppedCard == null) {
+                    if (tableCenter.getNumber().equals("rey")) {
                         System.out.println("--YA NO REPITE TURNO");
-                        repiteTurno = false;
+                        playAgain = false;
                     }
-                    jugador.robarCarta();
-                    jugada = " roba carta";
+                    player.drawCard();
+                    play = " roba carta";
                 } else {
-                    jugada = String.format(" echa %s", cartaSoltada.getStringCarta());
+                    play = String.format(" echa %s", droppedCard.getStringCard());
                 }
             }
         }
-        if (jugador.getCartasEnMano() == 0) {
-            System.out.println("GANA " + jugador.getNombreJugador().toUpperCase());
-            return String.format("FIN DE LA PARTIDA, ¡GANA EL JUGADOR %s!", jugador.getNombreJugador().toUpperCase());
+        if (player.getNumberOfCardsInHand() == 0) {
+            System.out.println("GANA " + player.getPlayerName().toUpperCase());
+            return String.format("FIN DE LA PARTIDA, ¡GANA EL JUGADOR %s!", player.getPlayerName().toUpperCase());
         }
-        partida = jugador.getNombreJugador(true) + jugada;
-        if (cartaSoltada != null) {
-            if (cartaSoltada.getNumero().equals("siete")) {
-                this.cambioSentido();
-                partida += ". Cambio de sentido";
-            } else if (cartaSoltada.getNumero().equals("caballo")) {
-                System.out.println("SALTA TURNO: no juega " + this.getJugadorTurno().getNombreJugador());
-                this.setTurno();
-                partida += String.format(". Salta el turno del %s", this.getJugadorTurno().getNombreJugador());
-            } else if (cartaSoltada.getNumero().equals("sota")) {
-                partida += String.format(" y cambia de palo a %s", this.cambioPalo(cartaSoltada.getPalo()));
-            } else if (cartaSoltada.getNumero().equals("as")) {
-                Jugador elegidoRoba = this.elegirJugador();
-                elegidoRoba.robarCarta();
-                partida += String.format(". Elige al jugador %s para que robe carta", elegidoRoba.getNombreJugador());
+        game = player.getPlayerName(true) + play;
+        if (droppedCard != null) {
+            if (droppedCard.getNumber().equals("siete")) {
+                this.reverseDirection();
+                game += ". Cambio de sentido";
+            } else if (droppedCard.getNumber().equals("caballo")) {
+                System.out.println("SALTA TURNO: no juega " + this.getPlayerOfTurn().getPlayerName());
+                this.setTurn();
+                game += String.format(". Salta el turno del %s", this.getPlayerOfTurn().getPlayerName());
+            } else if (droppedCard.getNumber().equals("sota")) {
+                game += String.format(" y cambia de palo a %s", this.changeSuit(droppedCard.getSuit()));
+            } else if (droppedCard.getNumber().equals("as")) {
+                Player chosenPlayer = this.choosePlayer();
+                chosenPlayer.drawCard();
+                game += String.format(". Elige al jugador %s para que robe carta", chosenPlayer.getPlayerName());
             }
         }
-        jugador = this.setTurno().getJugadorTurno();
-        turno = jugador.esMaquina() ? String.format(". Turno del %s.", jugador.getNombreJugador())
+        player = this.setTurn().getPlayerOfTurn();
+        turn = player.isMachine() ? String.format(". Turno del %s.", player.getPlayerName())
                 : ". Es tu turno, elige carta.";
-        if (cartaSoltada != null && repiteTurno && cartaSoltada.getNumero().equals("rey")) {
-            jugador = cambioSentido().setTurno().getJugadorTurno();
-            System.out.println("REY - VUELVE A JUGAR: " + this.getJugadorTurno().getNombreJugador());
-            turno = jugador.esMaquina() ? String.format(". Vuelve a jugar el %s.", jugador.getNombreJugador())
+        if (droppedCard != null && playAgain && droppedCard.getNumber().equals("rey")) {
+            player = reverseDirection().setTurn().getPlayerOfTurn();
+            System.out.println("REY - VUELVE A JUGAR: " + this.getPlayerOfTurn().getPlayerName());
+            turn = player.isMachine() ? String.format(". Vuelve a jugar el %s.", player.getPlayerName())
                     : ". Vuelves a jugar.";
         }
-        return partida + turno;
+        return game + turn;
     }
 
-    private void puntuarCartas() {
-        for (Carta c : mazo.getCartas()) {
-            int p;
-            switch (c.getNumero()) {
+    private void scoreCards() {
+        for (Card c : drawPile.getCards()) {
+            int score;
+            switch (c.getNumber()) {
                 case "as":
-                    p = 1;
+                    score = 1;
                     break;
                 case "tres":
-                    p = 3;
+                    score = 3;
                     break;
                 case "cuatro":
-                    p = 4;
+                    score = 4;
                     break;
                 case "cinco":
-                    p = 5;
+                    score = 5;
                     break;
                 case "seis":
-                    p = 6;
+                    score = 6;
                     break;
                 case "siete":
-                    p = 7;
+                    score = 7;
                 case "caballo":
-                    p = 9;
+                    score = 9;
                 default:
-                    p = 10;
+                    score = 10;
             }
             ;
-            c.setPuntos(p);
+            c.setScore(score);
         }
     }
 
-    private void generarJugadores() {
-        this.turno = (int) (Math.random() * this.numeroJugadores);
-        for (int i = 0; i < this.numeroJugadores; i++) {
-            boolean esMano = (this.turno == i) ? true : false;
-            jugadores.add(new Jugador(this, i + 1, esMano));
+    private void generatePlayers() {
+        this.turn = (int) (Math.random() * this.numberOfPlayers);
+        for (int i = 0; i < this.numberOfPlayers; i++) {
+            boolean isMano = (this.turn == i) ? true : false;
+            players.add(new Player(this, i + 1, isMano));
         }
     }
 
-    private void repartirCartas() {
-        for (Jugador j : jugadores) {
-            int n = j.esMano() ? 5 : 4;
-            ArrayList<Carta> cartas = new ArrayList<>();
+    private void dealCards() {
+        for (Player j : players) {
+            int n = j.isMano() ? 5 : 4;
+            ArrayList<Card> cards = new ArrayList<>();
             for (int i = 0; i < n; i++) {
-                Carta c = mazo.sacarCarta();
-                if (!j.esMaquina()) {
-                    System.out.println("---\nEnlace antes: " + c.getEnlace());
-                    String enlace = String
-                            .format("<a href='http://localhost:8080/juegos_cartas/pumba.jsp?iniciar=0&carta=%s'>",
-                                    c.getLinkString());
-                    c.setDescubierta(true).setEnlace(enlace);
-                    System.out.println("Enlace de " + c.getStringCarta() + ": " + c.getEnlace() + "\n---");
+                Card c = drawPile.drawCard();
+                if (!j.isMachine()) {
+                    String link = String
+                            .format("<a href='http://localhost:8080/juegos_cartas/pumba.jsp?start=0&card=%s'>",
+                                    c.getCardNameLink());
+                    c.setUncovered(true).setLink(link);
                 }
-                cartas.add(c);
+                cards.add(c);
             }
-            j.recibirMano(j, cartas);
+            j.receiveHand(j, cards);
         }
     }
 

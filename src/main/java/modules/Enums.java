@@ -4,22 +4,22 @@ import java.util.Random;
 
 public class Enums {
 
-    public enum Palos {
+    public enum Suits {
         OROS, BASTOS, ESPADAS, COPAS;
 
-        public static Palos getRandom() {
+        public static Suits getRandom() {
             Random random = new Random();
-            Palos[] palos = values();
+            Suits[] palos = values();
             return palos[random.nextInt(palos.length)];
         }
     }
 
-    public enum Numeros {
+    public enum Numbers {
         AS, DOS, TRES, CUATRO, CINCO, SEIS, SIETE, SOTA, CABALLO, REY;
 
-        public static Numeros getRandom() {
+        public static Numbers getRandom() {
             Random random = new Random();
-            Numeros[] numeros = values();
+            Numbers[] numeros = values();
             return numeros[random.nextInt(numeros.length)];
         }
     }

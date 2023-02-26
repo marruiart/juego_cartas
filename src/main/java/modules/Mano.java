@@ -3,71 +3,71 @@ package modules;
 import java.util.ArrayList;
 
 public class Mano {
-    private Jugador jugador;
-    private ArrayList<Carta> cartas = new ArrayList<Carta>();
-    private ArrayList<Carta> cartasValidas;
+    private Player player;
+    private ArrayList<Card> cards = new ArrayList<Card>();
+    private ArrayList<Card> validCards;
 
-    public Mano(Jugador jugador, ArrayList<Carta> cartas) {
-        this.jugador = jugador;
-        this.cartas = cartas;
+    public Mano(Player _player, ArrayList<Card> _cards) {
+        this.player = _player;
+        this.cards = _cards;
     }
 
-    public Jugador getJugador() {
-        return this.jugador;
+    public Player getPlayer() {
+        return this.player;
     }
 
-    public ArrayList<Carta> getCartas() {
-        return this.cartas;
+    public ArrayList<Card> getCards() {
+        return this.cards;
     }
 
-    public int getNumeroCartas() {
-        return this.cartas.size();
+    public int getNumberOfCards() {
+        return this.cards.size();
     }
 
-    public ArrayList<Carta> getCartasValidas(Carta centroMesa, String palo) {
-        cartasValidas = new ArrayList<Carta>();
-        for (Carta c : cartas) {
-            if (c.esValida(centroMesa, palo))
-                cartasValidas.add(c);
+    public ArrayList<Card> getValidCards(Card _tableCenter, String _suit) {
+        validCards = new ArrayList<Card>();
+        for (Card c : cards) {
+            if (c.isValid(_tableCenter, _suit))
+                validCards.add(c);
         }
-        return this.cartasValidas;
+        return this.validCards;
     }
 
-    public Carta removeCarta() {
-        int n = (int) (Math.random() * cartas.size());
-        Carta carta = cartas.remove(n);
-        return carta;
+    public Card removeCard() {
+        int n = (int) (Math.random() * cards.size());
+        Card card = cards.remove(n);
+        return card;
     }
 
-    public Carta removeCarta(Carta c) {
-        cartas.remove(c);
+    public Card removeCard(Card c) {
+        cards.remove(c);
         return c;
     }
 
-    public void addCarta(Carta carta) {
-        if (carta != null) {
-            cartas.add(carta);
+    public void addCard(Card _card) {
+        if (_card != null) {
+            cards.add(_card);
         }
     }
 
     @Override
     public String toString() {
-        String jugador = "mano" + getJugador().getNumero();
-        String mano = String.format("<div class='%s'>", jugador);
-        float n = getNumeroCartas() / 2;
-        float rotacion = (float)Math.floor(n) * -0.02f;
-        for (int i = 0; i < getNumeroCartas(); i++) {
-            rotacion = (getNumeroCartas() % 2 == 0 && rotacion == 0) ? 0.02f : rotacion;
+        String player = "hand" + getPlayer().getNumber();
+        String hand = String.format("<div class='%s'>", player);
+        float n = getNumberOfCards() / 2;
+        float rotation = (float)Math.floor(n) * -0.02f;
+        for (int i = 0; i < getNumberOfCards(); i++) {
+            rotation = (getNumberOfCards() % 2 == 0 && rotation == 0) ? 0.02f : rotation;
             if ((i + 0.5) < n) {
-                this.cartas.get(i).rotarCarta("right", Float.toString(rotacion));
+                this.cards.get(i).rotateCard("right", Float.toString(rotation));
             } else if ((i + 0.5) > n) {
-                this.cartas.get(i).rotarCarta("left", Float.toString(rotacion));
+                this.cards.get(i).rotateCard("left", Float.toString(rotation));
             } else {
-                this.cartas.get(i).rotarCarta("center", "0");
+                this.cards.get(i).rotateCard("center", "0");
             }
-            mano += this.cartas.get(i);
-            rotacion += 0.02f; 
+            hand += this.cards.get(i);
+            rotation += 0.02f; 
         }
-        return mano + "</div>";
+        return hand + "</div>";
     }
 }
