@@ -9,8 +9,17 @@ public class Enums {
 
         public static Suits getRandom() {
             Random random = new Random();
-            Suits[] palos = values();
-            return palos[random.nextInt(palos.length)];
+            Suits[] suits = values();
+            return suits[random.nextInt(suits.length)];
+        }
+
+        public static Suits getSuit(String _suit) {
+            Suits[] suits = values();
+            for (Suits s : suits) {
+                if (s.toString().toLowerCase().equals(_suit))
+                    return s;
+            }
+            return null;
         }
     }
 
@@ -19,8 +28,17 @@ public class Enums {
 
         public static Numbers getRandom() {
             Random random = new Random();
-            Numbers[] numeros = values();
-            return numeros[random.nextInt(numeros.length)];
+            Numbers[] numbers = values();
+            return numbers[random.nextInt(numbers.length)];
+        }
+
+        public static Numbers getNumber(String _number) {
+            Numbers[] numbers = values();
+            for (Numbers n : numbers) {
+                if (n.toString().toLowerCase().equals(_number))
+                    return n;
+            }
+            return null;
         }
     }
 

@@ -28,6 +28,16 @@ public class Player {
         return this.handCards;
     }
 
+    public Card getPlayedCard(String _playedCard) {
+        String suit = _playedCard.split("_")[1];
+        String number = _playedCard.split("_")[0];
+        Card tmp = new Card(number, suit);
+        for (Card c : this.handCards.getCards())
+            if (c.equals(tmp))
+                return c;
+        return null;
+    }
+
     public int getNumberOfCardsInHand() {
         return this.handCards.getNumberOfCards();
     }
@@ -68,8 +78,8 @@ public class Player {
      * @param _cardOnTable carta en el centro de la mesa.
      * @return la carta soltada
      */
-    public Card dropValidCard(Card _cardOnTable) {
-        return dropValidCard(_cardOnTable, null);
+    public Card dropValidCard(Card _cardOnTable, Card _playedCard) {
+        return dropValidCard(_cardOnTable, _playedCard, null);
     }
 
     /**
@@ -80,12 +90,15 @@ public class Player {
      * @param _changedSuit palo al que se juega
      * @return la carta soltada
      */
-    public Card dropValidCard(Card _cardOnTable, String _changedSuit) {
+    public Card dropValidCard(Card _cardOnTable, Card _playedCard, String _changedSuit) {
         ArrayList<Card> validCards = this.handCards.getValidCards(_cardOnTable, _changedSuit);
         if (validCards.size() == 0)
             return null;
-        int n = (int) (Math.random() * validCards.size());
-        return this.dropCard(validCards.get(n));
+        if (_playedCard == null) {
+            int n = (int) (Math.random() * validCards.size());
+            return this.dropCard(validCards.get(n));
+        } else
+            return this.dropCard(_playedCard);
     }
 
     /**

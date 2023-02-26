@@ -12,6 +12,7 @@ public class Pumba {
     private int draw2;
     private int playDirection;
     private String suit;
+    private Card playedCard;
 
     public Pumba(int _numberOfPlayers) {
         this.drawPile = new CardsDeck();
@@ -21,6 +22,7 @@ public class Pumba {
         this.draw2 = 2;
         this.playDirection = 1;
         this.suit = null;
+        this.playedCard = null;
         scoreCards();
         generatePlayers();
         dealCards();
@@ -147,14 +149,14 @@ public class Pumba {
     public Card special2Play(Player _player, Card _cardOnTable) {
         Card droppedCard = null;
         if (this.draw2 == -1) {
-            droppedCard = _player.dropValidCard(_cardOnTable, _cardOnTable.getSuit());
+            droppedCard = _player.dropValidCard(_cardOnTable, this.playedCard, _cardOnTable.getSuit());
             if (droppedCard != null) {
                 this.draw2 = 2;
             }
             return droppedCard;
         }
         if (this.draw2 != 8)
-            droppedCard = _player.dropValidCard(_cardOnTable);
+            droppedCard = _player.dropValidCard(_cardOnTable, this.playedCard);
         if (droppedCard == null) {
             System.out.println("---" + _player.getPlayerName() + " chupa: " + this.draw2 + " cartas---");
             _player.drawCards(draw2);
@@ -168,8 +170,11 @@ public class Pumba {
     public String runPlay(String _playedCard) {
         Player player = this.getPlayerOfTurn();
         System.out.println("\nTURNO: " + player.getPlayerName().toUpperCase());
-        if (this.turn == 0)
-            System.out.println("Esta es la carta jugada: " + _playedCard);
+        if (this.turn == 0 && _playedCard != null) {
+            this.playedCard = player.getPlayedCard(_playedCard);
+            System.out.println("Esta es la carta jugada: " + this.playedCard.getStringCard());
+        } else
+            this.playedCard = null;
         Card cardOnTable = this.getCardOnTable();
         String gameMessage = "";
         Card droppedCard;
@@ -195,7 +200,7 @@ public class Pumba {
                     }
                 }
             } else {
-                droppedCard = player.dropValidCard(cardOnTable, this.suit);
+                droppedCard = player.dropValidCard(cardOnTable, this.playedCard, this.suit);
                 if (this.suit != null && droppedCard != null) {
                     System.out.println("-Reset palo");
                     this.suit = null;

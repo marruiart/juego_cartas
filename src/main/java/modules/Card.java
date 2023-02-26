@@ -10,8 +10,12 @@ public class Card {
     private Integer score;
     private boolean uncovered;
 
-    public Card(Numbers _number, Suits _palo) {
-        this(_number, _palo, false);
+    public Card(Numbers _number, Suits _suit) {
+        this(_number, _suit, false);
+    }
+
+    public Card(String _number, String _suit) {
+        this(Numbers.getNumber(_number), Suits.getSuit(_suit));
     }
 
     public Card(Numbers _number, Suits _suit, boolean _uncovered) {
@@ -76,7 +80,7 @@ public class Card {
      * centro de la mesa, teniendo en cuenta el palo que hay en juego.
      * 
      * @param _cardOnTable carta en el centro de la mesa
-     * @param _suit palo en juego
+     * @param _suit        palo en juego
      * @return true si la carta es válida
      * @return false si la carta no es válida (no se puede soltar)
      */
