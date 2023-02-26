@@ -235,33 +235,33 @@ main .table {
     font-weight: bold;
 }
 
-.position0 {
+.seat0 {
     bottom: 0;
     left: 0;
 }
 
-.position1 {
+.seat1 {
     top: 28%;
     left: 9%;
 }
 
-.position2 {
+.seat2 {
     top: 0;
     left: 50%;
     transform: translateX(-50%);
 }
 
-.position3 {
+.seat3 {
     top: 28%;
     right: 9%;
 }
 
-.position4 {
+.seat4 {
     bottom: 0;
     right: 0;
 }
 
-div[class^="player"]:not(.player1):not() {
+div[class^="jugador"]:not(.jugador1) {
     width: 19vw;
     text-align: center;
 }
@@ -357,12 +357,12 @@ section.display {
     min-height: 270px;
 }
 
-.div_player1 {
+.div_jugador1 {
     height: 100%;
     width: 100%;
 }
 
-.player1 {
+.jugador1 {
     height: 100%;
     width: 35vw;
     margin: 0 auto;
