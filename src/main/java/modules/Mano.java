@@ -24,10 +24,10 @@ public class Mano {
         return this.cards.size();
     }
 
-    public ArrayList<Card> getValidCards(Card _tableCenter, String _suit) {
+    public ArrayList<Card> getValidCards(Card _cardOnTable, String _suit) {
         validCards = new ArrayList<Card>();
         for (Card c : cards) {
-            if (c.isValid(_tableCenter, _suit))
+            if (c.isValid(_cardOnTable, _suit))
                 validCards.add(c);
         }
         return this.validCards;
@@ -69,12 +69,13 @@ public class Mano {
         for (int i = 0; i < getNumberOfCards(); i++) {
             Card card = this.cards.get(i);
             rotation = this.setRotation(card, i, rotation);
-            if (this.player.isMachine())
-                cardHand += card.toString();
-            else if (this.player.getGame().getTurn() == 0)
+            if (this.player.getGame().getTurn() == 0 && !this.player.isMachine()
+                    && card.isValid(player.checkCardOnTable()))
                 cardHand += card.toStringAnchorTag(false);
-            else
+            else if (!this.player.isMachine())
                 cardHand += card.toStringAnchorTag(true);
+            else
+                cardHand += card.toString();
         }
         return cardHand;
     }

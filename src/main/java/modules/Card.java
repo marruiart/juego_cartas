@@ -67,14 +67,27 @@ public class Card {
                 _rotation);
     }
 
-    public boolean isValid(Card c, String _suit) {
+    public boolean isValid(Card c) {
+        return isValid(c, null);
+    }
+
+    /**
+     * Devuelve si la carta es válida o no con respecto a la carta que hay en el
+     * centro de la mesa, teniendo en cuenta el palo que hay en juego.
+     * 
+     * @param _cardOnTable carta en el centro de la mesa
+     * @param _suit palo en juego
+     * @return true si la carta es válida
+     * @return false si la carta no es válida (no se puede soltar)
+     */
+    public boolean isValid(Card _cardOnTable, String _suit) {
         if (_suit != null) {
             if (this.getSuit().equals(_suit))
                 return true;
             else
                 return false;
         }
-        if (c.getNumber().equals("dos")) {
+        if (_cardOnTable.getNumber().equals("dos")) {
             if (this.getNumber().equals("dos"))
                 return true;
             else
@@ -83,7 +96,7 @@ public class Card {
         if (this.getNumber().equals("sota")) {
             return true;
         }
-        if (c.getNumber().equals(this.getNumber()) || c.getSuit().equals(this.getSuit())) {
+        if (_cardOnTable.getNumber().equals(this.getNumber()) || _cardOnTable.getSuit().equals(this.getSuit())) {
             return true;
         }
         return false;
@@ -94,6 +107,14 @@ public class Card {
         return this.getClass() == o.getClass() && (this.number == ((Card) o).number && this.suit == ((Card) o).suit);
     }
 
+    /**
+     * Coloca la carta del jugador 1 entre etiquetas de enlace (<a> carta </a>),
+     * añadiendo la ruta del enlace. Recibe un booleano que determina si la carta va
+     * a ser clickeable (false) o no (true).
+     * 
+     * @param disable si es true, se desactiva el enlace
+     * @return String con la carta entre etiquetas de enlace
+     */
     public String toStringAnchorTag(boolean disable) {
         return String.format(
                 "<a href='http://localhost:8080/juegos_cartas/pumba.jsp?start=0&card=%s' %s>%s</a>",

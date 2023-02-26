@@ -56,8 +56,8 @@ public class Player {
      * 
      * @return la carta en el centro de la mesa
      */
-    public Card checkTableCenter() {
-        return game.getTableCenter();
+    public Card checkCardOnTable() {
+        return game.getCardOnTable();
     }
 
     /**
@@ -65,23 +65,23 @@ public class Player {
      * general, con mismo palo o mismo número que hay en el centro de la mesa. La
      * carta se elimina de la mano del jugador.
      * 
-     * @param _tableCenter carta en el centro de la mesa.
+     * @param _cardOnTable carta en el centro de la mesa.
      * @return la carta soltada
      */
-    public Card dropValidCard(Card _tableCenter) {
-        return dropValidCard(_tableCenter, null);
+    public Card dropValidCard(Card _cardOnTable) {
+        return dropValidCard(_cardOnTable, null);
     }
 
     /**
      * El jugador suelta una carta que cumpla el palo que hay en juego. La carta se
      * elimina de la mano del jugador.
      * 
-     * @param _tableCenter carta en el centro de la mesa.
+     * @param _cardOnTable carta en el centro de la mesa.
      * @param _changedSuit palo al que se juega
      * @return la carta soltada
      */
-    public Card dropValidCard(Card _tableCenter, String _changedSuit) {
-        ArrayList<Card> validCards = this.handCards.getValidCards(_tableCenter, _changedSuit);
+    public Card dropValidCard(Card _cardOnTable, String _changedSuit) {
+        ArrayList<Card> validCards = this.handCards.getValidCards(_cardOnTable, _changedSuit);
         if (validCards.size() == 0)
             return null;
         int n = (int) (Math.random() * validCards.size());

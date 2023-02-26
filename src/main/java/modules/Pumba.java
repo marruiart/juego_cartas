@@ -36,7 +36,7 @@ public class Pumba {
         return this.discardPile;
     }
 
-    public Card getTableCenter() {
+    public Card getCardOnTable() {
         if (this.discardPile.size() == 0)
             return null;
         return this.discardPile.get(this.discardPile.size() - 1);
@@ -144,17 +144,17 @@ public class Pumba {
         return chosenPlayer;
     }
 
-    public Card special2Play(Player _player, Card _tableCenter) {
+    public Card special2Play(Player _player, Card _cardOnTable) {
         Card droppedCard = null;
         if (this.draw2 == -1) {
-            droppedCard = _player.dropValidCard(_tableCenter, _tableCenter.getSuit());
+            droppedCard = _player.dropValidCard(_cardOnTable, _cardOnTable.getSuit());
             if (droppedCard != null) {
                 this.draw2 = 2;
             }
             return droppedCard;
         }
         if (this.draw2 != 8)
-            droppedCard = _player.dropValidCard(_tableCenter);
+            droppedCard = _player.dropValidCard(_cardOnTable);
         if (droppedCard == null) {
             System.out.println("---" + _player.getPlayerName() + " chupa: " + this.draw2 + " cartas---");
             _player.drawCards(draw2);
@@ -170,7 +170,7 @@ public class Pumba {
         System.out.println("\nTURNO: " + player.getPlayerName().toUpperCase());
         if (this.turn == 0)
             System.out.println("Esta es la carta jugada: " + _playedCard);
-        Card tableCenter = this.getTableCenter();
+        Card cardOnTable = this.getCardOnTable();
         String gameMessage = "";
         Card droppedCard;
         String play = "";
@@ -180,9 +180,9 @@ public class Pumba {
             droppedCard = player.dropCard();
             play = String.format(" echa %s", droppedCard.getStringCard());
         } else {
-            if (tableCenter.getNumber().equals("dos")) {
+            if (cardOnTable.getNumber().equals("dos")) {
                 int numberOfCards = player.getNumberOfCardsInHand();
-                droppedCard = special2Play(player, tableCenter);
+                droppedCard = special2Play(player, cardOnTable);
                 int drawnCards = player.getNumberOfCardsInHand() - numberOfCards;
                 if ((this.draw2 == -1 && drawnCards > 1) || drawnCards > 1) {
                     play = String.format(" chupa %d cartas", drawnCards);
@@ -195,13 +195,13 @@ public class Pumba {
                     }
                 }
             } else {
-                droppedCard = player.dropValidCard(tableCenter, this.suit);
+                droppedCard = player.dropValidCard(cardOnTable, this.suit);
                 if (this.suit != null && droppedCard != null) {
                     System.out.println("-Reset palo");
                     this.suit = null;
                 }
                 if (droppedCard == null) {
-                    if (tableCenter.getNumber().equals("rey")) {
+                    if (cardOnTable.getNumber().equals("rey")) {
                         System.out.println("--YA NO REPITE TURNO");
                         playAgain = false;
                     }

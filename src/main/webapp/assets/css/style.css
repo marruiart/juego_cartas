@@ -396,6 +396,14 @@ section.display {
     cursor: pointer;
 }
 
+.hand1 a.disabled {
+    pointer-events: none;
+}
+
+.hand1 a.disabled img {
+    filter: brightness(60%);
+}
+
 .hand1 a {
     margin-left: -40%;
     cursor: auto;
