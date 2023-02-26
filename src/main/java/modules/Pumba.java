@@ -301,7 +301,7 @@ public class Pumba {
                 }
                 cards.add(c);
             }
-            j.receiveHand(j, cards);
+            j.receiveHand(cards);
         }
     }
 

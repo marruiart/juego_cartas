@@ -97,8 +97,8 @@ public class Player {
         }
     }
 
-    public Mano receiveHand(Player jugador, ArrayList<Card> cartas) {
-        this.handCards = new Mano(this, cartas);
+    public Mano receiveHand(ArrayList<Card> _cards) {
+        this.handCards = new Mano(this, _cards);
         return this.handCards;
     }
 
