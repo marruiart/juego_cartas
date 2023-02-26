@@ -2,12 +2,12 @@ package modules;
 
 import java.util.ArrayList;
 
-public class Mano {
+public class CardHand {
     private Player player;
     private ArrayList<Card> cards = new ArrayList<Card>();
     private ArrayList<Card> validCards;
 
-    public Mano(Player _player, ArrayList<Card> _cards) {
+    public CardHand(Player _player, ArrayList<Card> _cards) {
         this.player = _player;
         this.cards = _cards;
     }
@@ -70,7 +70,7 @@ public class Mano {
             Card card = this.cards.get(i);
             rotation = this.setRotation(card, i, rotation);
             if (this.player.getGame().getTurn() == 0 && !this.player.isMachine()
-                    && card.isValid(player.checkCardOnTable()))
+                    && (this.validCards.contains(card) || card.isValid(player.checkCardOnTable())))
                 cardHand += card.toStringAnchorTag(false);
             else if (!this.player.isMachine())
                 cardHand += card.toStringAnchorTag(true);

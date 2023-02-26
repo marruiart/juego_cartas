@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Player {
     private Pumba game;
     private int number;
-    private Mano handCards;
+    private CardHand handCards;
     private boolean isMano;
     private boolean isMachine;
 
@@ -24,7 +24,7 @@ public class Player {
         return this.number;
     }
 
-    public Mano getMano() {
+    public CardHand getMano() {
         return this.handCards;
     }
 
@@ -154,8 +154,8 @@ public class Player {
      * @param _cards ArrayList de las cartas recibidas
      * @return Mano del jugador con las cartas recibidas
      */
-    public Mano receiveHand(ArrayList<Card> _cards) {
-        this.handCards = new Mano(this, _cards);
+    public CardHand receiveHand(ArrayList<Card> _cards) {
+        this.handCards = new CardHand(this, _cards);
         return this.handCards;
     }
 
