@@ -63,13 +63,20 @@ public class Pumba {
     }
 
     public Pumba setTurn() {
-        this.turn += playDirection;
-        if ((this.turn) % this.numberOfPlayers == -1)
+        this.turn += this.playDirection;
+        this.turn %= this.numberOfPlayers;
+        if (this.turn == -1)
             this.turn = this.numberOfPlayers - 1;
-        else
-            this.turn = (this.turn) % this.numberOfPlayers;
         System.out.println("-------SET: " + this.getPlayerOfTurn().getPlayerName().toUpperCase());
         return this;
+    }
+
+    public int getNextTurn() {
+        int nextTurn = this.turn + this.playDirection;
+        nextTurn %= this.numberOfPlayers;
+        if (nextTurn == -1)
+            nextTurn = this.numberOfPlayers - 1;
+        return nextTurn;
     }
 
     public boolean isStarted() {
