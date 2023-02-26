@@ -11,17 +11,33 @@ public class CardsDeck {
         shuffle();
     }
 
+    /**
+     * Devuelve las cartas que hay en el mazo.
+     * 
+     * @return ArrayList con las cartas del mazo.
+     */
     public ArrayList<Card> getCards() {
         for (Card c : this.cards)
-            c.setUncovered(false).setLink(null);
+            c.setUncovered(false);
         return this.cards;
     }
 
+    /**
+     * Saca una carta del mazo de forma aleatoria.
+     * 
+     * @return la carta extraída
+     */
     public Card drawCard() {
         int n = (int) (Math.random() * cards.size());
         return drawCard(n);
     }
 
+    /**
+     * Saca una carta del mazo en una posición concreta.
+     * 
+     * @param _position posición de la carta a extraer
+     * @return la carta extraída
+     */
     public Card drawCard(int _position) {
         if (cards.size() == 0) {
             return null;
@@ -30,35 +46,52 @@ public class CardsDeck {
         return card;
     }
 
+    /**
+     * Saca la primera carta del mazo.
+     * 
+     * @return la carta extraída
+     */
     public Card drawFirstCard() {
-        if (cards.size() == 0) {
-            return null;
-        }
-        Card card = cards.remove(0);
-        return card;
+        return drawCard(0);
     }
 
+    /**
+     * Saca la última carta del mazo.
+     * 
+     * @return la carta extraída
+     */
     public Card drawLastCard() {
-        if (this.cards.size() == 0) {
-            return null;
-        }
-        Card card = this.cards.remove(this.cards.size() - 1);
-        return card;
+        return drawCard(this.cards.size() - 1);
     }
 
+    /**
+     * Devuelve una carta concreta al mazo.
+     * 
+     * @param _card la carta devuelta
+     */
     public void returnCard(Card _card) {
         ArrayList<Card> cards = new ArrayList<>();
         cards.add(_card);
         returnCards(cards);
     }
 
+    /**
+     * Devuelve un grupo de cartas al mazo
+     * 
+     * @param _cards ArrayList de las cartas devueltas
+     */
     public void returnCards(ArrayList<Card> _cards) {
         for (Card c : _cards) {
-            c.setUncovered(false).setLink(null);
+            c.setUncovered(false);
             this.cards.add(c);
         }
     }
 
+    /**
+     * Genera una baraja de cartas española con 40 cartas (as, dos, tres, cuatro,
+     * cinco, seis, siete, sota, caballo y rey de oros, bastos, copas y espadas,
+     * respectivamente)
+     */
     public void generateDeck() {
         Suits[] suits = Suits.values();
         Numbers[] numbers = Numbers.values();
@@ -69,6 +102,9 @@ public class CardsDeck {
         }
     }
 
+    /**
+     * Baraja el mazo de cartas.
+     */
     public void shuffle() {
         Collections.shuffle(cards);
     }

@@ -9,7 +9,6 @@ public class Card {
     private String rotation;
     private Integer score;
     private boolean uncovered;
-    private String link;
 
     public Card(Numbers _number, Suits _palo) {
         this(_number, _palo, false);
@@ -19,7 +18,6 @@ public class Card {
         this.number = _number;
         this.suit = _suit;
         this.uncovered = _uncovered;
-        this.link = null;
         this.img = "assets/img/" + (this.uncovered ? (getNumber() + "_" + getSuit()) : "reverso") + ".png";
         this.rotation = "style='transform-origin: bottom center; transform: scale(1) rotate(0);'";
     }
@@ -48,14 +46,6 @@ public class Card {
         this.uncovered = _uncovered;
         this.img = "assets/img/" + (this.uncovered ? (getNumber() + "_" + getSuit()) : "reverso") + ".png";
         return this;
-    }
-
-    public String getLink() {
-        return this.link;
-    }
-
-    public void setLink(String m) {
-        this.link = m;
     }
 
     public String getCardNameLink() {
@@ -104,9 +94,14 @@ public class Card {
         return this.getClass() == o.getClass() && (this.number == ((Card) o).number && this.suit == ((Card) o).suit);
     }
 
+    public String toStringAnchorTag(boolean disable) {
+        return String.format(
+                "<a href='http://localhost:8080/juegos_cartas/pumba.jsp?start=0&card=%s' %s>%s</a>",
+                this.getCardNameLink(), disable ? "class='disabled'" : "", this.toString());
+    }
+
     @Override
     public String toString() {
-        return String.format("%s<img class='card' src=%s %s>%s", this.link != null ? this.link : "", this.img,
-                this.rotation, this.link != null ? "</a>" : "");
+        return String.format("<img class='card' src=%s %s>", this.img, this.rotation);
     }
 }

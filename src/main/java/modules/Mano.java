@@ -50,24 +50,38 @@ public class Mano {
         }
     }
 
+    private float setRotation(Card card, int i, float rotation) {
+        float n = getNumberOfCards() / 2;
+        if (rotation == 0 && getNumberOfCards() % 2 == 0)
+            rotation = 0.02f;
+        if ((i + 0.5) < n)
+            card.rotateCard("right", Float.toString(rotation));
+        else if ((i + 0.5) > n)
+            card.rotateCard("left", Float.toString(rotation));
+        else
+            card.rotateCard("center", "0");
+        return (rotation += 0.02f);
+    }
+
+    private String getCardHandStr() {
+        String cardHand = "";
+        float rotation = (float) Math.floor(getNumberOfCards() / 2) * -0.02f;
+        for (int i = 0; i < getNumberOfCards(); i++) {
+            Card card = this.cards.get(i);
+            rotation = this.setRotation(card, i, rotation);
+            if (this.player.isMachine())
+                cardHand += card.toString();
+            else if (this.player.getGame().getTurn() == 0)
+                cardHand += card.toStringAnchorTag(false);
+            else
+                cardHand += card.toStringAnchorTag(true);
+        }
+        return cardHand;
+    }
+
     @Override
     public String toString() {
-        String player = "hand" + getPlayer().getNumber();
-        String hand = String.format("<div class='%s'>", player);
-        float n = getNumberOfCards() / 2;
-        float rotation = (float)Math.floor(n) * -0.02f;
-        for (int i = 0; i < getNumberOfCards(); i++) {
-            rotation = (getNumberOfCards() % 2 == 0 && rotation == 0) ? 0.02f : rotation;
-            if ((i + 0.5) < n) {
-                this.cards.get(i).rotateCard("right", Float.toString(rotation));
-            } else if ((i + 0.5) > n) {
-                this.cards.get(i).rotateCard("left", Float.toString(rotation));
-            } else {
-                this.cards.get(i).rotateCard("center", "0");
-            }
-            hand += this.cards.get(i);
-            rotation += 0.02f; 
-        }
-        return hand + "</div>";
+        String handClass = "hand" + getPlayer().getNumber();
+        return String.format("<div class='%s'>%s</div>", handClass, getCardHandStr());
     }
 }

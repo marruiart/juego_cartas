@@ -34,8 +34,6 @@ public class Pumba {
     }
 
     public ArrayList<Card> getDiscardPile() {
-        for (Card c : this.discardPile)
-            c.setUncovered(true).setLink(null);
         System.out.println("Cartas en descartes: " + this.discardPile.size());
         return this.discardPile;
     }
@@ -76,6 +74,7 @@ public class Pumba {
         nextTurn %= this.numberOfPlayers;
         if (nextTurn == -1)
             nextTurn = this.numberOfPlayers - 1;
+        System.out.println("Próximo jugador " + (nextTurn + 1));
         return nextTurn;
     }
 
@@ -92,7 +91,7 @@ public class Pumba {
     }
 
     public void dropOnDiscardPile(Card _card) {
-        _card.rotateCard("center", "0");
+        _card.setUncovered(true).rotateCard("center", "0");
         discardPile.add(_card);
     }
 
@@ -294,18 +293,19 @@ public class Pumba {
         }
     }
 
+    /**
+     * Se reparte una mano de cartas a cada jugador. Las cartas repartidas se
+     * retiran del mazo. Si el jugador es la persona, las cartas se colocan boca
+     * arriba.
+     */
     private void dealCards() {
         for (Player j : players) {
             int n = j.isMano() ? 5 : 4;
             ArrayList<Card> cards = new ArrayList<>();
             for (int i = 0; i < n; i++) {
                 Card c = drawPile.drawCard();
-                if (!j.isMachine()) {
-                    String link = String
-                            .format("<a href='http://localhost:8080/juegos_cartas/pumba.jsp?start=0&card=%s'>",
-                                    c.getCardNameLink());
-                    c.setUncovered(true).setLink(link);
-                }
+                if (!j.isMachine())
+                    c.setUncovered(true);
                 cards.add(c);
             }
             j.receiveHand(cards);

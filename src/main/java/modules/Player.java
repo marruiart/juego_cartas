@@ -51,14 +51,35 @@ public class Player {
         return this.isMachine;
     }
 
+    /**
+     * El jugador comprueba la carta que hay en el centro de la mesa.
+     * 
+     * @return la carta en el centro de la mesa
+     */
     public Card checkTableCenter() {
         return game.getTableCenter();
     }
 
-    public Card dropValidCard(Card centroMesa) {
-        return dropValidCard(centroMesa, null);
+    /**
+     * El jugador suelta una carta que cumpla con las condiciones del juego, en
+     * general, con mismo palo o mismo número que hay en el centro de la mesa. La
+     * carta se elimina de la mano del jugador.
+     * 
+     * @param _tableCenter carta en el centro de la mesa.
+     * @return la carta soltada
+     */
+    public Card dropValidCard(Card _tableCenter) {
+        return dropValidCard(_tableCenter, null);
     }
 
+    /**
+     * El jugador suelta una carta que cumpla el palo que hay en juego. La carta se
+     * elimina de la mano del jugador.
+     * 
+     * @param _tableCenter carta en el centro de la mesa.
+     * @param _changedSuit palo al que se juega
+     * @return la carta soltada
+     */
     public Card dropValidCard(Card _tableCenter, String _changedSuit) {
         ArrayList<Card> validCards = this.handCards.getValidCards(_tableCenter, _changedSuit);
         if (validCards.size() == 0)
@@ -67,36 +88,59 @@ public class Player {
         return this.dropCard(validCards.get(n));
     }
 
+    /**
+     * El jugador suelta una carta aleatoria en la pila de descartes. La carta se
+     * elimina de la mano del jugador.
+     * 
+     * @return la carta soltada
+     */
     public Card dropCard() {
         return this.dropCard(null);
     }
 
+    /**
+     * El jugador suelta una carta concreta en la pila de descartes. La carta se
+     * elimina de la mano del jugador.
+     * 
+     * @param c la carta a soltar
+     * @return la carta soltada
+     */
     public Card dropCard(Card c) {
         Card card = (c == null) ? this.handCards.removeCard() : this.handCards.removeCard(c);
         System.out.println("Suelta " + card.getStringCard());
-        card.setUncovered(true).setLink(null);
         game.dropOnDiscardPile(card);
         return card;
     }
 
+    /**
+     * El jugador roba una carta del mazo y la pone en su mano.
+     */
     public void drawCard() {
         this.drawCards(1);
     }
 
+    /**
+     * El jugador roba n cartas del mazo y las pone en su mano.
+     * 
+     * @param n número de cartas robadas
+     */
     public void drawCards(int n) {
         System.out.printf("%s roba %d carta%s\n", this.getPlayerName(), n, n == 1 ? "" : "s");
         ArrayList<Card> drawnCards = game.drawCardsFromDeck(n);
         for (Card c : drawnCards) {
             if (!this.isMachine) {
-                String link = String.format(
-                        "<a href='http://localhost:8080/juegos_cartas/pumba.jsp?start=0&card=%s'>",
-                        c.getCardNameLink());
-                c.setUncovered(true).setLink(link);
+                c.setUncovered(true);
             }
             handCards.addCard(c);
         }
     }
 
+    /**
+     * El jugador recibe un conjunto de cartas que se añaden a su mano.
+     * 
+     * @param _cards ArrayList de las cartas recibidas
+     * @return Mano del jugador con las cartas recibidas
+     */
     public Mano receiveHand(ArrayList<Card> _cards) {
         this.handCards = new Mano(this, _cards);
         return this.handCards;
