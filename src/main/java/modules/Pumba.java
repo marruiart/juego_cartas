@@ -9,7 +9,6 @@ public class Pumba {
     private ArrayList<Player> players;
     private int turn;
     private int numberOfPlayers;
-    private boolean isGameStarted;
     private int draw2;
     private int playDirection;
     private String suit;
@@ -19,7 +18,6 @@ public class Pumba {
         this.discardPile = new ArrayList<>();
         this.players = new ArrayList<>();
         this.numberOfPlayers = _numberOfPlayers;
-        this.isGameStarted = false;
         this.draw2 = 2;
         this.playDirection = 1;
         this.suit = null;
@@ -76,14 +74,6 @@ public class Pumba {
             nextTurn = this.numberOfPlayers - 1;
         System.out.println("Próximo jugador " + (nextTurn + 1));
         return nextTurn;
-    }
-
-    public boolean isStarted() {
-        return this.isGameStarted;
-    }
-
-    public void setGameStarted(boolean _isGameStarted) {
-        this.isGameStarted = _isGameStarted;
     }
 
     public Player getPlayerOfTurn() {
@@ -178,15 +168,15 @@ public class Pumba {
     public String runPlay(String _playedCard) {
         Player player = this.getPlayerOfTurn();
         System.out.println("\nTURNO: " + player.getPlayerName().toUpperCase());
-        String game = "";
+        if (this.turn == 0)
+            System.out.println("Esta es la carta jugada: " + _playedCard);
+        Card tableCenter = this.getTableCenter();
+        String gameMessage = "";
         Card droppedCard;
         String play = "";
         String turn = "";
         boolean playAgain = true;
-        Card tableCenter = this.getTableCenter();
-        System.out.println("Esta es la carta jugada: " + _playedCard);
-        if (!this.isStarted()) {
-            this.setGameStarted(true);
+        if (this.discardPile.size() == 0) {
             droppedCard = player.dropCard();
             play = String.format(" echa %s", droppedCard.getStringCard());
         } else {
@@ -226,21 +216,21 @@ public class Pumba {
             System.out.println("GANA " + player.getPlayerName().toUpperCase());
             return String.format("FIN DE LA PARTIDA, ¡GANA EL JUGADOR %s!", player.getPlayerName().toUpperCase());
         }
-        game = player.getPlayerName(true) + play;
+        gameMessage = player.getPlayerName(true) + play;
         if (droppedCard != null) {
             if (droppedCard.getNumber().equals("siete")) {
                 this.reverseDirection();
-                game += ". Cambio de sentido";
+                gameMessage += ". Cambio de sentido";
             } else if (droppedCard.getNumber().equals("caballo")) {
                 System.out.println("SALTA TURNO: no juega " + this.getPlayerOfTurn().getPlayerName());
                 this.setTurn();
-                game += String.format(". Salta el turno del %s", this.getPlayerOfTurn().getPlayerName());
+                gameMessage += String.format(". Salta el turno del %s", this.getPlayerOfTurn().getPlayerName());
             } else if (droppedCard.getNumber().equals("sota")) {
-                game += String.format(" y cambia de palo a %s", this.changeSuit(droppedCard.getSuit()));
+                gameMessage += String.format(" y cambia de palo a %s", this.changeSuit(droppedCard.getSuit()));
             } else if (droppedCard.getNumber().equals("as")) {
                 Player chosenPlayer = this.choosePlayer();
                 chosenPlayer.drawCard();
-                game += String.format(". Elige al jugador %s para que robe carta", chosenPlayer.getPlayerName());
+                gameMessage += String.format(". Elige al jugador %s para que robe carta", chosenPlayer.getPlayerName());
             }
         }
         player = this.setTurn().getPlayerOfTurn();
@@ -252,7 +242,7 @@ public class Pumba {
             turn = player.isMachine() ? String.format(". Vuelve a jugar el %s.", player.getPlayerName())
                     : ". Vuelves a jugar.";
         }
-        return game + turn;
+        return gameMessage + turn;
     }
 
     private void scoreCards() {
