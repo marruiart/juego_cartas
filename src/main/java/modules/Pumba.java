@@ -91,7 +91,8 @@ public class Pumba {
     }
 
     public void dropOnDiscardPile(Card _card) {
-        _card.setUncovered(true).rotateCard("center", "0");
+        float rotation = -0.004f + (float) (Math.random() * (0.004f + 0.004f));
+        _card.setUncovered(true).rotateCard("center", Float.toString(rotation));
         discardPile.add(_card);
     }
 
