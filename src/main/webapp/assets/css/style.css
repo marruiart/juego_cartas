@@ -450,6 +450,7 @@ main .info {
 
 .play-info {
     display: flex;
+    justify-content: space-between;
     height: 100%;
     width: 100%;
     margin-bottom: 1.5rem;
@@ -468,7 +469,7 @@ main .info {
     object-fit: scale-down;
     padding-top: 26%;
     height: 120px;
-    width: 100%;
+    width: 120%;
 }
 
 .message {

@@ -134,7 +134,7 @@ public class Card {
         if (disable)
             classContent[0] = "disabled";
         else
-            classContent = null;
+            classContent[0] = "";
         return Utilities.printAnchor(href, this.toString(), classContent);
     }
 

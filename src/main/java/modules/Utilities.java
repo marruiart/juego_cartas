@@ -22,8 +22,9 @@ public class Utilities {
         return String.format("<a %s %s>%s</a>", getClassesStr(classes), href, content);
     }
 
-    public static String printDiv(Player content, String... classes) {
-        return printDiv(content.toString(), classes);
+    public static String printDiv(Player player, String... classes) {
+        String playerStr = player == null ? "" : player.toString();
+        return printDiv(playerStr, classes);
     }
 
     public static String printDiv(String content, String... classes) {
@@ -36,8 +37,8 @@ public class Utilities {
     }
 
     public static String printImg(String src, String alt, String inlineStyle, boolean inline, String... classes) {
-        src = src == null ? "" : String.format("src='%s'", src);
-        alt = alt == null ? "" : String.format("alt='%s'", alt);
+        src = (src == null || src.equals("")) ? "" : String.format("src='%s'", src);
+        alt = (alt == null || alt.equals("")) ? "" : String.format("alt='%s'", alt);
         inlineStyle = inline ? String.format("style='%s'", inlineStyle) : "";
         return String.format("<img %s %s %s %s>", getClassesStr(classes), src, alt, inlineStyle);
     }

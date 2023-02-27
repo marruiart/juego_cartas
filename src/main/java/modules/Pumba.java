@@ -101,11 +101,15 @@ public class Pumba {
     public String getSuitImg() {
         if (this.suit == null) {
             Card cardOnTable = getCardOnTable();
-            if (cardOnTable != null)
-                return "<img src='assets/img/" + cardOnTable.getSuit() + ".svg'>";
-            return "<img>";
+            if (cardOnTable != null) {
+                String src = String.format("assets/img/%s.png", cardOnTable.getSuit());
+                return Utilities.printImg(src, cardOnTable.getSuit());
+            }
+            return Utilities.printImg(null, null);
         }
-        return getSuitStr().equals("") ? "<img>" : "<img src='assets/img/" + getSuitStr() + ".svg'>";
+        String suitStr = getSuitStr();
+        String src = suitStr.equals("") ? "" : String.format("assets/img/%s.png", suitStr);
+        return Utilities.printImg(src, suitStr);
     }
 
     public void dropOnDiscardPile(Card _card) {
@@ -318,6 +322,7 @@ public class Pumba {
 
     private void generatePlayers() {
         this.turn = (int) (Math.random() * this.numberOfPlayers);
+        //this.turn = 0; /* QUITAR */
         System.out.println("MANO --- jugador " + (this.turn + 1));
         for (int i = 0; i < this.numberOfPlayers; i++) {
             boolean isMano = (this.turn == i) ? true : false;
