@@ -169,8 +169,8 @@ public class Player {
         String isManoTxt = isMano ? " (Mano)" : "";
         String isMachineTxt = isMachine ? "" : " (Tú)";
         String player = this.getPlayerName().replace(" ", "");
-        return String.format(
-                "<div class='%s %s'><div class='name'>%s %s%s</div>%s</div>", player, seat,
-                this.getPlayerName(true), isManoTxt, isMachineTxt, this.handCards.toString());
+        String content = Utilities.printDiv((this.getPlayerName(true) + isManoTxt + isMachineTxt), "name")
+                + this.handCards.toString();
+        return Utilities.printDiv(content, player, seat);
     }
 }

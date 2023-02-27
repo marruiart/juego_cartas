@@ -22,6 +22,10 @@ public class Utilities {
         return String.format("<a %s %s>%s</a>", getClassesStr(classes), href, content);
     }
 
+    public static String printDiv(Player content, String... classes) {
+        return printDiv(content.toString(), classes);
+    }
+
     public static String printDiv(String content, String... classes) {
         content = content == null ? "" : content;
         return String.format("<div %s>%s</div>", getClassesStr(classes), content);

@@ -67,9 +67,9 @@
         </div>
       </section>
       <section class="display">
-        <div class="div_jugador1">
-          <%=personPlayer%>
-        </div>
+        <%
+          out.print(Utilities.printDiv(personPlayer, "div_jugador1"));
+        %>
         <div class="info">
           <div class="play-info">
             <div class="played-suit">

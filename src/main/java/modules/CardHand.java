@@ -88,6 +88,6 @@ public class CardHand {
     @Override
     public String toString() {
         String handClass = "hand" + getPlayer().getNumber();
-        return String.format("<div class='%s'>%s</div>", handClass, getCardHandStr());
+        return Utilities.printDiv(getCardHandStr(), handClass);
     }
 }
