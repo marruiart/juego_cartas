@@ -48,7 +48,7 @@ public class Card {
 
     public Card setUncovered(boolean _uncovered) {
         this.uncovered = _uncovered;
-        this.img = String.format("assets/img/%s.png",(this.uncovered ? (getNumber() + "_" + getSuit()) : "reverso");
+        this.img = String.format("assets/img/%s.png", (this.uncovered ? (getNumber() + "_" + getSuit()) : "reverso"));
         return this;
     }
 
