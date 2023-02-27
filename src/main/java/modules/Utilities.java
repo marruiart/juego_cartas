@@ -4,7 +4,7 @@ public class Utilities {
 
     private static String getClassesStr(String... classes) {
         String classStr = "";
-        if (classes != null) {
+        if (classes.length != 0) {
             classStr = "class='";
             for (String str : classes) {
                 if (str.equals(classes[classes.length - 1]))
@@ -31,4 +31,13 @@ public class Utilities {
         return String.format("<div %s>%s</div>", getClassesStr(classes), content);
     }
 
+    public static String printImg(String src, String alt, String... classes) {
+        return printImg(src, alt, null, false, classes);
+    }
+
+    public static String printImg(String src, String alt, String inlineStyle, boolean inline, String... classes) {
+        src = src == null ? "" : String.format("src='%s'", src);
+        alt = alt == null ? "" : String.format("alt='%s'", alt);
+        return String.format("<img %s %s %s %s>", getClassesStr(classes), src, alt, inline ? inlineStyle : "");
+    }
 }

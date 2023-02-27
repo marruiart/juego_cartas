@@ -48,7 +48,7 @@ public class Card {
 
     public Card setUncovered(boolean _uncovered) {
         this.uncovered = _uncovered;
-        this.img = "assets/img/" + (this.uncovered ? (getNumber() + "_" + getSuit()) : "reverso") + ".png";
+        this.img = String.format("assets/img/%s.png",(this.uncovered ? (getNumber() + "_" + getSuit()) : "reverso");
         return this;
     }
 
@@ -61,8 +61,7 @@ public class Card {
     }
 
     public void flipCard() {
-        this.uncovered = this.uncovered ? false : true;
-        this.img = "assets/img/" + (this.uncovered ? (getNumber() + "_" + getSuit()) : "reverso") + ".png";
+        setUncovered(this.uncovered ? false : true);
     }
 
     public void rotateCard(String _position, String _rotation) {
@@ -80,7 +79,7 @@ public class Card {
      * @return false si la carta no es válida (no se puede soltar)
      */
     public boolean isValid(Card _cardOnTable) {
-        return isValid( _cardOnTable, null);
+        return isValid(_cardOnTable, null);
     }
 
     /**
@@ -141,6 +140,6 @@ public class Card {
 
     @Override
     public String toString() {
-        return String.format("<img class='card' src=%s %s>", this.img, this.rotation);
+        return Utilities.printImg(this.img, this.img, this.rotation, true, "card");
     }
 }
