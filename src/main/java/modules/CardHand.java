@@ -76,9 +76,7 @@ public class CardHand {
                 Card cardOnTable = this.player.checkCardOnTable();
                 String suit = this.player.getGame().getSuit();
                 ArrayList<Card> validCards = this.getValidCards(cardOnTable, suit);
-                if (cardOnTable == null && this.player.getGame().getTurn() == 0)
-                    cardHand += card.toStringAnchorTag(false);
-                else if (this.player.getGame().getTurn() == 0 && (validCards.contains(card)))
+                if (this.player.getGame().getTurn() == 0 && (cardOnTable == null || validCards.contains(card)))
                     cardHand += card.toStringAnchorTag(false);
                 else
                     cardHand += card.toStringAnchorTag(true);
