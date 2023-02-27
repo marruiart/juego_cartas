@@ -71,8 +71,16 @@ public class Card {
                 _rotation);
     }
 
-    public boolean isValid(Card c) {
-        return isValid(c, null);
+    /**
+     * Devuelve si la carta es válida o no con respecto a la carta que hay en el
+     * centro de la mesa.
+     * 
+     * @param _cardOnTable carta en el centro de la mesa
+     * @return true si la carta es válida
+     * @return false si la carta no es válida (no se puede soltar)
+     */
+    public boolean isValid(Card _cardOnTable) {
+        return isValid( _cardOnTable, null);
     }
 
     /**
@@ -87,25 +95,24 @@ public class Card {
     public boolean isValid(Card _cardOnTable, String _suit) {
         if (_cardOnTable == null)
             return true;
+        String suitOnTable = _cardOnTable.getSuit();
+        String numberOnTable = _cardOnTable.getNumber();
+        String thisSuit = this.getSuit();
+        String thisNumber = this.getNumber();
         if (_suit != null) {
-            if (this.getSuit().equals(_suit)
-                    || (_cardOnTable.getSuit().equals("sota") && this.getSuit().equals("sota")))
+            if (thisSuit.equals(_suit)
+                    || (numberOnTable.equals("sota") && thisNumber.equals("sota"))
+                    || (numberOnTable.equals("dos") && thisNumber.equals("dos")))
                 return true;
             else
                 return false;
         }
-        if (_cardOnTable.getNumber().equals("dos")) {
-            if (this.getNumber().equals("dos"))
-                return true;
-            else
-                return false;
-        }
-        if (this.getNumber().equals("sota")) {
+        if (numberOnTable.equals("dos"))
+            return (thisNumber.equals("dos") ? true : false);
+        if (thisNumber.equals("sota"))
             return true;
-        }
-        if (_cardOnTable.getNumber().equals(this.getNumber()) || _cardOnTable.getSuit().equals(this.getSuit())) {
+        if (numberOnTable.equals(thisNumber) || suitOnTable.equals(thisSuit))
             return true;
-        }
         return false;
     }
 
@@ -123,9 +130,13 @@ public class Card {
      * @return String con la carta entre etiquetas de enlace
      */
     public String toStringAnchorTag(boolean disable) {
-        return String.format(
-                "<a href='http://localhost:8080/juegos_cartas/pumba.jsp?start=0&card=%s' %s>%s</a>",
-                this.getCardNameLink(), disable ? "class='disabled'" : "", this.toString());
+        String href = "http://localhost:8080/juegos_cartas/pumba.jsp?start=0&card=" + this.getCardNameLink();
+        String[] classContent = new String[1];
+        if (disable)
+            classContent[0] = "disabled";
+        else
+            classContent = null;
+        return Utilities.printAnchor(href, this.toString(), classContent);
     }
 
     @Override

@@ -29,12 +29,14 @@ public class Pumba {
     }
 
     public ArrayList<Card> getDrawPile() {
-        System.out.println("Cartas en mazo: " + this.drawPile.getCards().size());
+        System.out.println(" ------------------------- ");
+        System.out.println(String.format("| Cartas en mazo:      %2d |", this.drawPile.getCards().size()));
         return this.drawPile.getCards();
     }
 
     public ArrayList<Card> getDiscardPile() {
-        System.out.println("Cartas en descartes: " + this.discardPile.size());
+        System.out.println(String.format("| Cartas en descartes: %2d |", this.discardPile.size()));
+        System.out.println(" ------------------------- ");
         return this.discardPile;
     }
 
@@ -176,6 +178,8 @@ public class Pumba {
             changeSuit(_cardOnTable.getSuit());
             droppedCard = _player.dropValidCard(_cardOnTable, this.playedCard, this.suit);
             if (droppedCard != null) {
+                if (droppedCard.getNumber().equals("dos"))
+                    changeSuit(droppedCard.getSuit());
                 this.draw2 = 2;
             }
             return droppedCard;
@@ -206,8 +210,8 @@ public class Pumba {
         String play = "";
         String turn = "";
         boolean playAgain = true;
-        if (this.discardPile.size() == 0) {
-            droppedCard = player.dropCard(this.playedCard);
+        if (cardOnTable == null) {
+            droppedCard = (this.playedCard != null) ? player.dropCard(this.playedCard) : player.dropCard();
             play = String.format(" echa %s", droppedCard.getStringCard());
         } else {
             if (cardOnTable.getNumber().equals("dos")) {
@@ -225,7 +229,13 @@ public class Pumba {
                     }
                 }
             } else {
-                droppedCard = player.dropValidCard(cardOnTable, this.playedCard, this.suit);
+                if (this.playedCard != null) {
+                    if (this.playedCard.equals("draw_card")) {
+                        droppedCard = null;
+                    } else
+                        droppedCard = player.dropCard(this.playedCard);
+                } else
+                    droppedCard = player.dropValidCard(cardOnTable, this.playedCard, this.suit);
                 if (this.suit != null && droppedCard != null) {
                     System.out.println("-Reset cambio de palo");
                     this.suit = null;
