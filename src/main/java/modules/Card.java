@@ -23,7 +23,7 @@ public class Card {
         this.suit = _suit;
         this.uncovered = _uncovered;
         this.img = "assets/img/" + (this.uncovered ? (getNumber() + "_" + getSuit()) : "reverso") + ".png";
-        this.rotation = "style='transform-origin: bottom center; transform: scale(1) rotate(0);'";
+        this.rotation = "transform-origin: bottom center; transform: scale(1) rotate(0);";
     }
 
     public String getNumber() {
@@ -65,7 +65,7 @@ public class Card {
     }
 
     public void rotateCard(String _position, String _rotation) {
-        this.rotation = String.format("style='transform-origin: bottom %s; transform: scale(1) rotate(%sturn);'",
+        this.rotation = String.format("transform-origin: bottom %s; transform: scale(1) rotate(%sturn);",
                 _position,
                 _rotation);
     }

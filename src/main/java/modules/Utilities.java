@@ -38,6 +38,7 @@ public class Utilities {
     public static String printImg(String src, String alt, String inlineStyle, boolean inline, String... classes) {
         src = src == null ? "" : String.format("src='%s'", src);
         alt = alt == null ? "" : String.format("alt='%s'", alt);
-        return String.format("<img %s %s %s %s>", getClassesStr(classes), src, alt, inline ? inlineStyle : "");
+        inlineStyle = inline ? String.format("style='%s'", inlineStyle) : "";
+        return String.format("<img %s %s %s %s>", getClassesStr(classes), src, alt, inlineStyle);
     }
 }
