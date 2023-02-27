@@ -10,6 +10,11 @@ public class Card {
     private Integer score;
     private boolean uncovered;
 
+    public Card() {
+        this.img = "assets/img/transparent.png";
+        this.rotation = "transform-origin: bottom center; transform: scale(1) rotate(0);";
+    }
+
     public Card(Numbers _number, Suits _suit) {
         this(_number, _suit, false);
     }

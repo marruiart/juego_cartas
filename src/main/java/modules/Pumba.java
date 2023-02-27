@@ -13,6 +13,7 @@ public class Pumba {
     private int playDirection;
     private String suit;
     private Card playedCard;
+    private boolean isScoreRound;
 
     public Pumba(int _numberOfPlayers) {
         this.drawPile = new CardsDeck();
@@ -23,6 +24,7 @@ public class Pumba {
         this.playDirection = 1;
         this.suit = null;
         this.playedCard = null;
+        isScoreRound = false;
         scoreCards();
         generatePlayers();
         dealCards();
@@ -112,6 +114,10 @@ public class Pumba {
         return Utilities.printImg(src, suitStr);
     }
 
+    public boolean isScoreRound() {
+        return this.isScoreRound;
+    }
+
     public void dropOnDiscardPile(Card _card) {
         float rotation = -0.004f + (float) (Math.random() * (0.004f + 0.004f));
         _card.setUncovered(true).rotateCard("center", Float.toString(rotation));
@@ -193,11 +199,24 @@ public class Pumba {
         if (droppedCard == null) {
             System.out.println("---" + _player.getPlayerName() + " chupa: " + this.draw2 + " cartas---");
             _player.drawCards(draw2);
+            changeSuit(_cardOnTable.getSuit());
             this.draw2 = -1;
         } else {
             this.draw2 += 2;
         }
         return droppedCard;
+    }
+
+    private void setPlayersScore() {
+        this.isScoreRound = true;
+        for (Player p : this.players) {
+            int score = 0;
+            for (Card c : p.getMano().getCards())
+                score += c.getScore();
+            p.updateScore(score);
+            if (score == 0)
+                p.getMano().addCard(new Card());
+        }
     }
 
     public String runPlay(String _playedCard) {
@@ -258,6 +277,7 @@ public class Pumba {
         }
         if (player.getNumberOfCardsInHand() == 0) {
             System.out.println("GANA " + player.getPlayerName().toUpperCase());
+            setPlayersScore();
             return String.format("FIN DE LA PARTIDA, ¡GANA EL JUGADOR %s!", player.getPlayerName().toUpperCase());
         }
         gameMessage = player.getPlayerName(true) + play;
@@ -322,7 +342,7 @@ public class Pumba {
 
     private void generatePlayers() {
         this.turn = (int) (Math.random() * this.numberOfPlayers);
-        //this.turn = 0; /* QUITAR */
+        // this.turn = 0; /* QUITAR */
         System.out.println("MANO --- jugador " + (this.turn + 1));
         for (int i = 0; i < this.numberOfPlayers; i++) {
             boolean isMano = (this.turn == i) ? true : false;

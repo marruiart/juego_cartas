@@ -280,9 +280,28 @@ div[class^="jugador"]:not(.jugador1) {
     text-align: center;
 }
 
-/* .hand {
-    transform-origin: bottom center;
-} */
+/* PUNTUACIONES */
+
+div[class*="score"] {
+    position: absolute;
+    bottom: -12px;
+    left: 37%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 5rem;
+    width: 5rem;
+    border-radius: 50%;
+    border: 3px solid var(--semidark);
+    background-color: #fcba12e3;
+    color: var(--semidark);
+    font-family: old-school, 'Courier New', Courier, monospace;
+    font-size: 2rem;
+    font-weight: normal;
+    z-index: 1;
+}
+
+/* CARTAS EN MANO */
 
 div[class^="hand"]:not(.hand1) {
     display: flex;

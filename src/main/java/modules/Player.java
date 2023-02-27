@@ -8,12 +8,14 @@ public class Player {
     private CardHand handCards;
     private boolean isMano;
     private boolean isMachine;
+    private Integer score;
 
     public Player(Pumba _game, int _number, boolean _isMano) {
         this.game = _game;
         this.number = _number;
         this.isMano = _isMano;
         this.isMachine = _number == 1 ? false : true;
+        this.score = 0;
     }
 
     public Pumba getGame() {
@@ -48,9 +50,9 @@ public class Player {
 
     public String getPlayerName(boolean _firstCapital) {
         if (_firstCapital)
-            return String.format("Jugador %d", number);
+            return String.format("Jugador %d", this.number);
         else
-            return String.format("jugador %d", number);
+            return String.format("jugador %d", this.number);
     }
 
     public boolean isMano() {
@@ -59,6 +61,18 @@ public class Player {
 
     public boolean isMachine() {
         return this.isMachine;
+    }
+
+    public int getScore() {
+        return this.score;
+    }
+
+    public void setScore(int _score) {
+        this.score = _score;
+    }
+
+    public void updateScore(int _score) {
+        this.score += _score;
     }
 
     /**
@@ -169,8 +183,10 @@ public class Player {
         String isManoTxt = isMano ? " (Mano)" : "";
         String isMachineTxt = isMachine ? "" : " (Tú)";
         String player = this.getPlayerName().replace(" ", "");
-        String content = Utilities.printDiv((this.getPlayerName(true) + isManoTxt + isMachineTxt), "name")
-                + this.handCards.toString();
+        String name = (this.getPlayerName(true) + isManoTxt + isMachineTxt);
+        String score = game.isScoreRound() ? Utilities.printDiv(Integer.toString(this.score), "score" + this.number)
+                : "";
+        String content = score + Utilities.printDiv(name, "name") + this.handCards.toString();
         return Utilities.printDiv(content, player, seat);
     }
 }
