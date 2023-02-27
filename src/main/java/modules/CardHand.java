@@ -1,11 +1,11 @@
 package modules;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class CardHand {
     private Player player;
     private ArrayList<Card> cards = new ArrayList<Card>();
-    private ArrayList<Card> validCards;
 
     public CardHand(Player _player, ArrayList<Card> _cards) {
         this.player = _player;
@@ -25,12 +25,13 @@ public class CardHand {
     }
 
     public ArrayList<Card> getValidCards(Card _cardOnTable, String _suit) {
-        validCards = new ArrayList<Card>();
+        ArrayList<Card> validCards = new ArrayList<Card>();
         for (Card c : cards) {
-            if (c.isValid(_cardOnTable, _suit))
+            if (c.isValid(_cardOnTable, _suit)) {
                 validCards.add(c);
+            }
         }
-        return this.validCards;
+        return validCards;
     }
 
     public Card removeCard() {
@@ -69,13 +70,19 @@ public class CardHand {
         for (int i = 0; i < getNumberOfCards(); i++) {
             Card card = this.cards.get(i);
             rotation = this.setRotation(card, i, rotation);
-            if (this.player.getGame().getTurn() == 0 && !this.player.isMachine()
-                    && (this.validCards.contains(card) || card.isValid(player.checkCardOnTable())))
-                cardHand += card.toStringAnchorTag(false);
-            else if (!this.player.isMachine())
-                cardHand += card.toStringAnchorTag(true);
-            else
+            if (this.player.isMachine())
                 cardHand += card.toString();
+            else {
+                Card cardOnTable = this.player.checkCardOnTable();
+                String suit = this.player.getGame().getSuit();
+                ArrayList<Card> validCards = this.getValidCards(cardOnTable, suit);
+                if (cardOnTable == null && this.player.getGame().getTurn() == 0)
+                    cardHand += card.toStringAnchorTag(false);
+                else if (this.player.getGame().getTurn() == 0 && (validCards.contains(card)))
+                    cardHand += card.toStringAnchorTag(false);
+                else
+                    cardHand += card.toStringAnchorTag(true);
+            }
         }
         return cardHand;
     }

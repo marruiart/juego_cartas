@@ -85,8 +85,11 @@ public class Card {
      * @return false si la carta no es válida (no se puede soltar)
      */
     public boolean isValid(Card _cardOnTable, String _suit) {
+        if (_cardOnTable == null)
+            return true;
         if (_suit != null) {
-            if (this.getSuit().equals(_suit))
+            if (this.getSuit().equals(_suit)
+                    || (_cardOnTable.getSuit().equals("sota") && this.getSuit().equals("sota")))
                 return true;
             else
                 return false;

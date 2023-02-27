@@ -71,7 +71,14 @@
           <%=personPlayer%>
         </div>
         <div class="info">
-          <div class="message"><%=message%></div>
+          <div class="play-info">
+            <div class="played-suit">
+              <% String suit = game.getSuitStr(); %>
+              <div class="suit"><%=(suit == null ? "" : suit)%></div>
+              <%=game.getSuitImg()%>
+            </div>
+            <div class="message"><%=message%></div>
+          </div>
           <div class="buttons">
             <%
               if (message.contains("FIN")) {%>
