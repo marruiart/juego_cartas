@@ -331,7 +331,7 @@ div[class^="hand"]:not(.hand1) .card {
         15px 38px 20px rgba(0, 0, 0, 0.07);
 }
 
-/* MAZOS */
+/* MAZOS DE ROBO Y DESCARTE */
 
 .table-center,
 .positional-marks,
@@ -359,8 +359,13 @@ div[class^="hand"]:not(.hand1) .card {
 }
 
 .link-draw-pile a[href*="draw"].card {
-    transform: translateX(151%);
+    transform: translateX(158%);
+    border-radius: 10px;
     box-shadow: none;
+}
+
+.link-draw-pile a[href*="draw"].card:hover {
+    background-color: rgba(255, 255, 255, 0.50);
 }
 
 [class*="discards"] {
@@ -388,6 +393,10 @@ div[class^="hand"]:not(.hand1) .card {
 
 [class$="pile"] img.card[src*="positional-mark"] {
     box-shadow: none;
+}
+
+.link-draw-pile a.disabled {
+    pointer-events: none;
 }
 
 /********* DISPLAY DE INFERIOR DE INFORMACIÓN *********/
