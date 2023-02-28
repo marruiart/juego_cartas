@@ -1,7 +1,6 @@
 package modules;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class CardHand {
     private Player player;
