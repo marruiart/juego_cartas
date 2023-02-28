@@ -293,7 +293,7 @@ div[class*="score"] {
     width: 5rem;
     border-radius: 50%;
     border: 3px solid var(--semidark);
-    background-color: #fcba12e3;
+    background-color: #fcba12d1;
     color: var(--semidark);
     font-family: old-school, 'Courier New', Courier, monospace;
     font-size: 2rem;
@@ -301,11 +301,17 @@ div[class*="score"] {
     z-index: 1;
 }
 
+div[class*="score"].score1 {
+    bottom: 16px;
+    left: 45%;
+}
+
 /* CARTAS EN MANO */
 
 div[class^="hand"]:not(.hand1) {
     display: flex;
     justify-content: space-evenly;
+    min-height: 135px;
     width: 19vw;
     margin-left: 36%;
 }
@@ -338,8 +344,7 @@ div[class^="hand"]:not(.hand1) .card {
     min-width: 17rem;
 }
 
-.draw-pile,
-.discards-pile {
+[class$="pile"] {
     display: flex;
     justify-content: flex-start;
     align-items: center;
@@ -347,22 +352,21 @@ div[class^="hand"]:not(.hand1) .card {
     padding-left: 39%;
 }
 
-.draw-pile {
+[class*="draw"] {
     transform: translateX(30%);
 }
 
-.discards-pile {
+[class*="discards"] {
     transform: translateX(-30%);
 }
 
-.draw-pile .card,
-.discards-pile .card {
+[class$="pile"] .card {
     margin-left: -121%;
+    min-height: 189px;
     width: 7rem;
 }
 
-.draw-pile .card:first-child,
-.discards-pile .card:first-child {
+[class$="pile"] .card:first-child {
     box-shadow:
         0.3px 0.7px 0.4px rgba(0, 0, 0, 0.016),
         0.6px 1.6px 1px rgba(0, 0, 0, 0.023),
@@ -396,6 +400,7 @@ section.display {
 }
 
 .jugador1 {
+    position: relative;
     height: 100%;
     width: 35vw;
     margin: 0 auto;

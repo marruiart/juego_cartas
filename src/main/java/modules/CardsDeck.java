@@ -18,7 +18,7 @@ public class CardsDeck {
      */
     public ArrayList<Card> getCards() {
         for (Card c : this.cards)
-            c.setUncovered(true); /* CAMBIAR A FALSE */
+            c.setUncovered(false); /* CAMBIAR A TRUE PARA DESTAPAR LAS CARTAS */
         return this.cards;
     }
 
@@ -82,7 +82,7 @@ public class CardsDeck {
      */
     public void returnCards(ArrayList<Card> _cards) {
         for (Card c : _cards) {
-            c.setUncovered(true); /* CAMBIAR A FALSE */
+            c.setUncovered(false); /* CAMBIAR A TRUE PARA DESTAPAR LAS CARTAS */
             this.cards.add(c);
         }
     }

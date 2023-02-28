@@ -214,8 +214,6 @@ public class Pumba {
             for (Card c : p.getMano().getCards())
                 score += c.getScore();
             p.updateScore(score);
-            if (score == 0)
-                p.getMano().addCard(new Card());
         }
     }
 

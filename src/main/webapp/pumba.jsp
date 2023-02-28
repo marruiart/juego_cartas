@@ -41,10 +41,10 @@
             }
           %>
           <div class="table-center">
-            <div class="draw-pile">
+            <div class="mark-draw-pile">
               <img id="positional-mark" class="card" src="assets/img/positional-mark.png">
             </div>
-            <div class="discards-pile">
+            <div class="mark-discards-pile">
               <img id="positional-mark" class="card" src="assets/img/positional-mark.png">
             </div>
           </div>  
