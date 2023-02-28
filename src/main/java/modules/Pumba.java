@@ -150,7 +150,7 @@ public class Pumba {
         return drawnCards;
     }
 
-    public void flipDiscardsPile() {
+    private void flipDiscardsPile() {
         System.out.println("VOLTEAR DESCARTES");
         Card lastCard = this.discardPile.remove(this.discardPile.size() - 1);
         drawPile.returnCards(this.discardPile);
@@ -159,13 +159,13 @@ public class Pumba {
         this.discardPile.add(lastCard);
     }
 
-    public Pumba reverseDirection() {
+    private Pumba reverseDirection() {
         System.out.println("CAMBIO SENTIDO");
         this.playDirection *= -1;
         return this;
     }
 
-    public String chooseSuit(String _suitOnTable) {
+    private String chooseSuit(String _suitOnTable) {
         String suit;
         do {
             suit = Suits.getRandom().toString().toLowerCase();
@@ -173,13 +173,13 @@ public class Pumba {
         return changeSuit(suit);
     }
 
-    public String changeSuit(String _suit) {
+    private String changeSuit(String _suit) {
         this.suit = _suit;
         System.out.println("---CAMBIO DE PALO A " + _suit.toUpperCase());
         return this.suit;
     }
 
-    public Player choosePlayer() {
+    private Player choosePlayer() {
         int n;
         do {
             n = (int) (Math.random() * this.getNumberOfPlayers());
@@ -189,7 +189,7 @@ public class Pumba {
         return chosenPlayer;
     }
 
-    public Card special2Play(Player _player, Card _cardOnTable) {
+    private Card special2Play(Player _player, Card _cardOnTable) {
         Card droppedCard = null;
         if (this.draw2 == -1) {
             changeSuit(_cardOnTable.getSuit());
@@ -253,7 +253,7 @@ public class Pumba {
             return null;
     }
 
-    public String checkSpecialDroppedCard(Card droppedCard) {
+    private String checkSpecialDroppedCard(Card droppedCard) {
         String gameMessage = "";
         if (droppedCard.getNumber().equals("siete")) {
             this.reverseDirection();
@@ -263,7 +263,7 @@ public class Pumba {
             System.out.println("SALTA TURNO: no juega " + this.getPlayerOfTurn().getPlayerName());
             gameMessage = String.format(". Salta el turno del %s", this.getPlayerOfTurn().getPlayerName());
         } else if (droppedCard.getNumber().equals("sota")) {
-            gameMessage += String.format(" y cambia de palo a %s", this.chooseSuit(droppedCard.getSuit()));
+            gameMessage = String.format(" y cambia de palo a %s", this.chooseSuit(droppedCard.getSuit()));
         } else if (droppedCard.getNumber().equals("as")) {
             Player chosenPlayer = this.choosePlayer();
             chosenPlayer.drawCard();
@@ -326,6 +326,17 @@ public class Pumba {
         return returns;
     }
 
+    private String checkKingCardDropped(Card droppedCard, Boolean playAgain, Player player) {
+        String turnMessage = null;
+        if (droppedCard != null && playAgain && droppedCard.getNumber().equals("rey")) {
+            player = reverseDirection().setTurn().reverseDirection().getPlayerOfTurn();
+            System.out.println("REY - VUELVE A JUGAR: " + this.getPlayerOfTurn().getPlayerName());
+            turnMessage = player.isMachine() ? String.format(". Vuelve a jugar el %s.", player.getPlayerName())
+                    : ". Vuelves a jugar.";
+        }
+        return turnMessage;
+    }
+
     public String runPlay(String _playedCard) {
         Boolean playAgain = true;
         Card droppedCard = null;
@@ -364,13 +375,8 @@ public class Pumba {
         player = this.setTurn().getPlayerOfTurn();
         turnMessage = player.isMachine() ? String.format(". Turno del %s.", player.getPlayerName())
                 : ". Es tu turno, elige tu jugada.";
-        if (droppedCard != null && playAgain && droppedCard.getNumber().equals("rey")) {
-            player = reverseDirection().setTurn().reverseDirection().getPlayerOfTurn();
-            System.out.println("REY - VUELVE A JUGAR: " + this.getPlayerOfTurn().getPlayerName());
-            turnMessage = player.isMachine() ? String.format(". Vuelve a jugar el %s.", player.getPlayerName())
-                    : ". Vuelves a jugar.";
-        }
-        return gameMessage + turnMessage;
+        String kingMessage = checkKingCardDropped(droppedCard, playAgain, player);
+        return gameMessage + (kingMessage != null ? kingMessage : turnMessage);
     }
 
     private void scoreCards() {
