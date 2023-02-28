@@ -134,7 +134,7 @@ public class Player {
      */
     public Card dropCard(Card c) {
         Card card = (c == null) ? this.handCards.removeCard() : this.handCards.removeCard(c);
-        System.out.println("Suelta " + card.getStringCard());
+        System.out.println("Suelta " + card.getCardName());
         game.dropOnDiscardPile(card);
         return card;
     }

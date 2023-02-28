@@ -61,7 +61,7 @@ public class Card {
         return this.getNumber() + "_" + this.getSuit();
     }
 
-    public String getStringCard() {
+    public String getCardName() {
         return this.getNumber() + " de " + this.getSuit();
     }
 
