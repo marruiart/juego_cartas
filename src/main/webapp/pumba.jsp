@@ -66,7 +66,7 @@
           </div>
           <div class="drawing-link">
             <div class="link-draw-pile">
-              <a href="pumba.jsp?start=0&amp;card=draw" class="card"></a>
+              <a href="pumba.jsp?start=0&amp;card=draw_card" class="card"></a>
             </div>
           </div>  
         </div>

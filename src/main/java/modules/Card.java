@@ -9,10 +9,12 @@ public class Card {
     private String rotation;
     private Integer score;
     private boolean uncovered;
+    private boolean isDrawCard;
 
     public Card() {
-        this.img = "assets/img/transparent.png";
-        this.rotation = "transform-origin: bottom center; transform: scale(1) rotate(0);";
+        //this.img = "assets/img/transparent.png";
+        //this.rotation = "transform-origin: bottom center; transform: scale(1) rotate(0);";
+        this.isDrawCard = true;
     }
 
     public Card(Numbers _number, Suits _suit) {
@@ -27,6 +29,7 @@ public class Card {
         this.number = _number;
         this.suit = _suit;
         this.uncovered = _uncovered;
+        this.isDrawCard = false;
         this.img = "assets/img/" + (this.uncovered ? (getNumber() + "_" + getSuit()) : "reverso") + ".png";
         this.rotation = "transform-origin: bottom center; transform: scale(1) rotate(0);";
     }
@@ -73,6 +76,10 @@ public class Card {
         this.rotation = String.format("transform-origin: bottom %s; transform: scale(1) rotate(%sturn);",
                 _position,
                 _rotation);
+    }
+
+    public boolean isDrawCard() {
+        return this.isDrawCard;
     }
 
     /**
