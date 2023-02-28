@@ -1,6 +1,7 @@
 package modules;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import modules.Enums.Suits;
 
 public class Pumba {
@@ -271,9 +272,63 @@ public class Pumba {
         return gameMessage;
     }
 
+    private HashMap<String, Object> playWith2OnTable(Card cardOnTable, Player player) {
+        HashMap<String, Object> returns = new HashMap<>();
+        String playMessage = "";
+        int numberOfCards = player.getNumberOfCardsInHand();
+        Card droppedCard = (this.playedCard == null || this.playedCard.isDrawCard())
+                ? special2Play(player, cardOnTable)
+                : player.dropCard();
+        int drawnCards = player.getNumberOfCardsInHand() - numberOfCards;
+        if ((this.draw2 == -1 && drawnCards > 1) || drawnCards > 1) {
+            playMessage = String.format(" chupa %d cartas", drawnCards);
+        } else {
+            if (droppedCard == null) {
+                player.drawCard();
+                playMessage = " roba carta";
+            } else {
+                playMessage = String.format(" echa %s", droppedCard.getCardName());
+            }
+        }
+        returns.put("playMessage", playMessage);
+        returns.put("droppedCard", droppedCard);
+        return returns;
+    }
+
+    private HashMap<String, Object> playWithAnyCardOnTable(Card cardOnTable, Player player) {
+        HashMap<String, Object> returns = new HashMap<>();
+        String playMessage = "";
+        Card droppedCard = null;
+        Boolean playAgain = true;
+        if (this.playedCard != null) {
+            if (!this.playedCard.isDrawCard())
+                droppedCard = player.dropCard(this.playedCard);
+        } else {
+            droppedCard = player.dropValidCard(cardOnTable, this.playedCard, this.suit);
+        }
+        if (this.suit != null && droppedCard != null) {
+            System.out.println("-Reset cambio de palo");
+            this.suit = null;
+        }
+        if (droppedCard == null) {
+            if (cardOnTable.getNumber().equals("rey")) {
+                System.out.println("--YA NO REPITE TURNO");
+                playAgain = false;
+            }
+            player.drawCard();
+            playMessage = " roba carta";
+        } else {
+            playMessage = String.format(" echa %s", droppedCard.getCardName());
+        }
+        returns.put("playMessage", playMessage);
+        returns.put("droppedCard", droppedCard);
+        returns.put("playAgain", playAgain);
+        return returns;
+    }
+
     public String runPlay(String _playedCard) {
-        boolean playAgain = true;
-        Card droppedCard;
+        Boolean playAgain = true;
+        Card droppedCard = null;
         String gameMessage = "";
         String playMessage = "";
         String turnMessage = "";
@@ -287,41 +342,14 @@ public class Pumba {
             playMessage = String.format(" echa %s", droppedCard.getCardName());
         } else {
             if (cardOnTable.getNumber().equals("dos")) {
-                int numberOfCards = player.getNumberOfCardsInHand();
-                droppedCard = (this.playedCard == null || this.playedCard.isDrawCard())
-                        ? special2Play(player, cardOnTable)
-                        : player.dropCard();
-                int drawnCards = player.getNumberOfCardsInHand() - numberOfCards;
-                if ((this.draw2 == -1 && drawnCards > 1) || drawnCards > 1) {
-                    playMessage = String.format(" chupa %d cartas", drawnCards);
-                } else {
-                    if (droppedCard == null) {
-                        player.drawCard();
-                        playMessage = " roba carta";
-                    } else {
-                        playMessage = String.format(" echa %s", droppedCard.getCardName());
-                    }
-                }
+                HashMap<String, Object> returns = playWith2OnTable(cardOnTable, player);
+                playMessage = (String) returns.get("playMessage");
+                droppedCard = (Card) returns.get("droppedCard");
             } else {
-                if (this.playedCard != null) {
-                    droppedCard = this.playedCard.isDrawCard() ? null : player.dropCard(this.playedCard);
-                } else {
-                    droppedCard = player.dropValidCard(cardOnTable, this.playedCard, this.suit);
-                }
-                if (this.suit != null && droppedCard != null) {
-                    System.out.println("-Reset cambio de palo");
-                    this.suit = null;
-                }
-                if (droppedCard == null) {
-                    if (cardOnTable.getNumber().equals("rey")) {
-                        System.out.println("--YA NO REPITE TURNO");
-                        playAgain = false;
-                    }
-                    player.drawCard();
-                    playMessage = " roba carta";
-                } else {
-                    playMessage = String.format(" echa %s", droppedCard.getCardName());
-                }
+                HashMap<String, Object> returns = playWithAnyCardOnTable(cardOnTable, player);
+                playMessage = (String) returns.get("playMessage");
+                droppedCard = (Card) returns.get("droppedCard");
+                playAgain = (Boolean) returns.get("playAgain");
             }
         }
         if (player.getNumberOfCardsInHand() == 0) {
