@@ -221,8 +221,13 @@ public class Pumba {
         Player player = this.getPlayerOfTurn();
         System.out.println("\nTURNO: " + player.getPlayerName().toUpperCase());
         if (this.turn == 0 && _playedCard != null) {
-            this.playedCard = player.getPlayedCard(_playedCard);
-            System.out.println("Esta es la carta jugada: " + this.playedCard.getStringCard());
+            if (_playedCard.equals("draw")) {
+                System.out.println("ROBA CARTA DEL MAZO");
+                this.playedCard = null;
+            } else {
+                this.playedCard = player.getPlayedCard(_playedCard);
+                System.out.println("Esta es la carta jugada: " + this.playedCard.getStringCard());
+            }
         } else
             this.playedCard = null;
         Card cardOnTable = this.getCardOnTable();
