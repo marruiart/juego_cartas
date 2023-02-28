@@ -40,12 +40,12 @@
                 out.print(j);
             }
           %>
-          <div class="table-center">
+          <div class="positional-marks">
             <div class="mark-draw-pile">
-              <img id="positional-mark" class="card" src="assets/img/positional-mark.png">
+              <img class="card" src="assets/img/positional-mark.png">
             </div>
             <div class="mark-discards-pile">
-              <img id="positional-mark" class="card" src="assets/img/positional-mark.png">
+              <img class="card" src="assets/img/positional-mark.png">
             </div>
           </div>  
           <div class="table-center">
@@ -62,6 +62,11 @@
                 out.print(c);
               }
             %>
+            </div>
+          </div>
+          <div class="drawing-link">
+            <div class="link-draw-pile">
+              <a href="pumba.jsp?start=0&amp;card=draw" class="card"></a>
             </div>
           </div>  
         </div>
