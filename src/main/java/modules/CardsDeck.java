@@ -12,14 +12,25 @@ public class CardsDeck {
     }
 
     /**
-     * Devuelve las cartas que hay en el mazo.
+     * Devuelve las cartas que hay en el mazo. Si el boolean que recibe es true,
+     * todas las cartas se muestran, si es false, quedan boca abajo.
+     * 
+     * @param uncover booleano que establece si se muestran o no las cartas.
+     * @return ArrayList con las cartas del mazo.
+     */
+    public ArrayList<Card> getCards(boolean uncover) {
+        for (Card c : this.cards)
+            c.setUncovered(uncover);
+        return this.cards;
+    }
+
+    /**
+     * Devuelve las cartas que hay en el mazo boca abajo.
      * 
      * @return ArrayList con las cartas del mazo.
      */
     public ArrayList<Card> getCards() {
-        for (Card c : this.cards)
-            c.setUncovered(false); /* CAMBIAR A TRUE PARA DESTAPAR LAS CARTAS */
-        return this.cards;
+        return getCards(false); /* CAMBIAR A TRUE PARA DESTAPAR LAS CARTAS */
     }
 
     /**
@@ -76,15 +87,27 @@ public class CardsDeck {
     }
 
     /**
-     * Devuelve un grupo de cartas al mazo
+     * Devuelve un grupo de cartas al mazo mazo. Si el boolean que recibe es true,
+     * todas las cartas se muestran, si es false, quedan boca abajo.
+     * 
+     * @param uncover booleano que establece si se muestran o no las cartas.
+     * @param _cards  ArrayList de las cartas devueltas
+     * @return ArrayList con las cartas del mazo.
+     */
+    public void returnCards(ArrayList<Card> _cards, boolean uncover) {
+        for (Card c : _cards) {
+            c.setUncovered(uncover);
+            this.cards.add(c);
+        }
+    }
+
+    /**
+     * Devuelve un grupo de cartas al mazo boca abajo.
      * 
      * @param _cards ArrayList de las cartas devueltas
      */
     public void returnCards(ArrayList<Card> _cards) {
-        for (Card c : _cards) {
-            c.setUncovered(false); /* CAMBIAR A TRUE PARA DESTAPAR LAS CARTAS */
-            this.cards.add(c);
-        }
+        returnCards(_cards, false); /* CAMBIAR A TRUE PARA DESTAPAR LAS CARTAS */
     }
 
     /**
