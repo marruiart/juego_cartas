@@ -78,7 +78,7 @@
         <div class="info">
           <div class="play-info">
             <div class="played-suit">
-              <% String suit = game.getSuitStr(); %>
+              <% String suit = game.getSuitOnPlay(); %>
               <div class="suit"><%=(suit == null ? "" : suit)%></div>
               <%=game.getSuitImg()%>
             </div>

@@ -104,18 +104,6 @@ public class Card {
 
     /**
      * Devuelve si la carta es válida o no con respecto a la carta que hay en el
-     * centro de la mesa.
-     * 
-     * @param _cardOnTable carta en el centro de la mesa
-     * @return true si la carta es válida
-     * @return false si la carta no es válida (no se puede soltar)
-     */
-    public boolean isValid(Card _cardOnTable) {
-        return isValid(_cardOnTable, null);
-    }
-
-    /**
-     * Devuelve si la carta es válida o no con respecto a la carta que hay en el
      * centro de la mesa, teniendo en cuenta el palo que hay en juego.
      * 
      * @param _cardOnTable carta en el centro de la mesa
@@ -163,11 +151,9 @@ public class Card {
      */
     public String toStringAnchorTag(boolean disable) {
         String href = "http://localhost:8080/juegos_cartas/pumba.jsp?start=0&card=" + this.getCardNameLink();
-        String[] classContent = new String[1];
+        String classContent = "";
         if (disable)
-            classContent[0] = "disabled";
-        else
-            classContent[0] = "";
+            classContent = "disabled";
         return Utilities.printAnchor(href, this.toString(), classContent);
     }
 

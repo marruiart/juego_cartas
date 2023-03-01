@@ -6,7 +6,7 @@ public class Player {
     private String name;
     private Pumba game;
     private int number;
-    private CardHand handCards;
+    private CardHand cardHand;
     private boolean isMano;
     private boolean isMachine;
     private Integer score;
@@ -45,12 +45,12 @@ public class Player {
         return this.number;
     }
 
-    public CardHand getHandCards() {
-        return this.handCards;
+    public CardHand getCardHand() {
+        return this.cardHand;
     }
 
     public int getNumberOfCardsInHand() {
-        return this.handCards.getNumberOfCards();
+        return this.cardHand.getNumberOfCards();
     }
 
     public boolean isMano() {
@@ -90,7 +90,7 @@ public class Player {
         String number = card[0];
         String suit = card[1];
         Card tmp = new Card(number, suit);
-        for (Card c : this.handCards.getCards())
+        for (Card c : this.cardHand.getCards())
             if (c.equals(tmp))
                 return c;
         return null;
@@ -126,7 +126,7 @@ public class Player {
      * @return la carta soltada
      */
     public Card dropValidCard(Card _cardOnTable, Card _playedCard, String _changedSuit) {
-        ArrayList<Card> validCards = this.handCards.getValidCards(_cardOnTable, _changedSuit);
+        ArrayList<Card> validCards = this.cardHand.getValidCards(_cardOnTable, _changedSuit);
         if (validCards.size() == 0)
             return null;
         if (_playedCard == null) {
@@ -154,8 +154,8 @@ public class Player {
      * @return la carta soltada
      */
     public Card dropCard(Card c) {
-        Card card = (c == null) ? this.handCards.removeCard() : this.handCards.removeCard(c);
-        System.out.println("Suelta " + card.getCardName());
+        Card card = (c == null) ? this.cardHand.removeCard() : this.cardHand.removeCard(c);
+        System.out.println("-> Suelta ** " + card.getCardName().toUpperCase() + " **");
         game.dropOnDiscardPile(card);
         return card;
     }
@@ -179,7 +179,7 @@ public class Player {
             if (!this.isMachine) {
                 c.setUncovered(true);
             }
-            handCards.addCard(c);
+            cardHand.addCard(c);
         }
     }
 
@@ -190,8 +190,8 @@ public class Player {
      * @return Mano del jugador con las cartas recibidas
      */
     public CardHand receiveHand(ArrayList<Card> _cards) {
-        this.handCards = new CardHand(this, _cards);
-        return this.handCards;
+        this.cardHand = new CardHand(this, _cards);
+        return this.cardHand;
     }
 
     @Override
@@ -207,7 +207,7 @@ public class Player {
         String name = (this.getPlayerName(true) + isManoTxt + isMachineTxt);
         String score = game.isScoreRound() ? Utilities.printDiv(Integer.toString(this.score), "score" + this.number)
                 : "";
-        String content = score + Utilities.printDiv(name, "name") + this.handCards.toString();
+        String content = score + Utilities.printDiv(name, "name") + this.cardHand.toString();
         return Utilities.printDiv(content, player, seat);
     }
 }
