@@ -30,7 +30,7 @@ public class CardsDeck {
      * @return ArrayList con las cartas del mazo.
      */
     public ArrayList<Card> getCards() {
-        return getCards(false); /* CAMBIAR A TRUE PARA DESTAPAR LAS CARTAS */
+        return getCards(true); /* CAMBIAR A TRUE PARA DESTAPAR LAS CARTAS DE LOS JUGADORES */
     }
 
     /**
@@ -107,7 +107,7 @@ public class CardsDeck {
      * @param _cards ArrayList de las cartas devueltas
      */
     public void returnCards(ArrayList<Card> _cards) {
-        returnCards(_cards, false); /* CAMBIAR A TRUE PARA DESTAPAR LAS CARTAS */
+        returnCards(_cards, true); /* CAMBIAR A TRUE PARA DESTAPAR LAS CARTAS DEL MAZO DE ROBO */
     }
 
     /**

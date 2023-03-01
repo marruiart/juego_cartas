@@ -10,7 +10,7 @@ public class Pumba {
     private ArrayList<Player> players;
     private int numberOfPlayers;
     private int turn;
-    private Suits suit;
+    private String suit;
     private boolean isScoreRound;
     private Card playedCard;
     private int playDirection;
@@ -25,7 +25,7 @@ public class Pumba {
         this.playDirection = 1;
         this.suit = null;
         this.playedCard = null;
-        isScoreRound = false;
+        this.isScoreRound = false;
         scoreCards();
         generatePlayers();
         dealCards();
@@ -84,7 +84,7 @@ public class Pumba {
         return player;
     }
 
-    public Suits getSuit() {
+    public String getSuit() {
         return this.suit;
     }
 
@@ -93,7 +93,7 @@ public class Pumba {
      * 
      * @return un String con el palo en juego.
      */
-    public String getSuitStr() {
+    public String getSuitOnPlay() {
         if (this.suit == null) {
             Card cardOnTable = getCardOnTable();
             if (cardOnTable != null)
@@ -118,7 +118,7 @@ public class Pumba {
             }
             return Utilities.printImg(null, null);
         }
-        String suitStr = getSuitStr();
+        String suitStr = getSuitOnPlay();
         String src = suitStr.equals("") ? "" : String.format("assets/img/%s.png", suitStr);
         return Utilities.printImg(src, suitStr);
     }
@@ -151,15 +151,6 @@ public class Pumba {
     }
 
     /**
-     * Retira una carta del mazo de robo.
-     * 
-     * @return la carta robada.
-     */
-    public Card drawCardFromDeck() {
-        return drawCardsFromDeck(1).get(0);
-    }
-
-    /**
      * Retira varias cartas del mazo de robo.
      * 
      * @param n el número de cartas robadas.
@@ -168,10 +159,10 @@ public class Pumba {
     public ArrayList<Card> drawCardsFromDeck(int n) {
         ArrayList<Card> drawnCards = new ArrayList<>();
         for (int i = 0; i < n; i++) {
-            Card c = drawPile.drawFirstCard();
+            Card c = drawPile.drawLastCard();
             if (c == null) {
                 this.flipDiscardsPile();
-                c = drawPile.drawFirstCard();
+                c = drawPile.drawLastCard();
             }
             if (c != null) {
                 drawnCards.add(c);
@@ -227,7 +218,7 @@ public class Pumba {
      * @return el palo al que cambia el juego.
      */
     private String changeSuit(String _suit) {
-        this.suit = Suits.getSuit(_suit);
+        this.suit = _suit;
         System.out.println("---CAMBIO DE PALO A " + _suit.toUpperCase());
         return _suit;
     }
@@ -247,33 +238,50 @@ public class Pumba {
         return chosenPlayer;
     }
 
-    private Card special2Play(Player _player, Card _cardOnTable) {
+    /**
+     * Esta función comprueba las cartas que puede echar un jugador que no sea el
+     * principal cuando la carta en el centro de la mesa es un dos.
+     * Si draw2 es -1, quiere decir que ese dos ya ha cumplido su función especial
+     * antes (ha chupado cartas un jugador previo). Se establece el palo del dos
+     * sobre la mesa y se comprueba si el jugador puede echar carta.
+     * Si draw2 es distinto de 8, se comprueba si el jugador puede echar carta,
+     * en cuyo caso suma 2 cartas a draw2. Si no puede echar carta, el jugador roba
+     * tantas cartas como indique draw2.
+     * 
+     * @param _player      el jugador en turno
+     * @param _cardOnTable la carta en el centro de la mesa
+     * @return
+     */
+    private HashMap<String, Object> special2Play(Player _player, Card _cardOnTable) {
+        HashMap<String, Object> returns = new HashMap<>();
+        String playMessage = "";
         Card droppedCard = null;
         if (this.draw2 == -1) {
             changeSuit(_cardOnTable.getSuitStr());
-            if (this.playedCard != null && this.playedCard.isDrawCard())
-                return null;
-            else {
-                droppedCard = _player.dropValidCard(_cardOnTable, this.playedCard, getSuitStr());
-                if (droppedCard != null) {
-                    if (droppedCard.getNumber().equals("dos"))
-                        changeSuit(droppedCard.getSuitStr());
-                    this.draw2 = 2;
-                }
-                return droppedCard;
+            droppedCard = _player.dropValidCard(_cardOnTable, this.playedCard, this.suit);
+            if (droppedCard != null) {
+                if (droppedCard.getNumber().equals("dos"))
+                    changeSuit(droppedCard.getSuitStr());
+                this.draw2 = 2;
             }
+            returns.put("droppedCard", droppedCard);
+            returns.put("playMessage", playMessage);
+            return returns;
         }
         if (this.draw2 != 8)
             droppedCard = _player.dropValidCard(_cardOnTable, this.playedCard);
         if (droppedCard == null) {
             System.out.println("---" + _player.getPlayerName() + " chupa: " + this.draw2 + " cartas---");
+            playMessage = String.format(" chupa %d cartas", this.draw2);
             _player.drawCards(draw2);
             changeSuit(_cardOnTable.getSuitStr());
             this.draw2 = -1;
         } else {
             this.draw2 += 2;
         }
-        return droppedCard;
+        returns.put("droppedCard", droppedCard);
+        returns.put("playMessage", playMessage);
+        return returns;
     }
 
     /*** JUGADAS ESPECIALES Y CHEQUEOS DE LA JUGADA ***/
@@ -362,6 +370,9 @@ public class Pumba {
      * jugador juegue otro dos, que el jugador tenga que chupar cartas o bien que ya
      * se haya chupado las cartas un jugador previo, en cuyo caso se juega al
      * palo del dos.
+     * Si el jugador principal echa carta, se suelta esa carta. Si no ha habido
+     * carta jugada, se ejecuta special2Play para ver qué carta se puede jugar. Si
+     * no puede jugar ninguna carta o el jugador principal ha robado, se roba carta.
      * 
      * @param cardOnTable carta sobre la mesa
      * @param player      jugador del turno
@@ -370,20 +381,18 @@ public class Pumba {
     private HashMap<String, Object> playWith2OnTable(Card cardOnTable, Player player) {
         HashMap<String, Object> returns = new HashMap<>();
         String playMessage = "";
-        int numberOfCards = player.getNumberOfCardsInHand();
-        Card droppedCard = (this.playedCard == null || this.playedCard.isDrawCard())
-                ? special2Play(player, cardOnTable)
-                : player.dropCard(this.playedCard);
-        int drawnCards = player.getNumberOfCardsInHand() - numberOfCards;
-        if ((this.draw2 == -1 && drawnCards > 1) || drawnCards > 1) {
-            playMessage = String.format(" chupa %d cartas", drawnCards);
-        } else {
-            if (droppedCard == null) {
-                player.drawCard();
-                playMessage = " roba carta";
-            } else {
-                playMessage = String.format(" echa %s", droppedCard.getCardName());
-            }
+        Card droppedCard = null;
+        if (this.playedCard == null) {
+            HashMap<String, Object> specialReturns = special2Play(player, cardOnTable);
+            droppedCard = specialReturns != null ? (Card) specialReturns.get("droppedCard") : null;
+            playMessage = specialReturns != null ? (String) specialReturns.get("playMessage") : "";
+        } else if (!this.playedCard.isDrawCard())
+            droppedCard = player.dropCard(this.playedCard);
+        if (droppedCard == null && playMessage.equals("")) {
+            player.drawCard();
+            playMessage = " roba carta";
+        } else if (playMessage.equals("")) {
+            playMessage = String.format(" echa %s", droppedCard.getCardName());
         }
         returns.put("playMessage", playMessage);
         returns.put("droppedCard", droppedCard);
@@ -413,7 +422,7 @@ public class Pumba {
             if (!this.playedCard.isDrawCard())
                 droppedCard = player.dropCard(this.playedCard);
         } else {
-            droppedCard = player.dropValidCard(cardOnTable, this.playedCard, getSuitStr());
+            droppedCard = player.dropValidCard(cardOnTable, this.playedCard, this.suit);
         }
         if (this.suit != null && droppedCard != null) {
             System.out.println("-Reset cambio de palo");
@@ -445,7 +454,7 @@ public class Pumba {
         this.isScoreRound = true;
         for (Player p : this.players) {
             int score = 0;
-            for (Card c : p.getHandCards().getCards())
+            for (Card c : p.getCardHand().getCards())
                 score += c.getScore();
             p.updateScore(score);
         }
@@ -468,7 +477,7 @@ public class Pumba {
         System.out.println("\nTURNO: " + player.getPlayerName().toUpperCase());
         this.playedCard = checkPlayedCard(player, _playedCard);
         Card cardOnTable = this.getCardOnTable();
-        System.out.println(cardOnTable == null ? "Mesa vacia" : ("Carta en mesa: " + cardOnTable.getCardName()));
+        System.out.println(cardOnTable == null ? "--Mesa vacia" : ("--Carta en mesa: " + cardOnTable.getCardName()));
         if (cardOnTable == null) {
             /* CAMBIAR: HAY QUE DESHABILITAR EL ENLACE DE ROBAR PARA QUE ESTO NO PETE */
             droppedCard = (this.playedCard != null) ? player.dropCard(this.playedCard) : player.dropCard();
@@ -495,8 +504,13 @@ public class Pumba {
         if (droppedCard != null)
             gameMessage += checkSpecialDroppedCard(droppedCard);
         player = this.setTurn().getPlayerOfTurn();
-        turnMessage = player.isMachine() ? String.format(". Turno del %s.", player.getPlayerName())
-                : ". Es tu turno, elige tu jugada.";
+        if (player.isMachine())
+            turnMessage = String.format(". Turno del %s.", player.getPlayerName());
+        else {
+            turnMessage = ". Es tu turno, elige tu jugada.";
+            CardHand cardHand = player.getCardHand();
+            cardHand.printPlayer1ValidCards(cardOnTable, this.suit);
+        }
         String kingMessage = checkKingCardDropped(droppedCard, playAgain, player);
         return gameMessage + (kingMessage != null ? kingMessage : turnMessage);
     }
@@ -544,6 +558,8 @@ public class Pumba {
      */
     private void generatePlayers() {
         this.turn = (int) (Math.random() * this.numberOfPlayers);
+        // this.turn = 0; /* CAMBIAR: DESCOMENTAR PARA QUE EL JUGADOR PRINCIPAL SEA MANO
+        // */
         System.out.println("MANO --- jugador " + (this.turn + 1));
         for (int i = 0; i < this.numberOfPlayers; i++) {
             boolean isMano = (this.turn == i) ? true : false;

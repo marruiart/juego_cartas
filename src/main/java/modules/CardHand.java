@@ -25,6 +25,8 @@ public class CardHand {
         return this.cards.size();
     }
 
+    /*** CARTAS VÁLIDAS ***/
+
     /**
      * Devuelve las cartas de la mano que son válidas en función de la carta que hay
      * en el centro de la mesa y del palo en juego.
@@ -35,12 +37,18 @@ public class CardHand {
      */
     public ArrayList<Card> getValidCards(Card _cardOnTable, String _suit) {
         ArrayList<Card> validCards = new ArrayList<Card>();
-        for (Card c : cards) {
-            if (c.isValid(_cardOnTable, _suit)) {
+        for (Card c : this.cards) {
+            if (c.isValid(_cardOnTable, _suit))
                 validCards.add(c);
-            }
         }
         return validCards;
+    }
+
+    public void printPlayer1ValidCards(Card _cardOnTable, String _suit) {
+        System.out.println("\n** TUS CARTAS VALIDAS **");
+        for (Card c : getValidCards(_cardOnTable, _suit))
+            System.out.printf("* %s\n", c.getCardName());
+        System.out.println("************************");
     }
 
     /**
@@ -108,20 +116,33 @@ public class CardHand {
     private String getCardHandStr() {
         String cardHand = "";
         float rotation = (float) Math.floor(getNumberOfCards() / 2) * -0.02f;
-        for (int i = 0; i < getNumberOfCards(); i++) {
-            Card card = this.cards.get(i);
-            rotation = this.setRotation(card, i, rotation);
-            if (this.player.isMachine())
+        if (this.player.isMachine()) {
+            for (int i = 0; i < getNumberOfCards(); i++) {
+                Card card = this.cards.get(i);
+                rotation = this.setRotation(card, i, rotation);
                 cardHand += card.toString();
-            else {
+            }
+        } else {
+            // CAMBIAR: AÑADIR SI NO HAY CARTA VÁLIDA, QUE ACTIVE EL ENLACE DEL MAZO DE ROBO
+            // CAMBIAR: SI HAY QUE CHUPAR POR UN DOS, NO SE DEBE ILUMINAR NINGUNA CARTA
+            if (this.player.getGame().getTurn() == 0) {
                 Card cardOnTable = this.player.checkCardOnTable();
-                String suit = this.player.getGame().getSuitStr();
+                String suit = this.player.getGame().getSuit();
                 ArrayList<Card> validCards = this.getValidCards(cardOnTable, suit);
-                // CAMBIAR: AÑADIR SI NO HAY CARTA VÁLIDA, QUE ACTIVE EL ENLACE DEL MAZO DE ROBO
-                if (this.player.getGame().getTurn() == 0 && (cardOnTable == null || validCards.contains(card)))
-                    cardHand += card.toStringAnchorTag(false);
-                else
+                for (int i = 0; i < getNumberOfCards(); i++) {
+                    Card card = this.cards.get(i);
+                    rotation = this.setRotation(card, i, rotation);
+                    if (cardOnTable == null || validCards.contains(card))
+                        cardHand += card.toStringAnchorTag(false);
+                    else
+                        cardHand += card.toStringAnchorTag(true);
+                }
+            } else {
+                for (int i = 0; i < getNumberOfCards(); i++) {
+                    Card card = this.cards.get(i);
+                    rotation = this.setRotation(card, i, rotation);
                     cardHand += card.toStringAnchorTag(true);
+                }
             }
         }
         return cardHand;
