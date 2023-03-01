@@ -3,6 +3,7 @@ package modules;
 import java.util.ArrayList;
 
 public class Player {
+    private String name;
     private Pumba game;
     private int number;
     private CardHand handCards;
@@ -11,11 +12,29 @@ public class Player {
     private Integer score;
 
     public Player(Pumba _game, int _number, boolean _isMano) {
+        this(null, _game, _number, _isMano);
+    }
+
+    public Player(String _name, Pumba _game, int _number, boolean _isMano) {
         this.game = _game;
         this.number = _number;
+        this.name = _name == null ? String.format("jugador %d", this.number) : _name;
         this.isMano = _isMano;
         this.isMachine = _number == 1 ? false : true;
         this.score = 0;
+    }
+
+    /* GETTERS Y SETTERS */
+
+    public String getPlayerName() {
+        return getPlayerName(false);
+    }
+
+    public String getPlayerName(boolean _firstCapital) {
+        if (_firstCapital)
+            return Character.toUpperCase(this.name.charAt(0)) + this.name.substring(1);
+        else
+            return String.format(this.name.toLowerCase());
     }
 
     public Pumba getGame() {
@@ -26,33 +45,12 @@ public class Player {
         return this.number;
     }
 
-    public CardHand getMano() {
+    public CardHand getHandCards() {
         return this.handCards;
-    }
-
-    public Card getPlayedCard(String _playedCard) {
-        String suit = _playedCard.split("_")[1];
-        String number = _playedCard.split("_")[0];
-        Card tmp = new Card(number, suit);
-        for (Card c : this.handCards.getCards())
-            if (c.equals(tmp))
-                return c;
-        return null;
     }
 
     public int getNumberOfCardsInHand() {
         return this.handCards.getNumberOfCards();
-    }
-
-    public String getPlayerName() {
-        return getPlayerName(false);
-    }
-
-    public String getPlayerName(boolean _firstCapital) {
-        if (_firstCapital)
-            return String.format("Jugador %d", this.number);
-        else
-            return String.format("jugador %d", this.number);
     }
 
     public boolean isMano() {
@@ -73,6 +71,29 @@ public class Player {
 
     public void updateScore(int _score) {
         this.score += _score;
+    }
+
+    /**
+     * Convierte en un objeto Card el String pasado por parámetros.
+     * 
+     * @param _playedCard un String que debe tener formato numero_palo
+     * @return una Card correspondiente al palo y al número del String.
+     * @return en caso de que _playedCard no sea válido o sea null, se devuelve
+     *         null.
+     */
+    public Card getPlayedCard(String _playedCard) {
+        if (_playedCard == null)
+            return null;
+        String[] card = _playedCard.split("_");
+        if (card.length != 2)
+            return null;
+        String number = card[0];
+        String suit = card[1];
+        Card tmp = new Card(number, suit);
+        for (Card c : this.handCards.getCards())
+            if (c.equals(tmp))
+                return c;
+        return null;
     }
 
     /**
