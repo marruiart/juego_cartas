@@ -66,7 +66,12 @@
           </div>
           <div class="drawing-link">
             <div class="link-draw-pile">
-              <a href="pumba.jsp?start=0&amp;card=draw_card" class="card"></a>
+              <%  
+              Card c = personPlayer.checkCardOnTable();
+              String s = personPlayer.getGame().getSuit();
+              boolean enableDrawPile = game.getTurn() == 0 && (personPlayer.getCardHand().getValidCards(c, s).size() == 0);
+              out.print(Utilities.printAnchor("pumba.jsp?start=0&amp;card=draw_card", "", "card", enableDrawPile ? "" : "disabled"));
+              %>
             </div>
           </div>  
         </div>
@@ -86,12 +91,12 @@
           </div>
           <div class="buttons">
             <%
-              if (message.contains("FIN")) {%>
-                <a class="btn" href="index.html">Atrás</a>
-            <%} else {%>
-                <a class="btn" href="pumba.jsp?start=0">OK</a>
-                <a class="btn" href="index.html">Atrás</a>
-            <%}
+              if (message.contains("FIN")) {
+                  out.print(Utilities.printAnchor("index.html", "Atrás", "btn"));
+              } else {
+                  out.print(Utilities.printAnchor("pumba.jsp?start=0", "Siguiente", "btn", (game.getTurn() == 0) ? "disabled" : ""));
+                  out.print(Utilities.printAnchor("index.html", "Atrás", "btn"));
+              }
             %>
           </div>
         </div>
