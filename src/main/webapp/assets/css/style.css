@@ -466,18 +466,37 @@ main .info {
 
 .played-suit {
     height: 100%;
-    width: 25%;
-    min-width: 73px;
-    max-width: 76px;
-    padding-right: 1rem;
+    width: 76px;
+    margin-right: 1rem;
     text-align: center;
+}
+
+.played-suit select.select-suit {
+    width: 100%;
+    background-color: var(--light);
+    font-family: old-school, 'Courier New', Courier, monospace;
+    text-align: center;
+    border: none;
+}
+
+.played-suit select.select-suit:disabled {
+    color: black;
+    font-size: 1.2rem;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    text-indent: 1px;
+    text-overflow: '';
+}
+
+select:disabled::-ms-expand {
+    display: none;
 }
 
 .played-suit img {
     object-fit: scale-down;
     padding-top: 26%;
     height: 120px;
-    width: 120%;
+    width: 100%;
 }
 
 .message {

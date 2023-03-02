@@ -1,5 +1,7 @@
 package modules;
 
+import java.util.ArrayList;
+
 public class Utilities {
 
     private static String getClassesStr(String... classes) {
@@ -41,5 +43,27 @@ public class Utilities {
         alt = (alt == null || alt.equals("")) ? "" : String.format("alt='%s'", alt);
         inlineStyle = inline ? String.format("style='%s'", inlineStyle) : "";
         return String.format("<img %s %s %s %s>", getClassesStr(classes), src, alt, inlineStyle);
+    }
+
+    private static String getOptionsStr(ArrayList<String> options, String disabledOption) {
+        String optStr = "";
+        if (options.size() != 0) {
+            for (String opt : options) {
+                if (opt.equals(disabledOption))
+                    optStr += String.format("<option value='%s' %s>%s</option>", opt.toLowerCase(), "disabled selected",
+                            opt);
+                else
+                    optStr += String.format("<option value='%s'>%s</option>", opt.toLowerCase(), opt);
+            }
+        }
+        return optStr;
+    }
+
+    public static String printSelect(String _name, boolean disabledSelect, ArrayList<String> options,
+            String disabledOption, String... classes) {
+        _name = _name == null ? "" : String.format("name='%s'", _name);
+        String select = String.format("<select %s %s%s>%s</select>", _name, getClassesStr(classes),
+                disabledSelect ? " disabled" : "", getOptionsStr(options, disabledOption));
+        return select;
     }
 }

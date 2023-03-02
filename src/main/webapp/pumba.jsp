@@ -1,5 +1,6 @@
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
 <%@page import="modules.*"%>
+<%@page import="modules.Enums.Suits"%>
 <!DOCTYPE html>
 <html>
   <head>
@@ -83,8 +84,11 @@
         <div class="info">
           <div class="play-info">
             <div class="played-suit">
-              <% String suit = game.getSuitOnPlay(); %>
-              <div class="suit"><%=(suit == null ? "" : suit)%></div>
+              <% 
+                String suit = game.getSuitOnPlay(); 
+                out.print(Utilities.printSelect("suits", true, Suits.getAllSuits(), suit, "select-suit"));
+              %>
+              <!-- <div class="suit"><%=(suit == null ? "" : suit)%></div> -->
               <%=game.getSuitImg()%>
             </div>
             <div class="message"><%=message%></div>

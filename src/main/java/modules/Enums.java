@@ -1,5 +1,6 @@
 package modules;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class Enums {
@@ -20,6 +21,15 @@ public class Enums {
                     return s;
             }
             return null;
+        }
+
+        public static ArrayList<String> getAllSuits() {
+            ArrayList<String> allSuits = new ArrayList<>();
+            Suits[] suits = values();
+            for (Suits s : suits) {
+                allSuits.add(s.toString().toLowerCase());
+            }
+            return allSuits;
         }
     }
 
