@@ -1,10 +1,12 @@
-//TODO Fix cartas con enlace activo cuando hay un dos activo en juego
 //TODO Quitar "oros" como palo al inicio del juego
 //TODO Quitar limitación de sota a palo diferente al actual
 //TODO Sota elige palo más favorecedor (no aleatorio)
 //TODO pasar un HashMap en inlineStyle de printImg
 //TODO jugar rondas y eliminar jugadores
 //TODO elegir jugador que roba carta cuando el As
+//TODO Si caballo + palo caballo -> elegir esa
+//TODO Si rey + palo rey -> elegir esa
+//TODO cantar "¡PUMBA!"
 package modules;
 
 import java.util.ArrayList;
@@ -533,7 +535,7 @@ public class Pumba {
             if (player.getNumberOfCardsInHand() == 0) {
                 System.out.println("GANA " + player.getPlayerName().toUpperCase());
                 setPlayersScore();
-                /* CAMBIAR: DAR LA VUELTA A TODAS LAS CARTAS */
+                //TODO DAR LA VUELTA A TODAS LAS CARTAS
                 return String.format("FIN DE LA PARTIDA, ¡GANA EL JUGADOR %s!", player.getPlayerName().toUpperCase());
             }
             gameMessage = player.getPlayerName(true) + playMessage;
@@ -551,7 +553,7 @@ public class Pumba {
                 else {
                     turnMessage = ". Es tu turno, elige tu jugada.";
                     CardHand cardHand = player.getCardHand();
-                    cardHand.printPlayer1ValidCards(cardOnTable, this.suit);
+                    cardHand.printPlayer1ValidCards(droppedCard != null ? droppedCard : cardOnTable, this.suit);
                 }
                 kingMessage = checkKingCardDropped(droppedCard, playAgain, player);
             } else {

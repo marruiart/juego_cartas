@@ -5,7 +5,7 @@ import modules.Enums.*;
 
 public class CardsDeck {
     private ArrayList<Card> cards = new ArrayList<Card>();
-    private boolean uncoverAll = false; /* CAMBIAR A TRUE PARA DESTAPAR LAS CARTAS DE LOS JUGADORES */
+    private boolean uncover = true; /* CAMBIAR A TRUE PARA DESTAPAR LAS CARTAS DE LOS JUGADORES */
 
     public CardsDeck() {
         generateDeck();
@@ -31,7 +31,7 @@ public class CardsDeck {
      * @return ArrayList con las cartas del mazo.
      */
     public ArrayList<Card> getCards() {
-        return getCards(uncoverAll);
+        return getCards(uncover);
     }
 
     /**
@@ -108,7 +108,7 @@ public class CardsDeck {
      * @param _cards ArrayList de las cartas devueltas
      */
     public void returnCards(ArrayList<Card> _cards) {
-        returnCards(_cards, uncoverAll);
+        returnCards(_cards, uncover);
     }
 
     /**
