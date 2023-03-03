@@ -51,12 +51,12 @@ public class Utilities {
         return String.format("<img %s %s %s %s>", getClassesStr(classes), src, alt, inlineStyle);
     }
 
-    private static String getOptionsStr(ArrayList<String> options, String disabledOption) {
+    private static String getOptionsStr(ArrayList<String> options, String selectedOption) {
         String optStr = "";
         if (options.size() != 0) {
             for (String opt : options) {
-                if (disabledOption != null && opt.equals(disabledOption))
-                    optStr += String.format("<option value='%s' %s>%s</option>", opt.toLowerCase(), "disabled selected",
+                if (selectedOption != null && opt.equals(selectedOption))
+                    optStr += String.format("<option value='%s' %s>%s</option>", opt.toLowerCase(), "selected",
                             opt);
                 else
                     optStr += String.format("<option value='%s'>%s</option>", opt.replace(" ", "_").toLowerCase(), opt);
@@ -65,15 +65,15 @@ public class Utilities {
         return optStr;
     }
 
-    public static String printSelect(String name, ArrayList<String> options, String disabledOption, String... classes) {
-        return printSelect(name, true, options, disabledOption, classes);
+    public static String printSelect(String name, ArrayList<String> options, String... classes) {
+        return printSelect(name, true, options, null, classes);
     }
 
     public static String printSelect(String name, boolean enableSelect, ArrayList<String> options,
-            String disabledOption, String... classes) {
+            String selectedOption, String... classes) {
         name = name == null ? "" : String.format("name='%s'", name);
         return String.format("<select %s %s%s>%s</select>", name, getClassesStr(classes),
-                enableSelect ? "" : " disabled", options == null ? "" : getOptionsStr(options, disabledOption));
+                enableSelect ? "" : " disabled", options == null ? "" : getOptionsStr(options, selectedOption));
     }
 
     public static String printInput(String type, String name, String value, String... classes) {

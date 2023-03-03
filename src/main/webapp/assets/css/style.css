@@ -494,7 +494,7 @@ select:disabled::-ms-expand {
     display: none;
 }
 
-.played-suit select.select-suit option:disabled {
+.played-suit select.select-suit option:selected {
     color: #b4b4b4;
 }
 
@@ -581,8 +581,8 @@ select:disabled::-ms-expand {
 }
 
 .btn.select-btn:hover {
-    background-color: #ffeabb;
-    box-shadow: 1px 1px 25px var(--emphasis) inset, -1px -1px 25px var(--emphasis) inset;
+    background-color: var(--emphasis);
+    box-shadow: 1px 1px 25px #ffeabb inset, -1px -1px 25px #ffeabb inset;
     color: #141414;
 }
 

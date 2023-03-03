@@ -1,5 +1,3 @@
-//TODO Quitar limitación de sota a palo diferente al actual
-//TODO Sota elige palo más favorecedor (no aleatorio)
 //TODO pasar un HashMap en inlineStyle de printImg
 //TODO jugar rondas y eliminar jugadores
 //TODO Si caballo + palo caballo -> elegir esa
@@ -11,7 +9,7 @@ package modules;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import modules.Enums.Suits;
+import java.util.Map;
 
 public class Pumba {
     private CardsDeck drawPile;
@@ -232,12 +230,22 @@ public class Pumba {
      * @param _suitOnTable el palo en juego
      * @return un String con el palo escogido.
      */
-    private String chooseSuit(String _suitOnTable) {
-        String suit;
-        do {
-            suit = Suits.getRandom().toString().toLowerCase();
-        } while (suit.equals(_suitOnTable));
-        return changeSuit(suit);
+    private String chooseSuit() {
+        HashMap<String, Integer> number = new HashMap<>();
+        ArrayList<Card> cardHand = this.getPlayerOfTurn().getCardHand().getCards();
+        for (Card c : cardHand) {
+            String suit = c.getSuitStr();
+            number.put(suit, number.containsKey(suit) ? (number.get(suit) + 1) : 1);
+        }
+        String chosenSuit = null;
+        int count = 0;
+        for (Map.Entry<String, Integer> set : number.entrySet()) {
+            if (chosenSuit == null || count < set.getValue()) {
+                count = set.getValue();
+                chosenSuit = set.getKey();
+            }
+        }
+        return changeSuit(chosenSuit);
     }
 
     /**
@@ -377,7 +385,7 @@ public class Pumba {
         } else if (droppedCard.getNumber().equals("sota")) {
             if (this.turn == 0)
                 return null;
-            gameMessage = String.format(" y cambia de palo a %s", this.chooseSuit(droppedCard.getSuitStr()));
+            gameMessage = String.format(" y cambia de palo a %s", this.chooseSuit());
         } else if (droppedCard.getNumber().equals("as")) {
             if (this.turn == 0)
                 return null;

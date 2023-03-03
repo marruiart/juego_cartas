@@ -102,8 +102,7 @@
                 boolean playerDrawing = (message.equals("Elige al jugador que chupa 1 carta.")) ? true : false;
                 boolean changeOfSuit = false;
                 if (playerDrawing) {
-                  out.print(Utilities.printSelect("draw_player", (start == 1) ? null : game.getAllPlayersNames(), 
-                    null, "select-suit"));
+                  out.print(Utilities.printSelect("draw_player", game.getAllPlayersNames(), "select-suit"));
                 } else {
                   changeOfSuit = (message.equals("Elige el cambio de palo.")) ? true : false;
                   out.print(Utilities.printSelect("suits", changeOfSuit, (start == 1) ? null : Suits.getAllSuits(), 
