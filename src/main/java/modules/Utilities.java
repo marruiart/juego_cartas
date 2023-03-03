@@ -68,9 +68,8 @@ public class Utilities {
     public static String printSelect(String name, boolean enableSelect, ArrayList<String> options,
             String disabledOption, String... classes) {
         name = name == null ? "" : String.format("name='%s'", name);
-        String select = String.format("<select %s %s%s>%s</select>", name, getClassesStr(classes),
-                enableSelect ? "" : " disabled", getOptionsStr(options, disabledOption));
-        return select;
+        return String.format("<select %s %s%s>%s</select>", name, getClassesStr(classes),
+                enableSelect ? "" : " disabled", options == null ? "" : getOptionsStr(options, disabledOption));
     }
 
     public static String printInput(String type, String name, String value, String... classes) {

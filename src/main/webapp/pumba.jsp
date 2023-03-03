@@ -90,7 +90,7 @@
                 out.print(Utilities.printInput("hidden", "start", "0"));
                 out.print(Utilities.printInput("hidden", "card", (start == 1) ? null : playedCard));
                 boolean changeOfSuit = (message.equals("Elige el cambio de palo.")) ? true : false;
-                out.print(Utilities.printSelect("suits", changeOfSuit, Suits.getAllSuits(), game.getSuitOnPlay(), "select-suit"));
+                out.print(Utilities.printSelect("suits", changeOfSuit, (start == 1) ? null : Suits.getAllSuits(), game.getSuitOnPlay(), "select-suit"));
                 if (changeOfSuit)
                   out.print(Utilities.printButton("submit", "OK", "btn", "select-btn"));
                 else

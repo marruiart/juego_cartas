@@ -505,6 +505,10 @@ select:disabled::-ms-expand {
     width: 100%;
 }
 
+.played-suit img[src="empty"] {
+    visibility: hidden;
+}
+
 .message {
     height: 100%;
     width: 100%;

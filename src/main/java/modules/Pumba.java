@@ -1,4 +1,3 @@
-//TODO Quitar "oros" como palo al inicio del juego
 //TODO Quitar limitación de sota a palo diferente al actual
 //TODO Sota elige palo más favorecedor (no aleatorio)
 //TODO pasar un HashMap en inlineStyle de printImg
@@ -125,7 +124,7 @@ public class Pumba {
                 String src = String.format("assets/img/%s.png", cardOnTable.getSuitStr());
                 return Utilities.printImg(src, cardOnTable.getSuitStr());
             }
-            return Utilities.printImg(null, null);
+            return Utilities.printImg("empty", null);
         }
         String suitStr = getSuitOnPlay();
         String src = suitStr.equals("") ? "" : String.format("assets/img/%s.png", suitStr);

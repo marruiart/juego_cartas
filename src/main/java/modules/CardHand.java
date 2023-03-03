@@ -123,8 +123,6 @@ public class CardHand {
                 cardHand += card.toString();
             }
         } else {
-            //TODO AÑADIR SI NO HAY CARTA VÁLIDA, QUE ACTIVE EL ENLACE DEL MAZO DE ROBO
-            //TODO SI HAY QUE CHUPAR POR UN DOS, NO SE DEBE ILUMINAR NINGUNA CARTA
             if (this.player.getGame().getTurn() == 0) {
                 Card cardOnTable = this.player.checkCardOnTable();
                 String suit = this.player.getGame().getSuit();
