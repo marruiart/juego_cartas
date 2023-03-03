@@ -535,19 +535,20 @@ public class Pumba {
             changeSuit(_suit);
             droppedCard = getPlayedCard(_playedCard);
             playMessage = String.format(" echa %s y cambia de palo a %s", droppedCard.getCardName(), getSuit());
-            Player player = getPlayerOfTurn();
-            gameMessage = player.getPlayerName(true) + playMessage;
-            player = this.setTurn().getPlayerOfTurn();
-            turnMessage = String.format(". Turno del %s.", player.getPlayerName());
+            gameMessage = getPlayerOfTurn().getPlayerName(true) + playMessage;
+            turnMessage = String.format(". Turno del %s.", this.setTurn().getPlayerOfTurn().getPlayerName(true));
             this.isSelectionRound = false;
         } else if (_drawPlayer != null) {
             droppedCard = getPlayedCard(_playedCard);
+            _drawPlayer = _drawPlayer.replace("_", " ");
             playMessage = String.format(" echa %s. Elige a %s para que chupe 1 carta", droppedCard.getCardName(),
-                    Utilities.firstToCapital(_drawPlayer).replace("_", " "));
-            Player player = getPlayerOfTurn();
-            gameMessage = player.getPlayerName(true) + playMessage;
-            player = this.setTurn().getPlayerOfTurn();
-            turnMessage = String.format(". Turno del %s.", player.getPlayerName());
+                    Utilities.firstToCapital(_drawPlayer));
+            for (Player p : this.players) {
+                if (p.getPlayerName().equals(_drawPlayer))
+                    p.drawCard();
+            }
+            gameMessage = getPlayerOfTurn().getPlayerName(true) + playMessage;
+            turnMessage = String.format(". Turno del %s.", this.setTurn().getPlayerOfTurn().getPlayerName(true));
             this.isSelectionRound = false;
         } else {
             Player player = this.getPlayerOfTurn();

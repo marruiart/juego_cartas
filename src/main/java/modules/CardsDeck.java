@@ -5,7 +5,7 @@ import modules.Enums.*;
 
 public class CardsDeck {
     private ArrayList<Card> cards = new ArrayList<Card>();
-    private boolean uncover = false; /* CAMBIAR A TRUE PARA DESTAPAR LAS CARTAS DE LOS JUGADORES */
+    private boolean uncover = true; /* CAMBIAR A TRUE PARA DESTAPAR LAS CARTAS DE LOS JUGADORES */
 
     public CardsDeck() {
         generateDeck();
