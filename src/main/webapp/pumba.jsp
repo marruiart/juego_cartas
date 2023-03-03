@@ -78,11 +78,15 @@
               <%  
               Card c = personPlayer.checkCardOnTable();
               String s = personPlayer.getGame().getSuit();
-              boolean enableDrawPile = game.getTurn() == 0 && (personPlayer.getCardHand().getValidCards(c, s).size() == 0);
-              out.print(Utilities.printAnchor("pumba.jsp?start=0&amp;card=draw_card", "", "card", enableDrawPile ? "" : "disabled"));
+              boolean enableDrawPile = !game.isScoreRound() && game.getTurn() == 0 && (personPlayer.getCardHand().getValidCards(c, s).size() == 0);
+              out.print(Utilities.printAnchor("pumba.jsp?start=0&card=draw_card", "", "card", enableDrawPile ? "" : "disabled"));
               %>
             </div>
-          </div>  
+          </div>
+          <%
+          out.print(Utilities.printImg("assets/img/dir"+game.getPlayDirection() +".png", "Flecha de dirección del juego", "arrow-img", "top"));
+          out.print(Utilities.printImg("assets/img/dir"+game.getPlayDirection() +".png", "Flecha de dirección del juego", "arrow-img", "bottom"));
+          %>  
         </div>
       </section>
       <section class="display">
@@ -114,6 +118,7 @@
             <div class="message"><%=message%></div>
           </div>
           <div class="buttons">
+            <!-- CAMBIAR index.html#play -->
             <%
               if (message.contains("FIN")) {
                   out.print(Utilities.printAnchor("index.html", "Atrás", "btn"));

@@ -521,6 +521,19 @@ select:disabled::-ms-expand {
     overflow-Y: auto;
 }
 
+.arrow-img.top {
+    position: absolute;
+    bottom: 0;
+    left: 48.7%;
+}
+
+.arrow-img.bottom {
+    position: absolute;
+    bottom: 47%;
+    left: 48.7%;
+    transform: rotate(180deg);
+}
+
 /* BOTONES */
 
 .buttons {

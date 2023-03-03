@@ -99,6 +99,10 @@ public class Pumba {
         return nextTurn;
     }
 
+    public int getPlayDirection() {
+        return this.playDirection;
+    }
+
     public Player getPlayerOfTurn() {
         Player player = this.players.get(turn);
         return player;
