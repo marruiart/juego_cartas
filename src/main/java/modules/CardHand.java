@@ -37,8 +37,9 @@ public class CardHand {
      */
     public ArrayList<Card> getValidCards(Card _cardOnTable, String _suit) {
         ArrayList<Card> validCards = new ArrayList<Card>();
+        boolean isSelectionRound = this.player.getGame().isSelectionRound();
         for (Card c : this.cards) {
-            if (c.isValid(_cardOnTable, _suit))
+            if (!isSelectionRound && c.isValid(_cardOnTable, _suit))
                 validCards.add(c);
         }
         return validCards;
@@ -123,9 +124,10 @@ public class CardHand {
                 cardHand += card.toString();
             }
         } else {
-            if (this.player.getGame().getTurn() == 0) {
+            Pumba game = this.player.getGame();
+            if (game.getTurn() == 0) {
                 Card cardOnTable = this.player.checkCardOnTable();
-                String suit = this.player.getGame().getSuit();
+                String suit = game.getSuit();
                 ArrayList<Card> validCards = this.getValidCards(cardOnTable, suit);
                 for (int i = 0; i < getNumberOfCards(); i++) {
                     Card card = this.cards.get(i);

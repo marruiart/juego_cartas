@@ -5,9 +5,8 @@
 //TODO Si caballo + palo caballo -> elegir esa
 //TODO Si rey + palo rey -> elegir esa
 //TODO cantar "¡PUMBA!"
-//TODO not available cards when choosing suit
-//TODO not available cards when choosing person to draw
 //TODO assign players names
+//TODO PumbaUtilities: iniciar partida, sacar funciones allí
 package modules;
 
 import java.util.ArrayList;
@@ -22,6 +21,7 @@ public class Pumba {
     private int turn;
     private String suit;
     private boolean isScoreRound;
+    private boolean isSelectionRound;
     private Card playedCard;
     private int playDirection;
     private int draw2;
@@ -36,6 +36,7 @@ public class Pumba {
         this.suit = null;
         this.playedCard = null;
         this.isScoreRound = false;
+        this.isSelectionRound = false;
         scoreCards();
         generatePlayers();
         dealCards();
@@ -149,6 +150,10 @@ public class Pumba {
 
     public boolean isScoreRound() {
         return this.isScoreRound;
+    }
+
+    public boolean isSelectionRound() {
+        return this.isSelectionRound;
     }
 
     /**
@@ -526,13 +531,16 @@ public class Pumba {
             gameMessage = player.getPlayerName(true) + playMessage;
             player = this.setTurn().getPlayerOfTurn();
             turnMessage = String.format(". Turno del %s.", player.getPlayerName());
+            this.isSelectionRound = false;
         } else if (_drawPlayer != null) {
             droppedCard = getPlayedCard(_playedCard);
             playMessage = String.format(" echa %s. Elige a %s para que chupe 1 carta", droppedCard.getCardName(),
                     Utilities.firstToCapital(_drawPlayer).replace("_", " "));
             Player player = getPlayerOfTurn();
             gameMessage = player.getPlayerName(true) + playMessage;
+            player = this.setTurn().getPlayerOfTurn();
             turnMessage = String.format(". Turno del %s.", player.getPlayerName());
+            this.isSelectionRound = false;
         } else {
             Player player = this.getPlayerOfTurn();
             System.out.println("\nTURNO: " + player.getPlayerName().toUpperCase());
@@ -580,6 +588,7 @@ public class Pumba {
                 }
                 kingMessage = checkKingCardDropped(droppedCard, playAgain, player);
             } else {
+                this.isSelectionRound = true;
                 if (droppedCard.getNumber().equals("sota")) {
                     System.out.println("-*- ELECCION DE PALO -*-");
                     gameMessage = "Elige el cambio de palo.";

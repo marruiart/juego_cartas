@@ -78,7 +78,7 @@
               <%  
               Card c = personPlayer.checkCardOnTable();
               String s = personPlayer.getGame().getSuit();
-              boolean enableDrawPile = !game.isScoreRound() && game.getTurn() == 0 && (personPlayer.getCardHand().getValidCards(c, s).size() == 0);
+              boolean enableDrawPile = !game.isSelectionRound() && !game.isScoreRound() && game.getTurn() == 0 && (personPlayer.getCardHand().getValidCards(c, s).size() == 0);
               out.print(Utilities.printAnchor("pumba.jsp?start=0&card=draw_card", "", "card", enableDrawPile ? "" : "disabled"));
               %>
             </div>
