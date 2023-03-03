@@ -5,7 +5,6 @@ import modules.Enums.*;
 
 public class CardsDeck {
     private ArrayList<Card> cards = new ArrayList<Card>();
-    private boolean uncover = true; /* CAMBIAR A TRUE PARA DESTAPAR LAS CARTAS DE LOS JUGADORES */
 
     public CardsDeck() {
         generateDeck();
@@ -31,7 +30,7 @@ public class CardsDeck {
      * @return ArrayList con las cartas del mazo.
      */
     public ArrayList<Card> getCards() {
-        return getCards(uncover);
+        return getCards(false); /* CAMBIAR A TRUE PARA DESTAPAR TODAS LAS CARTAS */
     }
 
     /**
@@ -77,38 +76,15 @@ public class CardsDeck {
     }
 
     /**
-     * Devuelve una carta concreta al mazo.
-     * 
-     * @param _card la carta devuelta
-     */
-    public void returnCard(Card _card) {
-        ArrayList<Card> cards = new ArrayList<>();
-        cards.add(_card);
-        returnCards(cards);
-    }
-
-    /**
-     * Devuelve un grupo de cartas al mazo mazo. Si el boolean que recibe es true,
-     * todas las cartas se muestran, si es false, quedan boca abajo.
-     * 
-     * @param uncover booleano que establece si se muestran o no las cartas.
-     * @param _cards  ArrayList de las cartas devueltas
-     * @return ArrayList con las cartas del mazo.
-     */
-    public void returnCards(ArrayList<Card> _cards, boolean uncover) {
-        for (Card c : _cards) {
-            c.setUncovered(uncover);
-            this.cards.add(c);
-        }
-    }
-
-    /**
      * Devuelve un grupo de cartas al mazo boca abajo.
      * 
      * @param _cards ArrayList de las cartas devueltas
      */
     public void returnCards(ArrayList<Card> _cards) {
-        returnCards(_cards, uncover);
+        for (Card c : _cards) {
+            c.setUncovered(false); /* CAMBIAR A TRUE PARA DESTAPAR TODAS LAS CARTAS */
+            this.cards.add(c);
+        }
     }
 
     /**

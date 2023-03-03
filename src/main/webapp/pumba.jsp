@@ -117,13 +117,12 @@
             <div class="message"><%=message%></div>
           </div>
           <div class="buttons">
-            <!-- CAMBIAR index.html#play -->
             <%
               if (message.contains("FIN")) {
                   out.print(Utilities.printAnchor("index.html", "Atrás", "btn"));
               } else {
                   out.print(Utilities.printAnchor("pumba.jsp?start=0", "Siguiente", "btn", (game.getTurn() == 0) ? "disabled" : ""));
-                  out.print(Utilities.printAnchor("index.html#play", "Atrás", "btn"));
+                  out.print(Utilities.printAnchor("index.html", "Atrás", "btn"));
               }
             %>
           </div>

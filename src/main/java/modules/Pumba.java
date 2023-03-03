@@ -1,7 +1,4 @@
-//TODO pasar un HashMap en inlineStyle de printImg
 //TODO jugar rondas y eliminar jugadores
-//TODO Si caballo + palo caballo -> elegir esa
-//TODO Si rey + palo rey -> elegir esa
 //TODO cantar "¡PUMBA!"
 //TODO assign players names
 //TODO PumbaUtilities: iniciar partida, sacar funciones allí
@@ -512,8 +509,9 @@ public class Pumba {
         this.isScoreRound = true;
         for (Player p : this.players) {
             int score = 0;
-            for (Card c : p.getCardHand().getCards())
-                score += c.getScore();
+            for (Card c : p.getCardHand().getCards()) {
+                score += c.setUncovered(true).getScore();
+            }
             p.updateScore(score);
         }
     }
@@ -575,7 +573,6 @@ public class Pumba {
             if (player.getNumberOfCardsInHand() == 0) {
                 System.out.println("GANA " + player.getPlayerName().toUpperCase());
                 setPlayersScore();
-                // TODO DAR LA VUELTA A TODAS LAS CARTAS
                 return String.format("FIN DE LA PARTIDA, ¡GANA %s!", player.getPlayerName().toUpperCase());
             }
             gameMessage = player.getPlayerName(true) + playMessage;
