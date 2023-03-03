@@ -21,15 +21,17 @@
         String message;
         Pumba game;
         Player personPlayer = null;
+        String playedCard = null;
         if (start == 1) {
           int n = Integer.parseInt(request.getParameter("players"));
           game = new Pumba(n);
           session.setAttribute("game", game);
           message = "Comienza el juego. Turno del \"Mano\".";
         } else {
-          String playedCard = request.getParameter("card");
+          playedCard = request.getParameter("card");
+          String changedSuit = request.getParameter("suits");
           game = (Pumba)session.getAttribute("game");
-          message = game.runPlay(playedCard);
+          message = game.runPlay(playedCard, changedSuit);
       }%>
       <section class="table">
         <div class="all-players">
@@ -83,14 +85,18 @@
         %>
         <div class="info">
           <div class="play-info">
-            <div class="played-suit">
+            <form class="played-suit" method="GET" action="pumba.jsp">
               <% 
-                String suit = game.getSuitOnPlay(); 
-                out.print(Utilities.printSelect("suits", true, Suits.getAllSuits(), suit, "select-suit"));
+                out.print(Utilities.printInput("hidden", "start", "0"));
+                out.print(Utilities.printInput("hidden", "card", (start == 1) ? null : playedCard));
+                boolean changeOfSuit = (message.equals("Elige el cambio de palo.")) ? true : false;
+                out.print(Utilities.printSelect("suits", changeOfSuit, Suits.getAllSuits(), game.getSuitOnPlay(), "select-suit"));
+                if (changeOfSuit)
+                  out.print(Utilities.printButton("submit", "OK", "btn", "select-btn"));
+                else
+                  out.print(game.getSuitImg());
               %>
-              <!-- <div class="suit"><%=(suit == null ? "" : suit)%></div> -->
-              <%=game.getSuitImg()%>
-            </div>
+            </form>
             <div class="message"><%=message%></div>
           </div>
           <div class="buttons">
@@ -99,7 +105,7 @@
                   out.print(Utilities.printAnchor("index.html", "Atrás", "btn"));
               } else {
                   out.print(Utilities.printAnchor("pumba.jsp?start=0", "Siguiente", "btn", (game.getTurn() == 0) ? "disabled" : ""));
-                  out.print(Utilities.printAnchor("index.html", "Atrás", "btn"));
+                  out.print(Utilities.printAnchor("index.html#play", "Atrás", "btn"));
               }
             %>
           </div>

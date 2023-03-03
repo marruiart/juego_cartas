@@ -472,11 +472,13 @@ main .info {
 }
 
 .played-suit select.select-suit {
-    width: 100%;
+    width: 137%;
+    margin-left: -17%;
     background-color: var(--light);
     font-family: old-school, 'Courier New', Courier, monospace;
     text-align: center;
     border: none;
+    outline: none;
 }
 
 .played-suit select.select-suit:disabled {
@@ -492,10 +494,14 @@ select:disabled::-ms-expand {
     display: none;
 }
 
+.played-suit select.select-suit option:disabled {
+    color: #b4b4b4;
+}
+
 .played-suit img {
     object-fit: scale-down;
     padding-top: 26%;
-    height: 120px;
+    height: 100px;
     width: 100%;
 }
 
@@ -510,6 +516,8 @@ select:disabled::-ms-expand {
     overflow-wrap: break-word;
     overflow-Y: auto;
 }
+
+/* BOTONES */
 
 .buttons {
     display: flex;
@@ -544,6 +552,21 @@ select:disabled::-ms-expand {
     background-color: var(--emphasis);
     color: var(--dark);
     cursor: pointer;
+}
+
+.btn.select-btn {
+    background-color: var(--emphasis);
+    color: #141414;
+    height: 60%;
+    width: 120%;
+    min-width: 0;
+    margin: 28% 0 0 -9%;
+}
+
+.btn.select-btn:hover {
+    background-color: #ffeabb;
+    box-shadow: 1px 1px 25px var(--emphasis) inset, -1px -1px 25px var(--emphasis) inset;
+    color: #141414;
 }
 
 /********* ENLACES ACTIVADOS/DESACTIVADOS *********/

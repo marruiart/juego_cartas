@@ -286,6 +286,13 @@ public class Pumba {
 
     /*** JUGADAS ESPECIALES Y CHEQUEOS DE LA JUGADA ***/
 
+    private Card getPlayedCard(String _playedCard) {
+        String[] card = _playedCard.split("_");
+        String number = card[0];
+        String suit = card[1];
+        return new Card(number, suit);
+    }
+
     /**
      * Comprueba la carta ha jugado el jugador principal en su turno o bien si ha
      * robado carta del mazo.
@@ -334,7 +341,10 @@ public class Pumba {
             System.out.println("SALTA TURNO: no juega " + this.getPlayerOfTurn().getPlayerName());
             gameMessage = String.format(". Salta el turno del %s", this.getPlayerOfTurn().getPlayerName());
         } else if (droppedCard.getNumber().equals("sota")) {
-            gameMessage = String.format(" y cambia de palo a %s", this.chooseSuit(droppedCard.getSuitStr()));
+            if (this.turn == 0)
+                gameMessage = null;
+            else
+                gameMessage = String.format(" y cambia de palo a %s", this.chooseSuit(droppedCard.getSuitStr()));
         } else if (droppedCard.getNumber().equals("as")) {
             Player chosenPlayer = this.choosePlayer();
             chosenPlayer.drawCard();
@@ -466,52 +476,74 @@ public class Pumba {
      * @param _playedCard la carta escogida por el jugador principal.
      * @return un String con el mensaje que explica la jugada.
      */
-    public String runPlay(String _playedCard) {
+    public String runPlay(String _playedCard, String _suit) {
         Boolean playAgain = true;
         Card droppedCard = null;
         String gameMessage = "";
         String playMessage = "";
         String turnMessage = "";
-
-        Player player = this.getPlayerOfTurn();
-        System.out.println("\nTURNO: " + player.getPlayerName().toUpperCase());
-        this.playedCard = checkPlayedCard(player, _playedCard);
-        Card cardOnTable = this.getCardOnTable();
-        System.out.println(cardOnTable == null ? "--Mesa vacia" : ("--Carta en mesa: " + cardOnTable.getCardName()));
-        if (cardOnTable == null) {
-            /* CAMBIAR: HAY QUE DESHABILITAR EL ENLACE DE ROBAR PARA QUE ESTO NO PETE */
-            droppedCard = (this.playedCard != null) ? player.dropCard(this.playedCard) : player.dropCard();
-            playMessage = String.format(" echa %s", droppedCard.getCardName());
+        String kingMessage = null;
+        if (_suit != null) {
+            changeSuit(_suit);
+            droppedCard = getPlayedCard(_playedCard);
+            playMessage = String.format(" echa %s y cambia de palo a %s", droppedCard.getCardName(), getSuit());
+            Player player = getPlayerOfTurn();
+            gameMessage = player.getPlayerName(true) + playMessage;
+            player = this.setTurn().getPlayerOfTurn();
+            turnMessage = String.format(". Turno del %s.", player.getPlayerName());
         } else {
-            if (cardOnTable.getNumber().equals("dos")) {
-                HashMap<String, Object> returns = playWith2OnTable(cardOnTable, player);
-                playMessage = (String) returns.get("playMessage");
-                droppedCard = (Card) returns.get("droppedCard");
+            Player player = this.getPlayerOfTurn();
+            System.out.println("\nTURNO: " + player.getPlayerName().toUpperCase());
+            this.playedCard = checkPlayedCard(player, _playedCard);
+            Card cardOnTable = this.getCardOnTable();
+            System.out
+                    .println(cardOnTable == null ? "--Mesa vacia" : ("--Carta en mesa: " + cardOnTable.getCardName()));
+            if (cardOnTable == null) {
+                droppedCard = (this.playedCard != null) ? player.dropCard(this.playedCard) : player.dropCard();
+                playMessage = String.format(" echa %s", droppedCard.getCardName());
             } else {
-                HashMap<String, Object> returns = playWithAnyCardOnTable(cardOnTable, player);
-                playMessage = (String) returns.get("playMessage");
-                droppedCard = (Card) returns.get("droppedCard");
-                playAgain = (Boolean) returns.get("playAgain");
+                if (cardOnTable.getNumber().equals("dos")) {
+                    HashMap<String, Object> returns = playWith2OnTable(cardOnTable, player);
+                    playMessage = (String) returns.get("playMessage");
+                    droppedCard = (Card) returns.get("droppedCard");
+                } else {
+                    HashMap<String, Object> returns = playWithAnyCardOnTable(cardOnTable, player);
+                    playMessage = (String) returns.get("playMessage");
+                    droppedCard = (Card) returns.get("droppedCard");
+                    playAgain = (Boolean) returns.get("playAgain");
+                }
+            }
+            if (player.getNumberOfCardsInHand() == 0) {
+                System.out.println("GANA " + player.getPlayerName().toUpperCase());
+                setPlayersScore();
+                /* CAMBIAR: DAR LA VUELTA A TODAS LAS CARTAS */
+                return String.format("FIN DE LA PARTIDA, ¡GANA EL JUGADOR %s!", player.getPlayerName().toUpperCase());
+            }
+            gameMessage = player.getPlayerName(true) + playMessage;
+            if (droppedCard != null) {
+                String specialMessage = checkSpecialDroppedCard(droppedCard);
+                if (specialMessage != null)
+                    gameMessage += specialMessage;
+                else
+                    gameMessage = null;
+            }
+            if (gameMessage != null) {
+                player = this.setTurn().getPlayerOfTurn();
+                if (player.isMachine())
+                    turnMessage = String.format(". Turno del %s.", player.getPlayerName());
+                // CAMBIAR: if (cardOnTable.equals("dos") && droppedCard != null && this.draw2
+                // != -1)
+                else {
+                    turnMessage = ". Es tu turno, elige tu jugada.";
+                    CardHand cardHand = player.getCardHand();
+                    cardHand.printPlayer1ValidCards(cardOnTable, this.suit);
+                }
+                kingMessage = checkKingCardDropped(droppedCard, playAgain, player);
+            } else {
+                System.out.println("-*- ELECCION DE PALO -*-");
+                gameMessage = "Elige el cambio de palo.";
             }
         }
-        if (player.getNumberOfCardsInHand() == 0) {
-            System.out.println("GANA " + player.getPlayerName().toUpperCase());
-            setPlayersScore();
-            /* CAMBIAR: DAR LA VUELTA A TODAS LAS CARTAS */
-            return String.format("FIN DE LA PARTIDA, ¡GANA EL JUGADOR %s!", player.getPlayerName().toUpperCase());
-        }
-        gameMessage = player.getPlayerName(true) + playMessage;
-        if (droppedCard != null)
-            gameMessage += checkSpecialDroppedCard(droppedCard);
-        player = this.setTurn().getPlayerOfTurn();
-        if (player.isMachine())
-            turnMessage = String.format(". Turno del %s.", player.getPlayerName());
-        else {
-            turnMessage = ". Es tu turno, elige tu jugada.";
-            CardHand cardHand = player.getCardHand();
-            cardHand.printPlayer1ValidCards(cardOnTable, this.suit);
-        }
-        String kingMessage = checkKingCardDropped(droppedCard, playAgain, player);
         return gameMessage + (kingMessage != null ? kingMessage : turnMessage);
     }
 

@@ -34,6 +34,12 @@ public class Utilities {
         return String.format("<div %s>%s</div>", getClassesStr(classes), content);
     }
 
+    public static String printButton(String type, String content, String... classes) {
+        type = type == null ? "type='submit'" : String.format("type='%s'", type);
+        content = content == null ? "" : content;
+        return String.format("<button %s %s>%s</button>", getClassesStr(classes), type, content);
+    }
+
     public static String printImg(String src, String alt, String... classes) {
         return printImg(src, alt, null, false, classes);
     }
@@ -59,11 +65,18 @@ public class Utilities {
         return optStr;
     }
 
-    public static String printSelect(String _name, boolean disabledSelect, ArrayList<String> options,
+    public static String printSelect(String name, boolean enableSelect, ArrayList<String> options,
             String disabledOption, String... classes) {
-        _name = _name == null ? "" : String.format("name='%s'", _name);
-        String select = String.format("<select %s %s%s>%s</select>", _name, getClassesStr(classes),
-                disabledSelect ? " disabled" : "", getOptionsStr(options, disabledOption));
+        name = name == null ? "" : String.format("name='%s'", name);
+        String select = String.format("<select %s %s%s>%s</select>", name, getClassesStr(classes),
+                enableSelect ? "" : " disabled", getOptionsStr(options, disabledOption));
         return select;
+    }
+
+    public static String printInput(String type, String name, String value, String... classes) {
+        type = type == null ? "type='text'" : String.format("type='%s'", type);
+        name = name == null ? "" : String.format("name='%s'", name);
+        value = value == null ? "" : String.format("value='%s'", value);
+        return String.format("<input %s %s %s %s/>", type, name, value, getClassesStr(classes));
     }
 }
