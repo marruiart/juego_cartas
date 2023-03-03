@@ -32,7 +32,7 @@ public class Player {
 
     public String getPlayerName(boolean _firstCapital) {
         if (_firstCapital)
-            return Character.toUpperCase(this.name.charAt(0)) + this.name.substring(1);
+            return Utilities.firstToCapital(this.name);
         else
             return String.format(this.name.toLowerCase());
     }

@@ -22,6 +22,7 @@
         Pumba game;
         Player personPlayer = null;
         String playedCard = null;
+        String drawPlayer = null;
         if (start == 1) {
           int n = Integer.parseInt(request.getParameter("players"));
           game = new Pumba(n);
@@ -29,9 +30,14 @@
           message = "Comienza el juego. Turno del \"Mano\".";
         } else {
           playedCard = request.getParameter("card");
+          drawPlayer = request.getParameter("draw_player");
           String changedSuit = request.getParameter("suits");
+          if (playedCard != null)
+            playedCard = Utilities.getPlayerName(playedCard);
+          if (drawPlayer != null)
+            drawPlayer = Utilities.getPlayerName(drawPlayer);
           game = (Pumba)session.getAttribute("game");
-          message = game.runPlay(playedCard, changedSuit);
+          message = game.runPlay(playedCard, changedSuit, drawPlayer);
       }%>
       <section class="table">
         <div class="all-players">
@@ -89,9 +95,17 @@
               <% 
                 out.print(Utilities.printInput("hidden", "start", "0"));
                 out.print(Utilities.printInput("hidden", "card", (start == 1) ? null : playedCard));
-                boolean changeOfSuit = (message.equals("Elige el cambio de palo.")) ? true : false;
-                out.print(Utilities.printSelect("suits", changeOfSuit, (start == 1) ? null : Suits.getAllSuits(), game.getSuitOnPlay(), "select-suit"));
-                if (changeOfSuit)
+                boolean playerDrawing = (message.equals("Elige al jugador que chupa 1 carta.")) ? true : false;
+                boolean changeOfSuit = false;
+                if (playerDrawing) {
+                  out.print(Utilities.printSelect("draw_player", (start == 1) ? null : game.getAllPlayersNames(), 
+                    null, "select-suit"));
+                } else {
+                  changeOfSuit = (message.equals("Elige el cambio de palo.")) ? true : false;
+                  out.print(Utilities.printSelect("suits", changeOfSuit, (start == 1) ? null : Suits.getAllSuits(), 
+                    game.getSuitOnPlay(), "select-suit"));
+                }
+                if (playerDrawing || changeOfSuit)
                   out.print(Utilities.printButton("submit", "OK", "btn", "select-btn"));
                 else
                   out.print(game.getSuitImg());

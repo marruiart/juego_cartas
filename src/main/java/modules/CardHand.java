@@ -47,7 +47,7 @@ public class CardHand {
     public void printPlayer1ValidCards(Card _cardOnTable, String _suit) {
         System.out.println("\n** TUS CARTAS VALIDAS **");
         for (Card c : getValidCards(_cardOnTable, _suit))
-            System.out.printf("* %s\n", c.getCardName());
+            System.out.printf("   * %s\n", c.getCardName());
         System.out.println("************************");
     }
 

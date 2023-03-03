@@ -2,10 +2,12 @@
 //TODO Sota elige palo más favorecedor (no aleatorio)
 //TODO pasar un HashMap en inlineStyle de printImg
 //TODO jugar rondas y eliminar jugadores
-//TODO elegir jugador que roba carta cuando el As
 //TODO Si caballo + palo caballo -> elegir esa
 //TODO Si rey + palo rey -> elegir esa
 //TODO cantar "¡PUMBA!"
+//TODO not available cards when choosing suit
+//TODO not available cards when choosing person to draw
+//TODO assign players names
 package modules;
 
 import java.util.ArrayList;
@@ -55,6 +57,16 @@ public class Pumba {
 
     public ArrayList<Player> getPlayers() {
         return this.players;
+    }
+
+    public ArrayList<String> getAllPlayersNames() {
+        ArrayList<String> playersNames = new ArrayList<>();
+        Player playerOfTurn = getPlayerOfTurn();
+        for (Player p : this.players) {
+            if (p != playerOfTurn)
+                playersNames.add(p.getPlayerName(true));
+        }
+        return playersNames;
     }
 
     public int getNumberOfPlayers() {
@@ -352,16 +364,17 @@ public class Pumba {
         } else if (droppedCard.getNumber().equals("caballo")) {
             this.setTurn();
             System.out.println("SALTA TURNO: no juega " + this.getPlayerOfTurn().getPlayerName());
-            gameMessage = String.format(". Salta el turno del %s", this.getPlayerOfTurn().getPlayerName());
+            gameMessage = String.format(". Salta el turno de %s", this.getPlayerOfTurn().getPlayerName(true));
         } else if (droppedCard.getNumber().equals("sota")) {
             if (this.turn == 0)
-                gameMessage = null;
-            else
-                gameMessage = String.format(" y cambia de palo a %s", this.chooseSuit(droppedCard.getSuitStr()));
+                return null;
+            gameMessage = String.format(" y cambia de palo a %s", this.chooseSuit(droppedCard.getSuitStr()));
         } else if (droppedCard.getNumber().equals("as")) {
+            if (this.turn == 0)
+                return null;
             Player chosenPlayer = this.choosePlayer();
             chosenPlayer.drawCard();
-            gameMessage = String.format(". Elige al jugador %s para que robe carta", chosenPlayer.getPlayerName());
+            gameMessage = String.format(". Elige a %s para que chupe 1 carta", chosenPlayer.getPlayerName(true));
         }
         return gameMessage;
     }
@@ -494,7 +507,7 @@ public class Pumba {
      * @param _playedCard la carta escogida por el jugador principal.
      * @return un String con el mensaje que explica la jugada.
      */
-    public String runPlay(String _playedCard, String _suit) {
+    public String runPlay(String _playedCard, String _suit, String _drawPlayer) {
         Boolean playAgain = true;
         Card droppedCard = null;
         String gameMessage = "";
@@ -508,6 +521,13 @@ public class Pumba {
             Player player = getPlayerOfTurn();
             gameMessage = player.getPlayerName(true) + playMessage;
             player = this.setTurn().getPlayerOfTurn();
+            turnMessage = String.format(". Turno del %s.", player.getPlayerName());
+        } else if (_drawPlayer != null) {
+            droppedCard = getPlayedCard(_playedCard);
+            playMessage = String.format(" echa %s. Elige a %s para que chupe 1 carta", droppedCard.getCardName(),
+                    Utilities.firstToCapital(_drawPlayer).replace("_", " "));
+            Player player = getPlayerOfTurn();
+            gameMessage = player.getPlayerName(true) + playMessage;
             turnMessage = String.format(". Turno del %s.", player.getPlayerName());
         } else {
             Player player = this.getPlayerOfTurn();
@@ -534,8 +554,8 @@ public class Pumba {
             if (player.getNumberOfCardsInHand() == 0) {
                 System.out.println("GANA " + player.getPlayerName().toUpperCase());
                 setPlayersScore();
-                //TODO DAR LA VUELTA A TODAS LAS CARTAS
-                return String.format("FIN DE LA PARTIDA, ¡GANA EL JUGADOR %s!", player.getPlayerName().toUpperCase());
+                // TODO DAR LA VUELTA A TODAS LAS CARTAS
+                return String.format("FIN DE LA PARTIDA, ¡GANA %s!", player.getPlayerName().toUpperCase());
             }
             gameMessage = player.getPlayerName(true) + playMessage;
             if (droppedCard != null) {
@@ -556,8 +576,13 @@ public class Pumba {
                 }
                 kingMessage = checkKingCardDropped(droppedCard, playAgain, player);
             } else {
-                System.out.println("-*- ELECCION DE PALO -*-");
-                gameMessage = "Elige el cambio de palo.";
+                if (droppedCard.getNumber().equals("sota")) {
+                    System.out.println("-*- ELECCION DE PALO -*-");
+                    gameMessage = "Elige el cambio de palo.";
+                } else {
+                    System.out.println("-*- ELECCION DE JUGADOR -*-");
+                    gameMessage = "Elige al jugador que chupa 1 carta.";
+                }
             }
         }
         return gameMessage + (kingMessage != null ? kingMessage : turnMessage);

@@ -55,14 +55,18 @@ public class Utilities {
         String optStr = "";
         if (options.size() != 0) {
             for (String opt : options) {
-                if (opt.equals(disabledOption))
+                if (disabledOption != null && opt.equals(disabledOption))
                     optStr += String.format("<option value='%s' %s>%s</option>", opt.toLowerCase(), "disabled selected",
                             opt);
                 else
-                    optStr += String.format("<option value='%s'>%s</option>", opt.toLowerCase(), opt);
+                    optStr += String.format("<option value='%s'>%s</option>", opt.replace(" ", "_").toLowerCase(), opt);
             }
         }
         return optStr;
+    }
+
+    public static String printSelect(String name, ArrayList<String> options, String disabledOption, String... classes) {
+        return printSelect(name, true, options, disabledOption, classes);
     }
 
     public static String printSelect(String name, boolean enableSelect, ArrayList<String> options,
@@ -77,5 +81,14 @@ public class Utilities {
         name = name == null ? "" : String.format("name='%s'", name);
         value = value == null ? "" : String.format("value='%s'", value);
         return String.format("<input %s %s %s %s/>", type, name, value, getClassesStr(classes));
+    }
+
+    public static String firstToCapital(String str) {
+        return (Character.toUpperCase(str.charAt(0)) + str.substring(1).toLowerCase());
+    }
+
+    public static String getPlayerName(String str) {
+        String name = str == null ? "" : str;
+        return name;
     }
 }
