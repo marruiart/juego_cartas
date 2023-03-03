@@ -1,3 +1,10 @@
+//TODO Fix cartas con enlace activo cuando hay un dos activo en juego
+//TODO Quitar "oros" como palo al inicio del juego
+//TODO Quitar limitación de sota a palo diferente al actual
+//TODO Sota elige palo más favorecedor (no aleatorio)
+//TODO pasar un HashMap en inlineStyle de printImg
+//TODO jugar rondas y eliminar jugadores
+//TODO elegir jugador que roba carta cuando el As
 package modules;
 
 import java.util.ArrayList;
@@ -238,6 +245,15 @@ public class Pumba {
         return chosenPlayer;
     }
 
+    private String mandatoryDraw2(Player _player, Card _cardOnTable) {
+        System.out.println("---" + _player.getPlayerName() + " chupa: " + this.draw2 + " cartas---");
+        String playMessage = String.format(" chupa %d cartas", this.draw2);
+        _player.drawCards(this.draw2);
+        changeSuit(_cardOnTable.getSuitStr());
+        this.draw2 = -1;
+        return playMessage;
+    }
+
     /**
      * Esta función comprueba las cartas que puede echar un jugador que no sea el
      * principal cuando la carta en el centro de la mesa es un dos.
@@ -271,11 +287,7 @@ public class Pumba {
         if (this.draw2 != 8)
             droppedCard = _player.dropValidCard(_cardOnTable, this.playedCard);
         if (droppedCard == null) {
-            System.out.println("---" + _player.getPlayerName() + " chupa: " + this.draw2 + " cartas---");
-            playMessage = String.format(" chupa %d cartas", this.draw2);
-            _player.drawCards(draw2);
-            changeSuit(_cardOnTable.getSuitStr());
-            this.draw2 = -1;
+            playMessage = mandatoryDraw2(_player, _cardOnTable);
         } else {
             this.draw2 += 2;
         }
@@ -380,9 +392,12 @@ public class Pumba {
      * jugador juegue otro dos, que el jugador tenga que chupar cartas o bien que ya
      * se haya chupado las cartas un jugador previo, en cuyo caso se juega al
      * palo del dos.
-     * Si el jugador principal echa carta, se suelta esa carta. Si no ha habido
-     * carta jugada, se ejecuta special2Play para ver qué carta se puede jugar. Si
-     * no puede jugar ninguna carta o el jugador principal ha robado, se roba carta.
+     * 
+     * Si es turno de la máquina (this.playedCard == null), se ejecuta special2Play
+     * para ver qué carta se puede jugar. Si el jugador principal ha robado y hay un
+     * dos activo en juego, chupa cartas. Si el jugador principal ha echado carta,
+     * se suelta esa carta. Si no se puede jugar ninguna carta o el jugador
+     * principal ha robado, se roba carta.
      * 
      * @param cardOnTable carta sobre la mesa
      * @param player      jugador del turno
@@ -396,7 +411,9 @@ public class Pumba {
             HashMap<String, Object> specialReturns = special2Play(player, cardOnTable);
             droppedCard = specialReturns != null ? (Card) specialReturns.get("droppedCard") : null;
             playMessage = specialReturns != null ? (String) specialReturns.get("playMessage") : "";
-        } else if (!this.playedCard.isDrawCard())
+        } else if (this.playedCard.isDrawCard() && this.draw2 != -1)
+            playMessage = mandatoryDraw2(player, cardOnTable);
+        else if (!this.playedCard.isDrawCard())
             droppedCard = player.dropCard(this.playedCard);
         if (droppedCard == null && playMessage.equals("")) {
             player.drawCard();
@@ -531,8 +548,6 @@ public class Pumba {
                 player = this.setTurn().getPlayerOfTurn();
                 if (player.isMachine())
                     turnMessage = String.format(". Turno del %s.", player.getPlayerName());
-                // CAMBIAR: if (cardOnTable.equals("dos") && droppedCard != null && this.draw2
-                // != -1)
                 else {
                     turnMessage = ". Es tu turno, elige tu jugada.";
                     CardHand cardHand = player.getCardHand();
