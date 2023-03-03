@@ -16,11 +16,11 @@
     padding: 0;
     margin: 0;
     box-sizing: border-box;
-    font-size: 1.1rem;
 }
 
 body {
     font-family: 'Courier New', Courier, monospace;
+    font-size: 1.1rem;
 }
 
 :root {
@@ -210,11 +210,11 @@ section.hero {
 /********* CENTRO DE LA PÁGINA (ZONA DE JUEGO) *********/
 
 .main-game {
-    padding: 1rem;
     display: flex;
     flex-direction: column;
+    min-width: 930px;
+    padding: 1rem;
     background-color: var(--principal);
-    background: rgb(94, 167, 144);
     background: radial-gradient(circle, rgba(94, 167, 144, 1) 0%, rgba(41, 96, 78, 1) 100%);
 }
 
@@ -230,6 +230,7 @@ main .table {
     min-height: 495px;
     width: 95vw;
     max-width: 1740px;
+    min-width: 800px;
     margin: 0 auto;
     text-align: center;
     border-top-left-radius: 100vh;
@@ -244,7 +245,8 @@ main .table {
 }
 
 .name {
-    padding-bottom: 1rem;
+    font-size: 1.1rem;
+    padding-bottom: 1em;
     color: white;
     font-weight: bold;
 }
@@ -311,14 +313,14 @@ div[class*="score"].score1 {
 div[class^="hand"]:not(.hand1) {
     display: flex;
     justify-content: space-evenly;
-    min-height: 135px;
+    min-height: 7.6em;
     width: 19vw;
     margin-left: 36%;
 }
 
 div[class^="hand"]:not(.hand1) .card {
     margin-left: -70%;
-    width: 5rem;
+    width: 5em;
     box-shadow:
         0.3px 0.7px 0.4px rgba(0, 0, 0, 0.016),
         0.6px 1.6px 1px rgba(0, 0, 0, 0.023),
@@ -343,14 +345,14 @@ div[class^="hand"]:not(.hand1) .card {
     display: flex;
     align-items: center;
     justify-content: space-around;
-    min-width: 17rem;
+    min-width: 17em;
 }
 
 [class$="pile"] {
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    width: 26.1rem;
+    width: 26.1em;
     padding-left: 39%;
 }
 
@@ -364,8 +366,8 @@ div[class^="hand"]:not(.hand1) .card {
 
 [class$="pile"] .card {
     margin-left: -121%;
-    min-height: 189px;
-    width: 7rem;
+    min-height: 10.7em;
+    width: 7em;
 }
 
 [class$="pile"] .card:first-child {
@@ -594,8 +596,8 @@ a.disabled {
 }
 
 .link-draw-pile a[href*="draw"].card {
-    width: 8rem;
-    transform: translateX(118%);
+    width: 7.8em;
+    transform: translateX(121%);
     box-shadow: none;
     border-radius: 10px;
 }
@@ -641,10 +643,8 @@ footer small>* {
     font-size: 0.8rem;
 }
 
-@media only screen and (min-width: 530px) {}
-
-@media only screen and (min-width: 768px) {}
-
-@media only screen and (min-width: 1024px) {}
-
-@media only screen and (max-width: 1440px) {}
+@media only screen and (max-height: 1104px) {
+    body {
+        font-size: 0.8rem;
+    }
+}
