@@ -178,9 +178,8 @@ public class Player {
      * @param n número de cartas robadas
      */
     public void drawCards(int n) {
-        Pumba game = this.getGame();
         System.out.printf("%s roba %d carta%s\n", this.getPlayerName(), n, n == 1 ? "" : "s");
-        ArrayList<Card> drawnCards = PumbaUtilities.drawCardsFromDeck(n, game.getDiscardPile(), game.getDrawPile());
+        ArrayList<Card> drawnCards = PumbaUtilities.drawCardsFromDeck(n, this.getGame());
         for (Card c : drawnCards) {
             if (!this.isMachine) {
                 c.setUncovered(true);

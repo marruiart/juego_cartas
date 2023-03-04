@@ -43,10 +43,19 @@ public class Pumba {
         return this.drawPile;
     }
 
+    public void setDrawPile(CardsDeck _drawPile){
+        this.drawPile = _drawPile;
+    }
+
+
     public ArrayList<Card> getDiscardPile() {
         System.out.printf("| Cartas en descartes: %2d |\n", this.discardPile.size());
         System.out.println(" ------------------------- ");
         return this.discardPile;
+    }
+
+    public void setDiscardPile(ArrayList<Card> _discardPile){
+        this.discardPile = _discardPile;
     }
 
     public ArrayList<Player> getPlayers() {
