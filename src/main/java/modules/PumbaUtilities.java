@@ -1,6 +1,8 @@
 package modules;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class PumbaUtilities {
 
@@ -46,14 +48,14 @@ public class PumbaUtilities {
      * Genera el número de jugadores que sean necesarios para la partida, eligiendo
      * aleatoriamente uno como Mano.
      */
-    public static void generatePlayers(ArrayList<Player> players, int numberOfPlayers, int turn, Pumba game) {
-        turn = (int) (Math.random() * numberOfPlayers);
+    public static void generatePlayers(Pumba game) {
+        game.setTurn((int) (Math.random() * game.getNumberOfPlayers()));
         // turn = 0; /* CAMBIAR: DESCOMENTAR PARA QUE EL JUGADOR PRINCIPAL SEA MANO
         // */
-        System.out.println("MANO --- jugador " + (turn + 1));
-        for (int i = 0; i < numberOfPlayers; i++) {
-            boolean isMano = (turn == i);
-            players.add(new Player(game, i + 1, isMano));
+        System.out.println("MANO --- jugador " + (game.getTurn() + 1));
+        for (int i = 0; i < game.getNumberOfPlayers(); i++) {
+            boolean isMano = (game.getTurn() == i);
+            game.getPlayers().add(new Player(game, i + 1, isMano));
         }
     }
 
@@ -75,5 +77,133 @@ public class PumbaUtilities {
             j.receiveHand(cards);
         }
     }
-    
+
+    /* *** MOVIMIENTOS DE LOS MAZOS *** */
+
+    /**
+     * Suelta una carta concreta en la pila de descartes, dando una rotación para
+     * simular desorden del mazo y colocando la carta boca arriba.
+     * 
+     * @param _card la carta soltada.
+     */
+    public static void dropOnDiscardPile(Card _card, ArrayList<Card> discardPile) {
+        float rotation = -0.004f + (float) (Math.random() * (0.004f + 0.004f));
+        _card.setUncovered(true).rotateCard("center", Float.toString(rotation));
+        discardPile.add(_card);
+    }
+
+    /**
+     * Retira varias cartas del mazo de robo.
+     * 
+     * @param n el número de cartas robadas.
+     * @return un ArrayList con las cartas robadas
+     */
+    public static ArrayList<Card> drawCardsFromDeck(int n, ArrayList<Card> discardPile, CardsDeck drawPile) {
+        ArrayList<Card> drawnCards = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            Card c = drawPile.drawLastCard();
+            if (c == null) {
+                flipDiscardsPile(discardPile, drawPile);
+                c = drawPile.drawLastCard();
+            }
+            if (c != null) {
+                drawnCards.add(c);
+            }
+        }
+        return drawnCards;
+    }
+
+    /**
+     * Voltea la pila de descartes cuando se queda sin cartas.
+     */
+    private static void flipDiscardsPile(ArrayList<Card> discardPile, CardsDeck drawPile) {
+        System.out.println("VOLTEAR DESCARTES");
+        Card lastCard = discardPile.remove(discardPile.size() - 1);
+        drawPile.returnCards(discardPile);
+        drawPile.shuffle();
+        discardPile = new ArrayList<>();
+        discardPile.add(lastCard);
+    }
+
+    /* ** CAMBIOS DURANTE LA PARTIDA ** */
+
+    /**
+     * Cambia el sentido de la ronda de juego.
+     * 
+     * @return devuelve un objeto Pumba de la partida en juego.
+     */
+    public static Pumba reverseDirection(int playDirection, Pumba game) {
+        System.out.println("CAMBIO SENTIDO");
+        playDirection *= -1;
+        return game;
+    }
+
+    /**
+     * Elige un palo aleatoriamente, sin que sea el mismo que está en juego y cambia
+     * el palo en juego.
+     * 
+     * @return un String con el palo escogido.
+     */
+    public static String chooseSuit(Pumba game) {
+        HashMap<String, Integer> number = new HashMap<>();
+        ArrayList<Card> cardHand = game.getPlayerOfTurn().getCardHand().getCards();
+        for (Card c : cardHand) {
+            String suit = c.getSuitStr();
+            number.put(suit, number.containsKey(suit) ? (number.get(suit) + 1) : 1);
+        }
+        String chosenSuit = null;
+        int count = 0;
+        for (Map.Entry<String, Integer> set : number.entrySet()) {
+            if (chosenSuit == null || count < set.getValue()) {
+                count = set.getValue();
+                chosenSuit = set.getKey();
+            }
+        }
+        return changeSuit(chosenSuit, game);
+    }
+
+    /**
+     * Cambia el palo en juego a aquel pasado por parámetros.
+     * 
+     * @param _suit el palo al que cambia el juego.
+     * @return el palo al que cambia el juego.
+     */
+    public static String changeSuit(String _suit, Pumba game) {
+        game.setSuit(_suit);
+        System.out.println("---CAMBIO DE PALO A " + _suit.toUpperCase());
+        return _suit;
+    }
+
+    /**
+     * Elige un jugador aleatorio, sin que sea el que está en turno.
+     * 
+     * @return el jugador escogido.
+     */
+    public static Player choosePlayer(Pumba game) {
+        int n;
+        do {
+            n = (int) (Math.random() * game.getNumberOfPlayers());
+        } while (game.getTurn() == n);
+        Player chosenPlayer = game.getPlayers().get(n);
+        System.out.println("--" + chosenPlayer.getPlayerName(true) + " elegido para robar");
+        return chosenPlayer;
+    }
+
+    /* ** PUNTUACIONES ** */
+
+    /**
+     * Asigna la puntuación de la ronda a cada jugador en función de sus cartas en
+     * mano.
+     */
+    public static void setPlayersScore(ArrayList<Player> players, boolean isScoreRound) {
+        isScoreRound = true;
+        for (Player p : players) {
+            int score = 0;
+            for (Card c : p.getCardHand().getCards()) {
+                score += c.setUncovered(true).getScore();
+            }
+            p.updateScore(score);
+        }
+    }
+
 }

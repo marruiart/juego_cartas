@@ -3,7 +3,6 @@ package modules;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 public class Pumba {
     private CardsDeck drawPile;
@@ -32,16 +31,16 @@ public class Pumba {
         this.isSelectionRound = false;
         this.activePumba = false;
         PumbaUtilities.scoreCards(this.drawPile);
-        PumbaUtilities.generatePlayers(players, this.numberOfPlayers, this.turn, this);
+        PumbaUtilities.generatePlayers(this);
         PumbaUtilities.dealCards(this.drawPile, this.players);
     }
 
     /* GETTERS Y SETTERS */
 
-    public ArrayList<Card> getDrawPile() {
+    public CardsDeck getDrawPile() {
         System.out.println(" ------------------------- ");
         System.out.printf("| Cartas en mazo:      %2d |\n", this.drawPile.getCards().size());
-        return this.drawPile.getCards();
+        return this.drawPile;
     }
 
     public ArrayList<Card> getDiscardPile() {
@@ -76,7 +75,11 @@ public class Pumba {
         return this.turn;
     }
 
-    public Pumba setTurn() {
+    public void setTurn(int _turn) {
+        this.turn = _turn;
+    }
+
+    public Pumba setTurnModule() {
         this.turn += this.playDirection;
         this.turn %= this.numberOfPlayers;
         if (this.turn == -1)
@@ -100,7 +103,7 @@ public class Pumba {
     public Player getPlayerOfTurn() {
         return this.players.get(turn);
     }
-    
+
     public boolean isScoreRound() {
         return this.isScoreRound;
     }
@@ -117,8 +120,16 @@ public class Pumba {
         this.activePumba = active;
     }
 
+    public int getDraw2() {
+        return this.draw2;
+    }
+
     public String getSuit() {
         return this.suit;
+    }
+
+    public void setSuit(String _suit) {
+        this.suit = _suit;
     }
 
     /**
@@ -165,123 +176,14 @@ public class Pumba {
         return (this.discardPile.size() == 0) ? null : this.discardPile.get(this.discardPile.size() - 1);
     }
 
-    /* *** MOVIMIENTOS DE LOS MAZOS *** */
-
-    /**
-     * Suelta una carta concreta en la pila de descartes, dando una rotación para
-     * simular desorden del mazo y colocando la carta boca arriba.
-     * 
-     * @param _card la carta soltada.
-     */
-    public void dropOnDiscardPile(Card _card) {
-        float rotation = -0.004f + (float) (Math.random() * (0.004f + 0.004f));
-        _card.setUncovered(true).rotateCard("center", Float.toString(rotation));
-        discardPile.add(_card);
-    }
-
-    /**
-     * Retira varias cartas del mazo de robo.
-     * 
-     * @param n el número de cartas robadas.
-     * @return un ArrayList con las cartas robadas
-     */
-    public ArrayList<Card> drawCardsFromDeck(int n) {
-        ArrayList<Card> drawnCards = new ArrayList<>();
-        for (int i = 0; i < n; i++) {
-            Card c = drawPile.drawLastCard();
-            if (c == null) {
-                this.flipDiscardsPile();
-                c = drawPile.drawLastCard();
-            }
-            if (c != null) {
-                drawnCards.add(c);
-            }
-        }
-        return drawnCards;
-    }
-
-    /**
-     * Voltea la pila de descartes cuando se queda sin cartas.
-     */
-    private void flipDiscardsPile() {
-        System.out.println("VOLTEAR DESCARTES");
-        Card lastCard = this.discardPile.remove(this.discardPile.size() - 1);
-        drawPile.returnCards(this.discardPile);
-        drawPile.shuffle();
-        this.discardPile = new ArrayList<>();
-        this.discardPile.add(lastCard);
-    }
-
-    /* ** CAMBIOS DURANTE LA PARTIDA ** */
-
-    /**
-     * Cambia el sentido de la ronda de juego.
-     * 
-     * @return devuelve un objeto Pumba de la partida en juego.
-     */
-    private Pumba reverseDirection() {
-        System.out.println("CAMBIO SENTIDO");
-        this.playDirection *= -1;
-        return this;
-    }
-
-    /**
-     * Elige un palo aleatoriamente, sin que sea el mismo que está en juego y cambia
-     * el palo en juego.
-     * 
-     * @return un String con el palo escogido.
-     */
-    private String chooseSuit() {
-        HashMap<String, Integer> number = new HashMap<>();
-        ArrayList<Card> cardHand = this.getPlayerOfTurn().getCardHand().getCards();
-        for (Card c : cardHand) {
-            String suit = c.getSuitStr();
-            number.put(suit, number.containsKey(suit) ? (number.get(suit) + 1) : 1);
-        }
-        String chosenSuit = null;
-        int count = 0;
-        for (Map.Entry<String, Integer> set : number.entrySet()) {
-            if (chosenSuit == null || count < set.getValue()) {
-                count = set.getValue();
-                chosenSuit = set.getKey();
-            }
-        }
-        return changeSuit(chosenSuit);
-    }
-
-    /**
-     * Cambia el palo en juego a aquel pasado por parámetros.
-     * 
-     * @param _suit el palo al que cambia el juego.
-     * @return el palo al que cambia el juego.
-     */
-    private String changeSuit(String _suit) {
-        this.suit = _suit;
-        System.out.println("---CAMBIO DE PALO A " + _suit.toUpperCase());
-        return _suit;
-    }
-
-    /**
-     * Elige un jugador aleatorio, sin que sea el que está en turno.
-     * 
-     * @return el jugador escogido.
-     */
-    private Player choosePlayer() {
-        int n;
-        do {
-            n = (int) (Math.random() * this.getNumberOfPlayers());
-        } while (this.getTurn() == n);
-        Player chosenPlayer = players.get(n);
-        System.out.println("--" + chosenPlayer.getPlayerName(true) + " elegido para robar");
-        return chosenPlayer;
-    }
+    /*** JUGADAS ESPECIALES Y CHEQUEOS DE LA JUGADA ***/
 
     private String mandatoryDraw2(Player _player, Card _cardOnTable) {
-        System.out.println("---" + _player.getPlayerName() + " chupa: " + this.draw2 + " cartas---");
-        String playMessage = String.format(" chupa %d cartas", this.draw2);
-        _player.drawCards(this.draw2);
-        changeSuit(_cardOnTable.getSuitStr());
-        this.draw2 = -1;
+        System.out.println("---" + _player.getPlayerName() + " chupa: " + draw2 + " cartas---");
+        String playMessage = String.format(" chupa %d cartas", draw2);
+        _player.drawCards(draw2);
+        PumbaUtilities.changeSuit(_cardOnTable.getSuitStr(), this);
+        draw2 = -1;
         return playMessage;
     }
 
@@ -304,11 +206,11 @@ public class Pumba {
         String playMessage = "";
         Card droppedCard = null;
         if (this.draw2 == -1) {
-            changeSuit(_cardOnTable.getSuitStr());
+            PumbaUtilities.changeSuit(_cardOnTable.getSuitStr(), this);
             droppedCard = _player.dropValidCard(_cardOnTable, this.playedCard, this.suit);
             if (droppedCard != null) {
                 if (droppedCard.getNumber().equals("dos"))
-                    changeSuit(droppedCard.getSuitStr());
+                    PumbaUtilities.changeSuit(droppedCard.getSuitStr(), this);
                 this.draw2 = 2;
             }
             returns.put("droppedCard", droppedCard);
@@ -326,8 +228,6 @@ public class Pumba {
         returns.put("playMessage", playMessage);
         return returns;
     }
-
-    /*** JUGADAS ESPECIALES Y CHEQUEOS DE LA JUGADA ***/
 
     private Card getPlayedCard(String _playedCard) {
         String[] card = _playedCard.split("_");
@@ -377,20 +277,20 @@ public class Pumba {
     private String checkSpecialDroppedCard(Card droppedCard) {
         String gameMessage = "";
         if (droppedCard.getNumber().equals("siete")) {
-            this.reverseDirection();
+            PumbaUtilities.reverseDirection(this.playDirection, this);
             gameMessage = ". Cambio de sentido";
         } else if (droppedCard.getNumber().equals("caballo")) {
-            this.setTurn();
+            this.setTurnModule();
             System.out.println("SALTA TURNO: no juega " + this.getPlayerOfTurn().getPlayerName());
             gameMessage = String.format(". Salta el turno de %s", this.getPlayerOfTurn().getPlayerName(true));
         } else if (droppedCard.getNumber().equals("sota")) {
             if (this.turn == 0)
                 return null;
-            gameMessage = String.format(" y cambia de palo a %s", this.chooseSuit());
+            gameMessage = String.format(" y cambia de palo a %s", PumbaUtilities.chooseSuit(this));
         } else if (droppedCard.getNumber().equals("as")) {
             if (this.turn == 0)
                 return null;
-            Player chosenPlayer = this.choosePlayer();
+            Player chosenPlayer = PumbaUtilities.choosePlayer(this);
             chosenPlayer.drawCard();
             gameMessage = String.format(". Elige a %s para que chupe 1 carta", chosenPlayer.getPlayerName(true));
         }
@@ -410,7 +310,8 @@ public class Pumba {
     private String checkKingCardDropped(Card droppedCard, Boolean playAgain) {
         String kingMessage = null;
         if (droppedCard != null && playAgain && droppedCard.getNumber().equals("rey")) {
-            Player player = reverseDirection().setTurn().reverseDirection().getPlayerOfTurn();
+            (PumbaUtilities.reverseDirection(this.playDirection, this)).setTurnModule();
+            Player player = (PumbaUtilities.reverseDirection(this.playDirection, this)).getPlayerOfTurn();
             System.out.println("REY - VUELVE A JUGAR: " + this.getPlayerOfTurn().getPlayerName());
             kingMessage = player.isMachine() ? String.format(". Vuelve a jugar %s.", player.getPlayerName())
                     : ". Vuelves a jugar.";
@@ -501,23 +402,6 @@ public class Pumba {
         return returns;
     }
 
-    /* ** PUNTUACIONES ** */
-
-    /**
-     * Asigna la puntuación de la ronda a cada jugador en función de sus cartas en
-     * mano.
-     */
-    private void setPlayersScore() {
-        this.isScoreRound = true;
-        for (Player p : this.players) {
-            int score = 0;
-            for (Card c : p.getCardHand().getCards()) {
-                score += c.setUncovered(true).getScore();
-            }
-            p.updateScore(score);
-        }
-    }
-
     /**
      * Función principal de ejecución de la jugada.
      * 
@@ -547,11 +431,11 @@ public class Pumba {
             }
         }
         if (_suit != null) {
-            changeSuit(_suit);
+            PumbaUtilities.changeSuit(_suit, this);
             droppedCard = getPlayedCard(_playedCard);
             playMessage = String.format(" echa %s y cambia de palo a %s", droppedCard.getCardName(), getSuit());
             gameMessage = getPlayerOfTurn().getPlayerName(true) + playMessage;
-            turnMessage = String.format(". Turno del %s.", this.setTurn().getPlayerOfTurn().getPlayerName(true));
+            turnMessage = String.format(". Turno del %s.", this.setTurnModule().getPlayerOfTurn().getPlayerName(true));
             this.isSelectionRound = false;
         } else if (_drawPlayer != null) {
             droppedCard = getPlayedCard(_playedCard);
@@ -563,7 +447,7 @@ public class Pumba {
                     p.drawCard();
             }
             gameMessage = getPlayerOfTurn().getPlayerName(true) + playMessage;
-            turnMessage = String.format(". Turno del %s.", this.setTurn().getPlayerOfTurn().getPlayerName(true));
+            turnMessage = String.format(". Turno del %s.", this.setTurnModule().getPlayerOfTurn().getPlayerName(true));
             this.isSelectionRound = false;
         } else {
             Player player = this.getPlayerOfTurn();
@@ -594,7 +478,7 @@ public class Pumba {
             }
             if (player.getNumberOfCardsInHand() == 0) {
                 System.out.println("GANA " + player.getPlayerName().toUpperCase());
-                setPlayersScore();
+                PumbaUtilities.setPlayersScore(this.players, this.isScoreRound);
                 return String.format("FIN DE LA PARTIDA, ¡GANA %s!", player.getPlayerName().toUpperCase());
             }
             gameMessage = player.getPlayerName(true) + playMessage;
@@ -606,7 +490,7 @@ public class Pumba {
                     gameMessage = null;
             }
             if (gameMessage != null) {
-                player = this.setTurn().getPlayerOfTurn();
+                player = this.setTurnModule().getPlayerOfTurn();
                 if (player.isMachine())
                     turnMessage = String.format(". Turno del %s.", player.getPlayerName());
                 else {

@@ -60,7 +60,7 @@
           <div class="table-center">
             <div class="draw-pile">
             <%
-              for (Card c : game.getDrawPile()) {
+              for (Card c : game.getDrawPile().getCards()) {
                 out.print(c);
               }
             %>

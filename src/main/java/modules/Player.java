@@ -161,7 +161,7 @@ public class Player {
     public Card dropCard(Card c) {
         Card card = (c == null) ? this.cardHand.removeCard() : this.cardHand.removeCard(c);
         System.out.println("-> Suelta ** " + card.getCardName().toUpperCase() + " **");
-        game.dropOnDiscardPile(card);
+        PumbaUtilities.dropOnDiscardPile(card, this.getGame().getDiscardPile());
         return card;
     }
 
@@ -178,8 +178,9 @@ public class Player {
      * @param n número de cartas robadas
      */
     public void drawCards(int n) {
+        Pumba game = this.getGame();
         System.out.printf("%s roba %d carta%s\n", this.getPlayerName(), n, n == 1 ? "" : "s");
-        ArrayList<Card> drawnCards = game.drawCardsFromDeck(n);
+        ArrayList<Card> drawnCards = PumbaUtilities.drawCardsFromDeck(n, game.getDiscardPile(), game.getDrawPile());
         for (Card c : drawnCards) {
             if (!this.isMachine) {
                 c.setUncovered(true);
