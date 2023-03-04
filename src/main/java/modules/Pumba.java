@@ -422,19 +422,9 @@ public class Pumba {
         String playMessage = "";
         String turnMessage = "";
         String kingMessage = null;
-        Player prev = this.getPreviousPlayer();
-        if (this.activePumba && _playedCard == null) {
+        if (this.activePumba && this.turn == 0 && _playedCard == null) {
             this.activePumba = false;
-            if (this.turn == 0)
-                return "¡PUMBA!";
-            else {
-                if (Math.random() < 0.2)
-                    pumbaMessage = String.format("%s: ¡PUMBA!<br/>", prev.getPlayerName(true));
-                else {
-                    pumbaMessage = String.format("%s no ha dicho pumba, chupa 1 carta.<br/>", prev.getPlayerName(true));
-                    prev.drawCard();
-                }
-            }
+            return "¡PUMBA!";
         }
         if (_suit != null) {
             PumbaUtilities.changeSuit(_suit, this);
@@ -466,11 +456,6 @@ public class Pumba {
                 droppedCard = (this.playedCard != null) ? player.dropCard(this.playedCard) : player.dropCard();
                 playMessage = String.format(" echa %s", droppedCard.getCardName());
             } else {
-                if (_playedCard != null && this.activePumba) {
-                    pumbaMessage = "No has dicho pumba, chupas 1 carta.<br/>";
-                    player.drawCard();
-                    this.activePumba = false;
-                }
                 if (cardOnTable.getNumber().equals("dos")) {
                     HashMap<String, Object> returns = playWith2OnTable(cardOnTable, player);
                     playMessage = (String) returns.get("playMessage");
@@ -494,6 +479,19 @@ public class Pumba {
                     gameMessage += specialMessage;
                 else
                     gameMessage = null;
+            }
+            if (_playedCard != null && this.activePumba) {
+                pumbaMessage = "No has dicho pumba, chupas 1 carta.<br/>";
+                player.drawCard();
+                this.activePumba = false;
+            } else if (this.activePumba) {
+                if (Math.random() < 0.1)
+                    pumbaMessage = String.format("%s: ¡PUMBA!<br/>", player.getPlayerName(true));
+                else {
+                    pumbaMessage = String.format("%s no ha dicho pumba, chupa 1 carta.<br/>", player.getPlayerName(true));
+                    player.drawCard();
+                }
+                this.activePumba = false;
             }
             if (gameMessage != null) {
                 player = this.setTurnModule().getPlayerOfTurn();
