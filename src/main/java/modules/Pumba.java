@@ -43,10 +43,9 @@ public class Pumba {
         return this.drawPile;
     }
 
-    public void setDrawPile(CardsDeck _drawPile){
+    public void setDrawPile(CardsDeck _drawPile) {
         this.drawPile = _drawPile;
     }
-
 
     public ArrayList<Card> getDiscardPile() {
         System.out.printf("| Cartas en descartes: %2d |\n", this.discardPile.size());
@@ -54,7 +53,7 @@ public class Pumba {
         return this.discardPile;
     }
 
-    public void setDiscardPile(ArrayList<Card> _discardPile){
+    public void setDiscardPile(ArrayList<Card> _discardPile) {
         this.discardPile = _discardPile;
     }
 
@@ -489,17 +488,18 @@ public class Pumba {
                 else
                     gameMessage = null;
             }
-            if (_playedCard != null && this.activePumba) {
-                pumbaMessage = "No has dicho pumba, chupas 1 carta.<br/>";
-                player.drawCard();
-                this.activePumba = false;
-            } else if (this.activePumba) {
+            if (this.activePumba && this.turn != 0) {
                 if (Math.random() < 0.1)
                     pumbaMessage = String.format("%s: ¡PUMBA!<br/>", player.getPlayerName(true));
                 else {
-                    pumbaMessage = String.format("%s no ha dicho pumba, chupa 1 carta.<br/>", player.getPlayerName(true));
+                    pumbaMessage = String.format("%s no ha dicho pumba, chupa 1 carta.<br/>",
+                            player.getPlayerName(true));
                     player.drawCard();
                 }
+                this.activePumba = false;
+            } else if (this.activePumba && _playedCard != null) {
+                pumbaMessage = "No has dicho pumba, chupas 1 carta.<br/>";
+                player.drawCard();
                 this.activePumba = false;
             }
             if (gameMessage != null) {
