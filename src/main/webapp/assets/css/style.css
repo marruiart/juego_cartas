@@ -478,6 +478,7 @@ main .info {
     margin-left: -17%;
     background-color: var(--light);
     font-family: old-school, 'Courier New', Courier, monospace;
+    font-size: 1.1em;
     text-align: center;
     border: none;
     outline: none;
@@ -624,8 +625,8 @@ a.disabled, .pumba-btn.disabled {
 }
 
 .link-draw-pile a[href*="draw"].card {
-    width: 7.8em;
-    transform: translateX(121%);
+    width: 8.1em;
+    transform: translateX(117%);
     box-shadow: none;
     border-radius: 10px;
 }

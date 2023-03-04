@@ -1,3 +1,4 @@
+//TODO compatibilizar PUMBA con cartas de select
 package modules;
 
 import java.util.ArrayList;
@@ -39,12 +40,12 @@ public class Pumba {
 
     public ArrayList<Card> getDrawPile() {
         System.out.println(" ------------------------- ");
-        System.out.println(String.format("| Cartas en mazo:      %2d |", this.drawPile.getCards().size()));
+        System.out.printf("| Cartas en mazo:      %2d |\n", this.drawPile.getCards().size());
         return this.drawPile.getCards();
     }
 
     public ArrayList<Card> getDiscardPile() {
-        System.out.println(String.format("| Cartas en descartes: %2d |", this.discardPile.size()));
+        System.out.printf("| Cartas en descartes: %2d |\n", this.discardPile.size());
         System.out.println(" ------------------------- ");
         return this.discardPile;
     }
@@ -84,13 +85,12 @@ public class Pumba {
         return this;
     }
 
-    public int getNextTurn() {
-        int nextTurn = this.turn + this.playDirection;
-        nextTurn %= this.numberOfPlayers;
-        if (nextTurn == -1)
-            nextTurn = this.numberOfPlayers - 1;
-        System.out.println("Próximo jugador " + (nextTurn + 1));
-        return nextTurn;
+    public Player getPreviousPlayer() {
+        int prevTurn = this.turn - this.playDirection;
+        prevTurn %= this.numberOfPlayers;
+        if (prevTurn == -1)
+            prevTurn = this.numberOfPlayers - 1;
+        return this.players.get(prevTurn);
     }
 
     public int getPlayDirection() {
@@ -98,8 +98,7 @@ public class Pumba {
     }
 
     public Player getPlayerOfTurn() {
-        Player player = this.players.get(turn);
-        return player;
+        return this.players.get(turn);
     }
 
     public String getSuit() {
@@ -118,7 +117,7 @@ public class Pumba {
                 return cardOnTable.getSuitStr();
             return "";
         }
-        return this.suit.toString().toLowerCase();
+        return this.suit.toLowerCase();
     }
 
     /**
@@ -166,7 +165,7 @@ public class Pumba {
         return (this.discardPile.size() == 0) ? null : this.discardPile.get(this.discardPile.size() - 1);
     }
 
-    /**** MOVIMIENTOS DE LOS MAZOS ****/
+    /* *** MOVIMIENTOS DE LOS MAZOS *** */
 
     /**
      * Suelta una carta concreta en la pila de descartes, dando una rotación para
@@ -213,7 +212,7 @@ public class Pumba {
         this.discardPile.add(lastCard);
     }
 
-    /*** CAMBIOS DURANTE LA PARTIDA ***/
+    /* ** CAMBIOS DURANTE LA PARTIDA ** */
 
     /**
      * Cambia el sentido de la ronda de juego.
@@ -230,7 +229,6 @@ public class Pumba {
      * Elige un palo aleatoriamente, sin que sea el mismo que está en juego y cambia
      * el palo en juego.
      * 
-     * @param _suitOnTable el palo en juego
      * @return un String con el palo escogido.
      */
     private String chooseSuit() {
@@ -299,7 +297,7 @@ public class Pumba {
      * 
      * @param _player      el jugador en turno
      * @param _cardOnTable la carta en el centro de la mesa
-     * @return
+     * @return un HashMap que contiene la carta echada y el mensaje de la jugada.
      */
     private HashMap<String, Object> special2Play(Player _player, Card _cardOnTable) {
         HashMap<String, Object> returns = new HashMap<>();
@@ -345,10 +343,10 @@ public class Pumba {
      * @param player      el jugador en turno
      * @param _playedCard la carta que se ha jugado o null en caso de que no haya
      *                    ninguna
-     * @return la carta que se ha jugado
-     * @return si el jugador principal roba, retorna una carta especial en la que
-     *         isDrawCard es true
-     * @return null si se ha robado carta o no hay cartas válidas que jugar
+     * @return la carta que se ha jugado. Si el jugador principal roba, retorna una
+     *         carta especial en la que
+     *         isDrawCard es true. null si se ha robado carta o no hay cartas
+     *         válidas que jugar
      */
     private Card checkPlayedCard(Player player, String _playedCard) {
         if (player.getNumber() == 1 && _playedCard != null) {
@@ -373,8 +371,8 @@ public class Pumba {
      * As -> Elige un jugado para robar 1 carta
      * 
      * @param droppedCard la carta jugada en ese turno
-     * @return retorna el mensaje para las cartas especiales
-     * @return si no es una carta especial, retorna un String vacío.
+     * @return retorna el mensaje para las cartas especiales. Si no es una carta
+     *         especial, retorna un String vacío.
      */
     private String checkSpecialDroppedCard(Card droppedCard) {
         String gameMessage = "";
@@ -406,14 +404,13 @@ public class Pumba {
      * @param droppedCard carta jugada en ese turno
      * @param playAgain   true si la carta de rey está en juego, false si
      *                    se mantiene en mesa desde jugadas anteriores.
-     * @param player      jugador del turno.
-     * @return el mensaje especial de la carta del rey.
-     * @return null si no se ejecuta la jugada especial del rey.
+     * @return el mensaje especial de la carta del rey. null si no se ejecuta la
+     *         jugada especial del rey.
      */
-    private String checkKingCardDropped(Card droppedCard, Boolean playAgain, Player player) {
+    private String checkKingCardDropped(Card droppedCard, Boolean playAgain) {
         String kingMessage = null;
         if (droppedCard != null && playAgain && droppedCard.getNumber().equals("rey")) {
-            player = reverseDirection().setTurn().reverseDirection().getPlayerOfTurn();
+            Player player = reverseDirection().setTurn().reverseDirection().getPlayerOfTurn();
             System.out.println("REY - VUELVE A JUGAR: " + this.getPlayerOfTurn().getPlayerName());
             kingMessage = player.isMachine() ? String.format(". Vuelve a jugar %s.", player.getPlayerName())
                     : ". Vuelves a jugar.";
@@ -426,7 +423,6 @@ public class Pumba {
      * jugador juegue otro dos, que el jugador tenga que chupar cartas o bien que ya
      * se haya chupado las cartas un jugador previo, en cuyo caso se juega al
      * palo del dos.
-     * 
      * Si es turno de la máquina (this.playedCard == null), se ejecuta special2Play
      * para ver qué carta se puede jugar. Si el jugador principal ha robado y hay un
      * dos activo en juego, chupa cartas. Si el jugador principal ha echado carta,
@@ -478,7 +474,7 @@ public class Pumba {
         HashMap<String, Object> returns = new HashMap<>();
         String playMessage = "";
         Card droppedCard = null;
-        Boolean playAgain = true;
+        boolean playAgain = true;
         if (this.playedCard != null) {
             if (!this.playedCard.isDrawCard())
                 droppedCard = player.dropCard(this.playedCard);
@@ -505,7 +501,7 @@ public class Pumba {
         return returns;
     }
 
-    /*** PUNTUACIONES ***/
+    /* ** PUNTUACIONES ** */
 
     /**
      * Asigna la puntuación de la ronda a cada jugador en función de sus cartas en
@@ -536,12 +532,19 @@ public class Pumba {
         String playMessage = "";
         String turnMessage = "";
         String kingMessage = null;
+        Player prev = this.getPreviousPlayer();
         if (this.activePumba && _playedCard == null) {
             this.activePumba = false;
             if (this.turn == 0)
                 return "¡PUMBA!";
-            else
-                pumbaMessage = "¡PUMBA! ";
+            else {
+                if (Math.random() < 0.2)
+                    pumbaMessage = String.format("%s: ¡PUMBA!<br/>", prev.getPlayerName(true));
+                else {
+                    pumbaMessage = String.format("%s no ha dicho pumba, chupa 1 carta.<br/>", prev.getPlayerName(true));
+                    prev.drawCard();
+                }
+            }
         }
         if (_suit != null) {
             changeSuit(_suit);
@@ -574,9 +577,7 @@ public class Pumba {
                 playMessage = String.format(" echa %s", droppedCard.getCardName());
             } else {
                 if (_playedCard != null && this.activePumba) {
-                    pumbaMessage = player.isMachine()
-                            ? String.format("%s no ha dicho pumba, chupa 1 carta. %s.", player.getPlayerName())
-                            : "No has dicho pumba, chupas 1 carta. ";
+                    pumbaMessage = "No has dicho pumba, chupas 1 carta.<br/>";
                     player.drawCard();
                     this.activePumba = false;
                 }
@@ -618,7 +619,7 @@ public class Pumba {
                         System.out.println("-*- PUMBA ACTIVO -*-");
                     }
                 }
-                kingMessage = checkKingCardDropped(droppedCard, playAgain, player);
+                kingMessage = checkKingCardDropped(droppedCard, playAgain);
             } else {
                 this.isSelectionRound = true;
                 if (droppedCard.getNumber().equals("sota")) {
@@ -633,7 +634,7 @@ public class Pumba {
         return pumbaMessage + gameMessage + (kingMessage != null ? kingMessage : turnMessage);
     }
 
-    /*** FUNCIONES PARA INCIAR LA PARTIDA ***/
+    /* ** FUNCIONES PARA INCIAR LA PARTIDA ** */
 
     /**
      * Establece la puntuación que tiene cada carta en función de su número y la
@@ -660,12 +661,13 @@ public class Pumba {
                     break;
                 case "siete":
                     score = 7;
+                    break;
                 case "caballo":
                     score = 9;
+                    break;
                 default:
                     score = 10;
             }
-            ;
             c.setScore(score);
         }
     }
@@ -680,7 +682,7 @@ public class Pumba {
         // */
         System.out.println("MANO --- jugador " + (this.turn + 1));
         for (int i = 0; i < this.numberOfPlayers; i++) {
-            boolean isMano = (this.turn == i) ? true : false;
+            boolean isMano = (this.turn == i);
             players.add(new Player(this, i + 1, isMano));
         }
     }

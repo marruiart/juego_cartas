@@ -129,13 +129,14 @@ public class Player {
         ArrayList<Card> validCards = this.cardHand.getValidCards(_cardOnTable, _changedSuit);
         if (validCards.size() == 0)
             return null;
-        if (this.getNumberOfCardsInHand() == 2 && validCards.size() >= 2) {
-            this.getGame().setActivePumba(true);
-            System.out.println("--- PUMBA ACTIVO ---");
-        }
         if (_playedCard == null) {
-            int n = (int) (Math.random() * validCards.size());
-            return this.dropCard(validCards.get(n));
+            if (this.isMachine()) {
+                if (this.getNumberOfCardsInHand() == 2 && validCards.size() >= 1) {
+                    this.getGame().setActivePumba(true);
+                    System.out.println("--- PUMBA ACTIVO ---");
+                }
+            }
+            return this.dropCard(validCards.get((int) (Math.random() * validCards.size())));
         } else
             return this.dropCard(_playedCard);
     }
