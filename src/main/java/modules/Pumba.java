@@ -1,7 +1,3 @@
-//TODO jugar rondas y eliminar jugadores
-//TODO cantar "¡PUMBA!"
-//TODO assign players names
-//TODO PumbaUtilities: iniciar partida, sacar funciones allí
 package modules;
 
 import java.util.ArrayList;
@@ -20,6 +16,7 @@ public class Pumba {
     private Card playedCard;
     private int playDirection;
     private int draw2;
+    private boolean activePumba;
 
     public Pumba(int _numberOfPlayers) {
         this.drawPile = new CardsDeck();
@@ -32,6 +29,7 @@ public class Pumba {
         this.playedCard = null;
         this.isScoreRound = false;
         this.isSelectionRound = false;
+        this.activePumba = false;
         scoreCards();
         generatePlayers();
         dealCards();
@@ -149,6 +147,14 @@ public class Pumba {
 
     public boolean isSelectionRound() {
         return this.isSelectionRound;
+    }
+
+    public boolean getActivePumba() {
+        return this.activePumba;
+    }
+
+    public void setActivePumba(boolean active) {
+        this.activePumba = active;
     }
 
     /**
@@ -409,7 +415,7 @@ public class Pumba {
         if (droppedCard != null && playAgain && droppedCard.getNumber().equals("rey")) {
             player = reverseDirection().setTurn().reverseDirection().getPlayerOfTurn();
             System.out.println("REY - VUELVE A JUGAR: " + this.getPlayerOfTurn().getPlayerName());
-            kingMessage = player.isMachine() ? String.format(". Vuelve a jugar el %s.", player.getPlayerName())
+            kingMessage = player.isMachine() ? String.format(". Vuelve a jugar %s.", player.getPlayerName())
                     : ". Vuelves a jugar.";
         }
         return kingMessage;
@@ -525,10 +531,18 @@ public class Pumba {
     public String runPlay(String _playedCard, String _suit, String _drawPlayer) {
         Boolean playAgain = true;
         Card droppedCard = null;
+        String pumbaMessage = "";
         String gameMessage = "";
         String playMessage = "";
         String turnMessage = "";
         String kingMessage = null;
+        if (this.activePumba && _playedCard == null) {
+            this.activePumba = false;
+            if (this.turn == 0)
+                return "¡PUMBA!";
+            else
+                pumbaMessage = "¡PUMBA! ";
+        }
         if (_suit != null) {
             changeSuit(_suit);
             droppedCard = getPlayedCard(_playedCard);
@@ -559,6 +573,13 @@ public class Pumba {
                 droppedCard = (this.playedCard != null) ? player.dropCard(this.playedCard) : player.dropCard();
                 playMessage = String.format(" echa %s", droppedCard.getCardName());
             } else {
+                if (_playedCard != null && this.activePumba) {
+                    pumbaMessage = player.isMachine()
+                            ? String.format("%s no ha dicho pumba, chupa 1 carta. %s.", player.getPlayerName())
+                            : "No has dicho pumba, chupas 1 carta. ";
+                    player.drawCard();
+                    this.activePumba = false;
+                }
                 if (cardOnTable.getNumber().equals("dos")) {
                     HashMap<String, Object> returns = playWith2OnTable(cardOnTable, player);
                     playMessage = (String) returns.get("playMessage");
@@ -590,7 +611,12 @@ public class Pumba {
                 else {
                     turnMessage = ". Es tu turno, elige tu jugada.";
                     CardHand cardHand = player.getCardHand();
-                    cardHand.printPlayer1ValidCards(droppedCard != null ? droppedCard : cardOnTable, this.suit);
+                    ArrayList<Card> validCards = cardHand
+                            .printPlayer1ValidCards(droppedCard != null ? droppedCard : cardOnTable, this.suit);
+                    if (player.getNumberOfCardsInHand() == 2 && validCards.size() >= 1) {
+                        this.activePumba = true;
+                        System.out.println("-*- PUMBA ACTIVO -*-");
+                    }
                 }
                 kingMessage = checkKingCardDropped(droppedCard, playAgain, player);
             } else {
@@ -604,7 +630,7 @@ public class Pumba {
                 }
             }
         }
-        return gameMessage + (kingMessage != null ? kingMessage : turnMessage);
+        return pumbaMessage + gameMessage + (kingMessage != null ? kingMessage : turnMessage);
     }
 
     /*** FUNCIONES PARA INCIAR LA PARTIDA ***/

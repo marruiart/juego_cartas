@@ -588,10 +588,38 @@ select:disabled::-ms-expand {
     color: #141414;
 }
 
+.pumba-btn {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    top: 103px;
+    right: 5%;
+    height: 8rem;
+    width: 8rem;
+    background-color: #fffaed;
+    border: 2px solid var(--semidark);
+    border-radius: 50%;
+    box-shadow: var(--semidark) 4px 4px 0 0;
+    font-size: 2rem;
+    font-family: old-school, 'Courier New', Courier, monospace;
+    letter-spacing: 0.15rem;
+    cursor: pointer;
+}
+
+.pumba-btn:hover {
+    background-color: #fff;
+}
+
+.pumba-btn:active {
+    box-shadow: var(--semidark) 2px 2px 0 0;
+    transform: translate(2px, 2px);
+}
+
 /********* ENLACES ACTIVADOS/DESACTIVADOS *********/
 
 
-a.disabled {
+a.disabled, .pumba-btn.disabled {
     pointer-events: none;
 }
 

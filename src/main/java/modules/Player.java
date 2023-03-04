@@ -129,6 +129,10 @@ public class Player {
         ArrayList<Card> validCards = this.cardHand.getValidCards(_cardOnTable, _changedSuit);
         if (validCards.size() == 0)
             return null;
+        if (this.getNumberOfCardsInHand() == 2 && validCards.size() >= 2) {
+            this.getGame().setActivePumba(true);
+            System.out.println("--- PUMBA ACTIVO ---");
+        }
         if (_playedCard == null) {
             int n = (int) (Math.random() * validCards.size());
             return this.dropCard(validCards.get(n));

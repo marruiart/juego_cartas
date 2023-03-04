@@ -45,11 +45,13 @@ public class CardHand {
         return validCards;
     }
 
-    public void printPlayer1ValidCards(Card _cardOnTable, String _suit) {
+    public ArrayList<Card> printPlayer1ValidCards(Card _cardOnTable, String _suit) {
+        ArrayList<Card> validCards = getValidCards(_cardOnTable, _suit);
         System.out.println("\n** TUS CARTAS VALIDAS **");
-        for (Card c : getValidCards(_cardOnTable, _suit))
+        for (Card c : validCards)
             System.out.printf("   * %s\n", c.getCardName());
         System.out.println("************************");
+        return validCards;
     }
 
     /**
