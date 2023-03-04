@@ -31,9 +31,9 @@ public class Pumba {
         this.isScoreRound = false;
         this.isSelectionRound = false;
         this.activePumba = false;
-        scoreCards();
-        generatePlayers();
-        dealCards();
+        PumbaUtilities.scoreCards(this.drawPile);
+        PumbaUtilities.generatePlayers(players, this.numberOfPlayers, this.turn, this);
+        PumbaUtilities.dealCards(this.drawPile, this.players);
     }
 
     /* GETTERS Y SETTERS */
@@ -100,6 +100,22 @@ public class Pumba {
     public Player getPlayerOfTurn() {
         return this.players.get(turn);
     }
+    
+    public boolean isScoreRound() {
+        return this.isScoreRound;
+    }
+
+    public boolean isSelectionRound() {
+        return this.isSelectionRound;
+    }
+
+    public boolean getActivePumba() {
+        return this.activePumba;
+    }
+
+    public void setActivePumba(boolean active) {
+        this.activePumba = active;
+    }
 
     public String getSuit() {
         return this.suit;
@@ -138,22 +154,6 @@ public class Pumba {
         String suitStr = getSuitOnPlay();
         String src = suitStr.equals("") ? "" : String.format("assets/img/%s.png", suitStr);
         return Utilities.printImg(src, suitStr);
-    }
-
-    public boolean isScoreRound() {
-        return this.isScoreRound;
-    }
-
-    public boolean isSelectionRound() {
-        return this.isSelectionRound;
-    }
-
-    public boolean getActivePumba() {
-        return this.activePumba;
-    }
-
-    public void setActivePumba(boolean active) {
-        this.activePumba = active;
     }
 
     /**
@@ -632,78 +632,6 @@ public class Pumba {
             }
         }
         return pumbaMessage + gameMessage + (kingMessage != null ? kingMessage : turnMessage);
-    }
-
-    /* ** FUNCIONES PARA INCIAR LA PARTIDA ** */
-
-    /**
-     * Establece la puntuación que tiene cada carta en función de su número y la
-     * asigna al atributo score de la carta.
-     */
-    private void scoreCards() {
-        for (Card c : drawPile.getCards()) {
-            int score;
-            switch (c.getNumber()) {
-                case "as":
-                    score = 1;
-                    break;
-                case "tres":
-                    score = 3;
-                    break;
-                case "cuatro":
-                    score = 4;
-                    break;
-                case "cinco":
-                    score = 5;
-                    break;
-                case "seis":
-                    score = 6;
-                    break;
-                case "siete":
-                    score = 7;
-                    break;
-                case "caballo":
-                    score = 9;
-                    break;
-                default:
-                    score = 10;
-            }
-            c.setScore(score);
-        }
-    }
-
-    /**
-     * Genera el número de jugadores que sean necesarios para la partida, eligiendo
-     * aleatoriamente uno como Mano.
-     */
-    private void generatePlayers() {
-        this.turn = (int) (Math.random() * this.numberOfPlayers);
-        // this.turn = 0; /* CAMBIAR: DESCOMENTAR PARA QUE EL JUGADOR PRINCIPAL SEA MANO
-        // */
-        System.out.println("MANO --- jugador " + (this.turn + 1));
-        for (int i = 0; i < this.numberOfPlayers; i++) {
-            boolean isMano = (this.turn == i);
-            players.add(new Player(this, i + 1, isMano));
-        }
-    }
-
-    /**
-     * Se reparte una mano de cartas a cada jugador. Las cartas repartidas se
-     * retiran del mazo. Si el jugador es la persona, las cartas se colocan boca
-     * arriba.
-     */
-    private void dealCards() {
-        for (Player j : players) {
-            int n = j.isMano() ? 5 : 4;
-            ArrayList<Card> cards = new ArrayList<>();
-            for (int i = 0; i < n; i++) {
-                Card c = drawPile.drawCard();
-                if (!j.isMachine())
-                    c.setUncovered(true);
-                cards.add(c);
-            }
-            j.receiveHand(cards);
-        }
     }
 
 }
