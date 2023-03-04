@@ -98,12 +98,13 @@ public class PumbaUtilities {
      * @param n el número de cartas robadas.
      * @return un ArrayList con las cartas robadas
      */
-    public static ArrayList<Card> drawCardsFromDeck(int n, ArrayList<Card> discardPile, CardsDeck drawPile) {
+    public static ArrayList<Card> drawCardsFromDeck(int n, Pumba game) {
         ArrayList<Card> drawnCards = new ArrayList<>();
+        CardsDeck drawPile = game.getDrawPile();
         for (int i = 0; i < n; i++) {
             Card c = drawPile.drawLastCard();
             if (c == null) {
-                flipDiscardsPile(discardPile, drawPile);
+                flipDiscardsPile(game);
                 c = drawPile.drawLastCard();
             }
             if (c != null) {
@@ -116,13 +117,16 @@ public class PumbaUtilities {
     /**
      * Voltea la pila de descartes cuando se queda sin cartas.
      */
-    private static void flipDiscardsPile(ArrayList<Card> discardPile, CardsDeck drawPile) {
+    private static void flipDiscardsPile(Pumba game) {
+        ArrayList<Card> discardPile = game.getDiscardPile();
+        CardsDeck drawPile = game.getDrawPile();
         System.out.println("VOLTEAR DESCARTES");
         Card lastCard = discardPile.remove(discardPile.size() - 1);
         drawPile.returnCards(discardPile);
         drawPile.shuffle();
         discardPile = new ArrayList<>();
         discardPile.add(lastCard);
+        game.setDiscardPile(discardPile);
     }
 
     /* ** CAMBIOS DURANTE LA PARTIDA ** */
