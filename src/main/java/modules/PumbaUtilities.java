@@ -132,10 +132,9 @@ public class PumbaUtilities {
      * 
      * @return devuelve un objeto Pumba de la partida en juego.
      */
-    public static Pumba reverseDirection(int playDirection, Pumba game) {
+    public static void reverseDirection(Pumba game) {
         System.out.println("CAMBIO SENTIDO");
-        playDirection *= -1;
-        return game;
+        game.setPlayDirection(game.getPlayDirection() * -1);
     }
 
     /**

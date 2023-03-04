@@ -100,6 +100,10 @@ public class Pumba {
         return this.playDirection;
     }
 
+    public void setPlayDirection(int _playDirection) {
+        this.playDirection = _playDirection;
+    }
+
     public Player getPlayerOfTurn() {
         return this.players.get(turn);
     }
@@ -277,7 +281,7 @@ public class Pumba {
     private String checkSpecialDroppedCard(Card droppedCard) {
         String gameMessage = "";
         if (droppedCard.getNumber().equals("siete")) {
-            PumbaUtilities.reverseDirection(this.playDirection, this);
+            PumbaUtilities.reverseDirection(this);
             gameMessage = ". Cambio de sentido";
         } else if (droppedCard.getNumber().equals("caballo")) {
             this.setTurnModule();
@@ -310,8 +314,10 @@ public class Pumba {
     private String checkKingCardDropped(Card droppedCard, Boolean playAgain) {
         String kingMessage = null;
         if (droppedCard != null && playAgain && droppedCard.getNumber().equals("rey")) {
-            (PumbaUtilities.reverseDirection(this.playDirection, this)).setTurnModule();
-            Player player = (PumbaUtilities.reverseDirection(this.playDirection, this)).getPlayerOfTurn();
+            PumbaUtilities.reverseDirection(this);
+            setTurnModule();
+            PumbaUtilities.reverseDirection(this);
+            Player player = getPlayerOfTurn();
             System.out.println("REY - VUELVE A JUGAR: " + this.getPlayerOfTurn().getPlayerName());
             kingMessage = player.isMachine() ? String.format(". Vuelve a jugar %s.", player.getPlayerName())
                     : ". Vuelves a jugar.";
