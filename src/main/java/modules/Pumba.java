@@ -476,7 +476,9 @@ public class Pumba {
     /**
      * Función principal de ejecución de la jugada.
      * 
-     * @param _playedCard la carta escogida por el jugador principal.
+     * @param _playedCard la carta escogida por la persona o null
+     * @param _suit       el palo escogido por la persona o null
+     * @param _drawPlayer el jugador que roba escogido por la persona o null
      * @return un String con el mensaje que explica la jugada.
      */
     public String runPlay(String _playedCard, String _suit, String _drawPlayer) {
@@ -488,10 +490,12 @@ public class Pumba {
         String turnMessage = "";
         String kingMessage = null;
         if (this.activePumba && this.turn == 0 && _playedCard == null) {
+            // Si la persona ha pulsado el botón ¡PUMBA! cuando debía
             this.activePumba = false;
             return "¡PUMBA!";
         }
         if (_suit != null) {
+            // Si el jugador principal ha cambiado de palo en el select
             PumbaUtilities.changeSuit(_suit, this);
             droppedCard = getPlayedCard(_playedCard);
             playMessage = String.format(" echa %s y cambia de palo a %s", droppedCard.getCardName(), getSuit());
@@ -499,6 +503,7 @@ public class Pumba {
             turnMessage = String.format(". Turno del %s.", this.setTurnModule().getPlayerOfTurn().getPlayerName(true));
             this.isSelectionRound = false;
         } else if (_drawPlayer != null) {
+            // Si el jugador principal ha elegido un jugador para que robe en el select
             droppedCard = getPlayedCard(_playedCard);
             _drawPlayer = _drawPlayer.replace("_", " ");
             playMessage = String.format(" echa %s. Elige a %s para que chupe 1 carta", droppedCard.getCardName(),
@@ -515,13 +520,15 @@ public class Pumba {
             System.out.println("\nTURNO: " + player.getPlayerName().toUpperCase());
             this.playedCard = checkPlayedCard(player, _playedCard);
             Card cardOnTable = this.getCardOnTable();
-            System.out
-                    .println(cardOnTable == null ? "--Mesa vacia" : ("--Carta en mesa: " + cardOnTable.getCardName()));
             if (cardOnTable == null) {
+                // Jugada inicial, no hay carta en mesa. Abre la mano con cualquier carta
+                System.out.println("--Mesa vacia");
                 droppedCard = (this.playedCard != null) ? player.dropCard(this.playedCard) : player.dropCard();
                 playMessage = String.format(" echa %s", droppedCard.getCardName());
             } else {
+                System.out.println("--Carta en mesa: " + cardOnTable.getCardName());
                 if (cardOnTable.getNumber().equals("dos")) {
+                    // Jugada especial cuando hay un 2 en mesa
                     HashMap<String, Object> returns = playWith2OnTable(cardOnTable, player);
                     playMessage = (String) returns.get("playMessage");
                     droppedCard = (Card) returns.get("droppedCard");
@@ -534,12 +541,13 @@ public class Pumba {
                 }
             }
             if (player.getNumberOfCardsInHand() == 0) {
+                // Jugador se queda sin cartas y gana la ronda o la partida
                 System.out.println("GANA " + player.getPlayerName().toUpperCase());
                 PumbaUtilities.setPlayersScore(this);
                 return String.format("FIN DE LA PARTIDA, ¡GANA %s!", player.getPlayerName().toUpperCase());
             }
-            gameMessage = player.getPlayerName(true) + playMessage;
             if (droppedCard != null) {
+                // Cuando el jugador juega una carta en su turno (carta especial o no)
                 String specialMessage = checkSpecialDroppedCard(droppedCard);
                 if (specialMessage != null)
                     gameMessage += specialMessage;
@@ -547,6 +555,7 @@ public class Pumba {
                     gameMessage = null;
             }
             if (gameMessage != null) {
+                // El jugador echó una carta especial (no si persona echa as o sota)
                 player = this.setTurnModule().getPlayerOfTurn();
                 if (player.isMachine())
                     turnMessage = String.format(". Turno del %s.", player.getPlayerName());
@@ -556,19 +565,25 @@ public class Pumba {
                     ArrayList<Card> validCards = cardHand
                             .printPlayer1ValidCards(droppedCard != null ? droppedCard : cardOnTable, this.suit);
                     if (player.getNumberOfCardsInHand() == 2 && validCards.size() >= 1) {
+                        // Se activa para permitir que la persona pulse el botón ¡PUMBA!
                         this.activePumba = true;
                         System.out.println("-*- PUMBA ACTIVO -*-");
                     }
                 }
+                // Comprobar si la carta echada fue un rey para repetir turno o no
                 kingMessage = checkKingCardDropped(droppedCard, playAgain);
             } else {
+                // Si gameMessage == null, el jugador principal echó sota o as
                 gameMessage = selectionRound(droppedCard);
             }
         }
-        Player previousPlayer = this.getPreviousPlayer();
-        pumbaMessage = getPumbaMessage(previousPlayer, _playedCard);
-        previousPlayer.getCardHand().setIsLastDroppedKing(false);
-        return pumbaMessage + gameMessage + (kingMessage != null ? kingMessage : turnMessage);
+        Player prevPlayer = this.getPreviousPlayer();
+        // Se obtiene el mensaje según si hay una jugada activa de ¡PUMBA!
+        pumbaMessage = getPumbaMessage(prevPlayer, _playedCard);
+        // Reseteo de última carta echada como rey en el jugador previo
+        prevPlayer.getCardHand().setIsLastDroppedKing(false);
+        return pumbaMessage + prevPlayer.getPlayerName(true) + gameMessage
+                + (kingMessage != null ? kingMessage : turnMessage);
     }
 
 }
