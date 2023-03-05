@@ -437,7 +437,7 @@ public class Pumba {
      */
     private String getPumbaMessage(Player prevPlayer, String _playedCard) {
         String pumbaMessage = "";
-        if (this.activePumba && prevPlayer.getNumber() != 0) {
+        if (this.activePumba && this.turn != 0 && prevPlayer.getNumber() != 1) {
             if (Math.random() < 0.9)
                 pumbaMessage = String.format("%s: ¡PUMBA!<br/>", prevPlayer.getPlayerName(true));
             else {
@@ -446,7 +446,7 @@ public class Pumba {
                 prevPlayer.drawCard();
             }
             this.activePumba = false;
-        } else if (this.activePumba && prevPlayer.getNumber() == 0) {
+        } else if (this.activePumba && prevPlayer.getNumber() == 1) {
             pumbaMessage = "No has dicho pumba, chupas 1 carta.<br/>";
             prevPlayer.drawCard();
             this.activePumba = false;
