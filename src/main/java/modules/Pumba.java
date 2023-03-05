@@ -546,6 +546,7 @@ public class Pumba {
                 PumbaUtilities.setPlayersScore(this);
                 return String.format("FIN DE LA PARTIDA, ¡GANA %s!", player.getPlayerName().toUpperCase());
             }
+            gameMessage = player.getPlayerName(true) + playMessage;
             if (droppedCard != null) {
                 // Cuando el jugador juega una carta en su turno (carta especial o no)
                 String specialMessage = checkSpecialDroppedCard(droppedCard);
@@ -582,8 +583,6 @@ public class Pumba {
         pumbaMessage = getPumbaMessage(prevPlayer, _playedCard);
         // Reseteo de última carta echada como rey en el jugador previo
         prevPlayer.getCardHand().setIsLastDroppedKing(false);
-        return pumbaMessage + prevPlayer.getPlayerName(true) + gameMessage
-                + (kingMessage != null ? kingMessage : turnMessage);
+        return pumbaMessage + gameMessage + (kingMessage != null ? kingMessage : turnMessage);
     }
-
 }
