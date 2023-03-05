@@ -1,4 +1,4 @@
-//TODO compatibilizar PUMBA con cartas de select
+//TODO no mantener pumba dicho de una jugada a otra
 package modules;
 
 import java.util.ArrayList;
@@ -118,6 +118,10 @@ public class Pumba {
 
     public boolean isScoreRound() {
         return this.isScoreRound;
+    }
+
+    public void setIsScoreRound(boolean _isScoreRound) {
+        this.isScoreRound = _isScoreRound;
     }
 
     public boolean isSelectionRound() {
@@ -358,8 +362,11 @@ public class Pumba {
             playMessage = specialReturns != null ? (String) specialReturns.get("playMessage") : "";
         } else if (this.playedCard.isDrawCard() && this.draw2 != -1)
             playMessage = mandatoryDraw2(player, cardOnTable);
-        else if (!this.playedCard.isDrawCard())
+        else if (!this.playedCard.isDrawCard()) {
             droppedCard = player.dropCard(this.playedCard);
+            if (this.draw2 == -1 && droppedCard.getNumber().equals("dos"))
+                draw2 = 2;
+        }
         if (droppedCard == null && playMessage.equals("")) {
             player.drawCard();
             playMessage = " roba carta";
@@ -473,11 +480,12 @@ public class Pumba {
                     playMessage = (String) returns.get("playMessage");
                     droppedCard = (Card) returns.get("droppedCard");
                     playAgain = (Boolean) returns.get("playAgain");
+                    player.getCardHand().setIsLastDroppedKing(playAgain);
                 }
             }
             if (player.getNumberOfCardsInHand() == 0) {
                 System.out.println("GANA " + player.getPlayerName().toUpperCase());
-                PumbaUtilities.setPlayersScore(this.players, this.isScoreRound);
+                PumbaUtilities.setPlayersScore(this);
                 return String.format("FIN DE LA PARTIDA, ¡GANA %s!", player.getPlayerName().toUpperCase());
             }
             gameMessage = player.getPlayerName(true) + playMessage;
@@ -487,20 +495,6 @@ public class Pumba {
                     gameMessage += specialMessage;
                 else
                     gameMessage = null;
-            }
-            if (this.activePumba && this.turn != 0) {
-                if (Math.random() < 0.1)
-                    pumbaMessage = String.format("%s: ¡PUMBA!<br/>", player.getPlayerName(true));
-                else {
-                    pumbaMessage = String.format("%s no ha dicho pumba, chupa 1 carta.<br/>",
-                            player.getPlayerName(true));
-                    player.drawCard();
-                }
-                this.activePumba = false;
-            } else if (this.activePumba && _playedCard != null) {
-                pumbaMessage = "No has dicho pumba, chupas 1 carta.<br/>";
-                player.drawCard();
-                this.activePumba = false;
             }
             if (gameMessage != null) {
                 player = this.setTurnModule().getPlayerOfTurn();
@@ -528,6 +522,22 @@ public class Pumba {
                 }
             }
         }
+        Player previousPlayer = this.getPreviousPlayer();
+        if (this.activePumba && this.turn != 0) {
+            if (Math.random() < 0.9)
+                pumbaMessage = String.format("%s: ¡PUMBA!<br/>", previousPlayer.getPlayerName(true));
+            else {
+                pumbaMessage = String.format("%s no ha dicho pumba, chupa 1 carta.<br/>",
+                        previousPlayer.getPlayerName(true));
+                previousPlayer.drawCard();
+            }
+            this.activePumba = false;
+        } else if (this.activePumba && _playedCard != null) {
+            pumbaMessage = "No has dicho pumba, chupas 1 carta.<br/>";
+            previousPlayer.drawCard();
+            this.activePumba = false;
+        }
+        previousPlayer.getCardHand().setIsLastDroppedKing(false);
         return pumbaMessage + gameMessage + (kingMessage != null ? kingMessage : turnMessage);
     }
 

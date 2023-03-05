@@ -5,10 +5,12 @@ import java.util.ArrayList;
 public class CardHand {
     private Player player;
     private ArrayList<Card> cards = new ArrayList<Card>();
+    private boolean isLastDroppedKing;
 
     public CardHand(Player _player, ArrayList<Card> _cards) {
         this.player = _player;
         this.cards = _cards;
+        this.isLastDroppedKing = false;
     }
 
     /* GETTERS Y SETTERS */
@@ -25,6 +27,10 @@ public class CardHand {
         return this.cards.size();
     }
 
+    public void setIsLastDroppedKing(boolean _isLastDroppedKing) {
+        this.isLastDroppedKing = _isLastDroppedKing;
+    }
+
     /*** CARTAS VÁLIDAS ***/
 
     /**
@@ -39,7 +45,8 @@ public class CardHand {
         ArrayList<Card> validCards = new ArrayList<Card>();
         boolean isSelectionRound = this.player.getGame().isSelectionRound();
         for (Card c : this.cards) {
-            if (!isSelectionRound && c.isValid(_cardOnTable, _suit))
+            if ((!isSelectionRound && c.isValid(_cardOnTable, _suit))
+                    || (c.getNumber().equals("rey") && this.isLastDroppedKing))
                 validCards.add(c);
         }
         return validCards;

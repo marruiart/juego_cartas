@@ -12,9 +12,6 @@ public class Card {
     private String rotation;
 
     public Card() {
-        // this.img = "assets/img/transparent.png";
-        // this.rotation = "transform-origin: bottom center; transform: scale(1)
-        // rotate(0);";
         this.isDrawCard = true;
     }
 

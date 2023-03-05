@@ -129,6 +129,16 @@ public class PumbaUtilities {
         game.setDiscardPile(discardPile);
     }
 
+    public static boolean isDrawPileEnabled(Pumba game, Player personPlayer) {
+        Card c = personPlayer.checkCardOnTable();
+        String s = personPlayer.getGame().getSuit();
+        if (game.getTurn() != 0 || game.isSelectionRound() || game.isScoreRound()
+                || (personPlayer.getNumberOfCardsInHand() == 0)
+                || (personPlayer.getCardHand().getValidCards(c, s).size() != 0))
+            return false;
+        return true;
+    }
+
     /* ** CAMBIOS DURANTE LA PARTIDA ** */
 
     /**
@@ -198,9 +208,9 @@ public class PumbaUtilities {
      * Asigna la puntuación de la ronda a cada jugador en función de sus cartas en
      * mano.
      */
-    public static void setPlayersScore(ArrayList<Player> players, boolean isScoreRound) {
-        isScoreRound = true;
-        for (Player p : players) {
+    public static void setPlayersScore(Pumba game) {
+        game.setIsScoreRound(true);
+        for (Player p : game.getPlayers()) {
             int score = 0;
             for (Card c : p.getCardHand().getCards()) {
                 score += c.setUncovered(true).getScore();

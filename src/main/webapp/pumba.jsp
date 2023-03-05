@@ -76,9 +76,7 @@
           <div class="drawing-link">
             <div class="link-draw-pile">
               <%  
-              Card c = personPlayer.checkCardOnTable();
-              String s = personPlayer.getGame().getSuit();
-              boolean enableDrawPile = !game.isSelectionRound() && !game.isScoreRound() && game.getTurn() == 0 && (personPlayer.getCardHand().getValidCards(c, s).size() == 0);
+              boolean enableDrawPile = PumbaUtilities.isDrawPileEnabled(game, personPlayer);
               out.print(Utilities.printAnchor("pumba.jsp?start=0&card=draw_card", "", "card", enableDrawPile ? "" : "disabled"));
               %>
             </div>
@@ -101,12 +99,12 @@
               <% 
                 out.print(Utilities.printInput("hidden", "start", "0"));
                 out.print(Utilities.printInput("hidden", "card", (start == 1) ? null : playedCard));
-                boolean playerDrawing = (message.equals("Elige al jugador que chupa 1 carta.")) ? true : false;
+                boolean playerDrawing = (message.contains("Elige al jugador que chupa 1 carta."));
                 boolean changeOfSuit = false;
                 if (playerDrawing) {
                   out.print(Utilities.printSelect("draw_player", game.getAllPlayersNames(), "select-suit"));
                 } else {
-                  changeOfSuit = (message.equals("Elige el cambio de palo.")) ? true : false;
+                  changeOfSuit = (message.contains("Elige el cambio de palo."));
                   out.print(Utilities.printSelect("suits", changeOfSuit, (start == 1) ? null : Suits.getAllSuits(), 
                     game.getSuitOnPlay(), "select-suit"));
                 }
