@@ -52,6 +52,14 @@ public class CardHand {
         return validCards;
     }
 
+    /**
+     * Imprime en consola las cartas válidas de las que va a disponer el jugador
+     * principal en el siguiente refresco de la página.
+     * 
+     * @param _cardOnTable la carta sobre la mesa
+     * @param _suit        el palo en juego
+     * @return un ArrayList con las cartas válidas
+     */
     public ArrayList<Card> printPlayer1ValidCards(Card _cardOnTable, String _suit) {
         ArrayList<Card> validCards = getValidCards(_cardOnTable, _suit);
         System.out.println("\n** TUS CARTAS VALIDAS **");

@@ -11,6 +11,8 @@ public class PumbaUtilities {
     /**
      * Establece la puntuación que tiene cada carta en función de su número y la
      * asigna al atributo score de la carta.
+     * 
+     * @param drawPile la pila de robo de la partida
      */
     public static void scoreCards(CardsDeck drawPile) {
         for (Card c : drawPile.getCards()) {
@@ -47,6 +49,8 @@ public class PumbaUtilities {
     /**
      * Genera el número de jugadores que sean necesarios para la partida, eligiendo
      * aleatoriamente uno como Mano.
+     * 
+     * @param game la partida en ejecución
      */
     public static void generatePlayers(Pumba game) {
         game.setTurn((int) (Math.random() * game.getNumberOfPlayers()));
@@ -63,6 +67,9 @@ public class PumbaUtilities {
      * Se reparte una mano de cartas a cada jugador. Las cartas repartidas se
      * retiran del mazo. Si el jugador es la persona, las cartas se colocan boca
      * arriba.
+     * 
+     * @param drawPile la pila de robo de la partida
+     * @param players  un ArrayList de los jugadores en la partida
      */
     public static void dealCards(CardsDeck drawPile, ArrayList<Player> players) {
         for (Player j : players) {
@@ -84,7 +91,8 @@ public class PumbaUtilities {
      * Suelta una carta concreta en la pila de descartes, dando una rotación para
      * simular desorden del mazo y colocando la carta boca arriba.
      * 
-     * @param _card la carta soltada.
+     * @param _card       la carta soltada por el jugador principal
+     * @param discardPile la pila de descartes de la partida
      */
     public static void dropOnDiscardPile(Card _card, ArrayList<Card> discardPile) {
         float rotation = -0.004f + (float) (Math.random() * (0.004f + 0.004f));
@@ -95,7 +103,8 @@ public class PumbaUtilities {
     /**
      * Retira varias cartas del mazo de robo.
      * 
-     * @param n el número de cartas robadas.
+     * @param n    el número de cartas robadas.
+     * @param game la partida en ejecución
      * @return un ArrayList con las cartas robadas
      */
     public static ArrayList<Card> drawCardsFromDeck(int n, Pumba game) {
@@ -116,6 +125,8 @@ public class PumbaUtilities {
 
     /**
      * Voltea la pila de descartes cuando se queda sin cartas.
+     * 
+     * @param game la partida en ejecución
      */
     private static void flipDiscardsPile(Pumba game) {
         ArrayList<Card> discardPile = game.getDiscardPile();
@@ -129,6 +140,18 @@ public class PumbaUtilities {
         game.setDiscardPile(discardPile);
     }
 
+    /**
+     * Indica si el enlace de la pila de descarte va a estar disponible para que el
+     * jugador principal (persona) robe carta, o no. La pila se activara si es el
+     * turno del jugador, no es ronda de elección de palo (la persona echó una sota)
+     * o jugador que robe (la persona echó un as), no es la ronda de puntuación
+     * final, el número de cartas de la persona no es 0 y si no tiene cartas válidas
+     * en mano para jugar.
+     * 
+     * @param game         la partida en ejecución
+     * @param personPlayer la persona (jugador no máquina)
+     * @return true para activar la pila de descartes y false para desactivarla
+     */
     public static boolean isDrawPileEnabled(Pumba game, Player personPlayer) {
         Card c = personPlayer.checkCardOnTable();
         String s = personPlayer.getGame().getSuit();
@@ -144,6 +167,7 @@ public class PumbaUtilities {
     /**
      * Cambia el sentido de la ronda de juego.
      * 
+     * @param game la partida en ejecución
      * @return devuelve un objeto Pumba de la partida en juego.
      */
     public static void reverseDirection(Pumba game) {
@@ -155,6 +179,7 @@ public class PumbaUtilities {
      * Elige un palo aleatoriamente, sin que sea el mismo que está en juego y cambia
      * el palo en juego.
      * 
+     * @param game la partida en ejecución
      * @return un String con el palo escogido.
      */
     public static String chooseSuit(Pumba game) {
@@ -179,6 +204,7 @@ public class PumbaUtilities {
      * Cambia el palo en juego a aquel pasado por parámetros.
      * 
      * @param _suit el palo al que cambia el juego.
+     * @param game  la partida en ejecución
      * @return el palo al que cambia el juego.
      */
     public static String changeSuit(String _suit, Pumba game) {
@@ -190,6 +216,7 @@ public class PumbaUtilities {
     /**
      * Elige un jugador aleatorio, sin que sea el que está en turno.
      * 
+     * @param game la partida en ejecución
      * @return el jugador escogido.
      */
     public static Player choosePlayer(Pumba game) {
@@ -207,6 +234,8 @@ public class PumbaUtilities {
     /**
      * Asigna la puntuación de la ronda a cada jugador en función de sus cartas en
      * mano.
+     * 
+     * @param game la partida en ejecución
      */
     public static void setPlayersScore(Pumba game) {
         game.setIsScoreRound(true);

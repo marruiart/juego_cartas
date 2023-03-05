@@ -424,6 +424,56 @@ public class Pumba {
     }
 
     /**
+     * Hace que se finalice una jugada de pumba activo (al jugador le quedará una
+     * carta en mano). Si es la máquina, se selecciona aleatoriamente si el jugador
+     * dice o no "¡PUMBA!". Si es el jugador principal y no ha pulsado el botón se
+     * ejecutará el else if.
+     * 
+     * @param previousPlayer el jugador previo (el que inició jugando en la ronda)
+     * @param _playedCard    la carta que jugó el jugador principal o null.
+     * @return el mensaje informando si se ha dicho o no "¡PUMBA!"
+     */
+    private String getPumbaMessage(Player previousPlayer, String _playedCard) {
+        String pumbaMessage = "";
+        if (this.activePumba && this.turn != 0) {
+            if (Math.random() < 0.9)
+                pumbaMessage = String.format("%s: ¡PUMBA!<br/>", previousPlayer.getPlayerName(true));
+            else {
+                pumbaMessage = String.format("%s no ha dicho pumba, chupa 1 carta.<br/>",
+                        previousPlayer.getPlayerName(true));
+                previousPlayer.drawCard();
+            }
+            this.activePumba = false;
+        } else if (this.activePumba && _playedCard != null) {
+            pumbaMessage = "No has dicho pumba, chupas 1 carta.<br/>";
+            previousPlayer.drawCard();
+            this.activePumba = false;
+        }
+        return pumbaMessage;
+    }
+
+    /**
+     * Hace que se imprima posteriormente una etiqueta select para
+     * elegir el palo al que se cambia o el jugador que roba al tornar true el
+     * atributo isSelectionRound.
+     * 
+     * @param droppedCard la carta jugada en la ronda
+     * @return el mensaje para indicar la elección al jugador principal
+     */
+    private String selectionRound(Card droppedCard) {
+        String gameMessage;
+        this.isSelectionRound = true;
+        if (droppedCard.getNumber().equals("sota")) {
+            System.out.println("-*- ELECCION DE PALO -*-");
+            gameMessage = "Elige el cambio de palo.";
+        } else {
+            System.out.println("-*- ELECCION DE JUGADOR -*-");
+            gameMessage = "Elige al jugador que chupa 1 carta.";
+        }
+        return gameMessage;
+    }
+
+    /**
      * Función principal de ejecución de la jugada.
      * 
      * @param _playedCard la carta escogida por el jugador principal.
@@ -512,31 +562,11 @@ public class Pumba {
                 }
                 kingMessage = checkKingCardDropped(droppedCard, playAgain);
             } else {
-                this.isSelectionRound = true;
-                if (droppedCard.getNumber().equals("sota")) {
-                    System.out.println("-*- ELECCION DE PALO -*-");
-                    gameMessage = "Elige el cambio de palo.";
-                } else {
-                    System.out.println("-*- ELECCION DE JUGADOR -*-");
-                    gameMessage = "Elige al jugador que chupa 1 carta.";
-                }
+                gameMessage = selectionRound(droppedCard);
             }
         }
         Player previousPlayer = this.getPreviousPlayer();
-        if (this.activePumba && this.turn != 0) {
-            if (Math.random() < 0.9)
-                pumbaMessage = String.format("%s: ¡PUMBA!<br/>", previousPlayer.getPlayerName(true));
-            else {
-                pumbaMessage = String.format("%s no ha dicho pumba, chupa 1 carta.<br/>",
-                        previousPlayer.getPlayerName(true));
-                previousPlayer.drawCard();
-            }
-            this.activePumba = false;
-        } else if (this.activePumba && _playedCard != null) {
-            pumbaMessage = "No has dicho pumba, chupas 1 carta.<br/>";
-            previousPlayer.drawCard();
-            this.activePumba = false;
-        }
+        pumbaMessage = getPumbaMessage(previousPlayer, _playedCard);
         previousPlayer.getCardHand().setIsLastDroppedKing(false);
         return pumbaMessage + gameMessage + (kingMessage != null ? kingMessage : turnMessage);
     }
