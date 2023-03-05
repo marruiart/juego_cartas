@@ -46,7 +46,8 @@ public class CardHand {
         boolean isSelectionRound = this.player.getGame().isSelectionRound();
         for (Card c : this.cards) {
             if ((!isSelectionRound && c.isValid(_cardOnTable, _suit))
-                    || (c.getNumber().equals("rey") && this.isLastDroppedKing))
+                    || (c.getNumber().equals("rey") && this.isLastDroppedKing)
+                    || (c.getSuit().equals(_cardOnTable.getSuit()) && this.isLastDroppedKing))
                 validCards.add(c);
         }
         return validCards;
