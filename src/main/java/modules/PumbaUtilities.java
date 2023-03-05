@@ -53,14 +53,24 @@ public class PumbaUtilities {
      * @param game la partida en ejecución
      */
     public static void generatePlayers(Pumba game) {
-        game.setTurn((int) (Math.random() * game.getNumberOfPlayers()));
-        // turn = 0; /* CAMBIAR: DESCOMENTAR PARA QUE EL JUGADOR PRINCIPAL SEA MANO
-        // */
-        System.out.println("MANO --- jugador " + (game.getTurn() + 1));
+        int mano = chooseManoPlayer(game);
         for (int i = 0; i < game.getNumberOfPlayers(); i++) {
-            boolean isMano = (game.getTurn() == i);
+            boolean isMano = (mano == i);
             game.getPlayers().add(new Player(game, i + 1, isMano));
         }
+    }
+
+    /**
+     * Elección aleatoria del jugador que será mano Mano.
+     * 
+     * @param game la partida en ejecución
+     * @return int con el turno del jugador que es mano
+     */
+    public static int chooseManoPlayer(Pumba game) {
+        int mano = game.setTurn((int) (Math.random() * game.getNumberOfPlayers()));
+        // game.setTurn(0); /* DESCOMENTAR PARA QUE EL JUGADOR PRINCIPAL SEA MANO */
+        System.out.println("MANO --- jugador " + (mano + 1));
+        return mano;
     }
 
     /**
@@ -83,6 +93,41 @@ public class PumbaUtilities {
             }
             j.receiveHand(cards);
         }
+    }
+
+    /* ** FUNCIONES PARA INCIAR OTRA RONDA DE JUEGO ** */
+
+    public static String remove100ScorePlayers(Pumba game, ArrayList<Player> players) {
+        String removed = "Se eliminan: <br/><ul>";
+        int count = 0;
+        for (Player p : players) {
+            if (p.getScore() >= 100) {
+                System.out.println("XXXX Eliminado " + p.getPlayerName() + " XXXX");
+                removed += String.format("<li>%s</li>", p.getPlayerName(true));
+                players.remove(p);
+                count++;
+            }
+        }
+        game.setNumberOfPlayers(players.size());
+        if (count == 0)
+            return "No se elimina a ningún jugador.<br/>";
+        else
+            return removed + "</ul><br/>";
+    }
+
+    public static void resetDrawPile(Pumba game) {
+        ArrayList<Card> discardPile = game.getDiscardPile();
+        CardsDeck drawPile = game.getDrawPile();
+        ArrayList<Player> players = game.getPlayers();
+        System.out.println("\nCOLOCAR PILA DE ROBO");
+        drawPile.returnCards(discardPile);
+        System.out.println("DEVOLVER MANOS A LA PILA");
+        for (Player p : players)
+            drawPile.returnCards(p.getCardHand().getCards());
+        drawPile.shuffle();
+        for (Card c : drawPile.getCards())
+            c.rotateCard("center", "transform-origin: bottom center; transform: scale(1) rotate(0);");
+        game.setDiscardPile(new ArrayList<Card>());
     }
 
     /* *** MOVIMIENTOS DE LOS MAZOS *** */

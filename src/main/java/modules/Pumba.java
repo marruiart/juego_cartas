@@ -83,8 +83,9 @@ public class Pumba {
         return this.turn;
     }
 
-    public void setTurn(int _turn) {
+    public int setTurn(int _turn) {
         this.turn = _turn;
+        return this.turn;
     }
 
     public Pumba setTurnModule() {
