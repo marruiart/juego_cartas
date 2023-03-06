@@ -114,12 +114,12 @@
           <div class="buttons">
             <%
               if (message.contains("FIN")) {
-                  out.print(Utilities.printAnchor("winner.html?winner=1", "PREMIO", "btn"));
+                  out.print(Utilities.printAnchor("winner.jsp?winner=1", "PREMIO", "btn"));
               } else if (message.contains("has sido eliminado")) {
                   out.print(Utilities.printAnchor("index.html", "Terminar", "btn"));
               } else if (message.contains("RONDA")) {
                   out.print(Utilities.printAnchor("pumba.jsp?start=0&round=1", "Sí", "btn"));
-                  out.print(Utilities.printAnchor("winner.html?winner=" + PumbaUtilities.getWinner(), "No", "btn"));
+                  out.print(Utilities.printAnchor("winner.jsp?winner=" + PumbaUtilities.getWinner(), "No", "btn"));
                   game.isScoreRound = false;
               } else {
                   out.print(Utilities.printAnchor("pumba.jsp?start=0", "Siguiente", "btn", (game.getTurn() == 0) ? "disabled" : ""));
