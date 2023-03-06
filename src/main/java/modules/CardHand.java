@@ -47,12 +47,7 @@ public class CardHand {
                     || (_cardOnTable != null && c.getSuit().equals(_cardOnTable.getSuit()) && this.isLastDroppedKing))
                 validCards.add(c);
         }
-        if (this.player.getNumberOfCardsInHand() == 2 && validCards.size() >= 1) {
-            if (this.player.getNumber() != 1) {
-                this.isPumbaTime = true;
-                System.out.printf("\033[1;34m--- PUMBA ACTIVO %s ---\033[0m\n", this.player.getPlayerName().toUpperCase());
-            }
-        }
+        PumbaUtilities.activatePumbaTime(player, validCards);
         return validCards;
     }
 

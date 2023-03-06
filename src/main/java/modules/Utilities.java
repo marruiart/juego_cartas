@@ -24,6 +24,12 @@ public class Utilities {
         return String.format("<a %s %s>%s</a>", getClassesStr(classes), href, content);
     }
 
+    public static String printTitle(String title, String content, String... classes) {
+        title = title == null ? "h1" : title;
+        content = content == null ? "" : content;
+        return String.format("<%s %s> %s </%s>", title, getClassesStr(classes), content, title);
+    }
+
     public static String printDiv(Player player, String... classes) {
         String playerStr = player == null ? "" : player.toString();
         return printDiv(playerStr, classes);
@@ -81,6 +87,23 @@ public class Utilities {
         name = name == null ? "" : String.format("name='%s'", name);
         value = value == null ? "" : String.format("value='%s'", value);
         return String.format("<input %s %s %s %s/>", type, name, value, getClassesStr(classes));
+    }
+
+    public static String printPlayers(Pumba game) {
+        String playersStr = "";
+        for (Player j : game.getPlayers()) {
+            if (j.isMachine())
+                playersStr += j;
+        }
+        return playersStr;
+    }
+
+    public static String printCards(Pumba game, ArrayList<Card> cards) {
+        String cardsStr = "";
+        for (Card c : cards) {
+            cardsStr += c;
+        }
+        return cardsStr;
     }
 
     public static String firstToCapital(String str) {

@@ -3,7 +3,7 @@
 <%@page import="modules.Enums.Suits"%>
 
 <!DOCTYPE html>
-<html>
+<html lang="es">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
@@ -35,10 +35,7 @@
         } else if (start != 1 && round != null && Integer.parseInt(round) >= 1) {
             game = (Pumba)session.getAttribute("game");
             game.incRound();
-            PumbaUtilities.resetDrawPile(game);
-            String removed = PumbaUtilities.remove100ScorePlayers(game, game.getPlayers());
-            PumbaUtilities.chooseManoPlayer(game);
-            PumbaUtilities.dealCards(game.getDrawPile(), game.getPlayers());
+            String removed = PumbaUtilities.restartRound(game);
             message = String.format("%sComienza la ronda %d. Turno del \"Mano\".", removed, game.getRound());
         } else {
             playedCard = request.getParameter("card");
@@ -54,12 +51,8 @@
       <section class="table">
         <div class="all-players">
           <%
-            for (Player j : game.getPlayers()) {
-              if (!j.isMachine())
-                personPlayer = j;
-              else
-                out.print(j);
-            }
+            personPlayer = game.getPlayers().get(0);
+            out.print(Utilities.printPlayers(game));
           %>
           <div class="positional-marks">
             <div class="mark-draw-pile">
@@ -71,40 +64,30 @@
           </div>  
           <div class="table-center">
             <div class="draw-pile">
-            <%
-              for (Card c : game.getDrawPile().getCards()) {
-                out.print(c);
-              }
-            %>
+              <%=Utilities.printCards(game, game.getDrawPile().getCards())%>
             </div>
             <div class="discards-pile">
-            <%
-              for (Card c : game.getDiscardPile()) {
-                out.print(c);
-              }
-            %>
+              <%=Utilities.printCards(game, game.getDiscardPile())%>
             </div>
           </div>
           <div class="drawing-link">
             <div class="link-draw-pile">
               <%  
-              boolean enableDrawPile = PumbaUtilities.isDrawPileEnabled(game, personPlayer);
-              out.print(Utilities.printAnchor("pumba.jsp?start=0&card=draw_card", "", "card", enableDrawPile ? "" : "disabled"));
+                boolean enableDrawPile = PumbaUtilities.isDrawPileEnabled(game, personPlayer);
+                out.print(Utilities.printAnchor("pumba.jsp?start=0&card=draw_card", "", "card", enableDrawPile ? "" : "disabled"));
               %>
             </div>
           </div>
           <%
-          boolean activePumba = personPlayer.isPumbaTime();
-          out.print(Utilities.printImg("assets/img/dir"+game.getPlayDirection() +".png", "Flecha de dirección del juego", "arrow-img", "top"));
-          out.print(Utilities.printImg("assets/img/dir"+game.getPlayDirection() +".png", "Flecha de dirección del juego", "arrow-img", "bottom"));
-          out.print(Utilities.printAnchor("pumba.jsp?start=0", "¡PUMBA!", "pumba-btn", activePumba ? "" : "disabled"));
+            boolean activePumba = personPlayer.isPumbaTime();
+            out.print(Utilities.printImg("assets/img/dir"+game.getPlayDirection() +".png", "Flecha de dirección del juego", "arrow-img", "top"));
+            out.print(Utilities.printImg("assets/img/dir"+game.getPlayDirection() +".png", "Flecha de dirección del juego", "arrow-img", "bottom"));
+            out.print(Utilities.printAnchor("pumba.jsp?start=0", "¡PUMBA!", "pumba-btn", activePumba ? "" : "disabled"));
           %>  
         </div>
       </section>
       <section class="display">
-        <%
-          out.print(Utilities.printDiv(personPlayer, "div_jugador1"));
-        %>
+        <%=Utilities.printDiv(personPlayer, "div_jugador1")%>
         <div class="info">
           <div class="play-info">
             <form class="played-suit" method="GET" action="pumba.jsp">
@@ -130,11 +113,13 @@
           </div>
           <div class="buttons">
             <%
-              if (message.contains("FIN") || message.contains("has sido eliminado")) {
-                  out.print(Utilities.printAnchor("index.html", "Volver a inicio", "btn"));
+              if (message.contains("FIN")) {
+                  out.print(Utilities.printAnchor("winner.html?winner=1", "PREMIO", "btn"));
+              } else if (message.contains("has sido eliminado")) {
+                  out.print(Utilities.printAnchor("index.html", "Terminar", "btn"));
               } else if (message.contains("RONDA")) {
                   out.print(Utilities.printAnchor("pumba.jsp?start=0&round=1", "Sí", "btn"));
-                  out.print(Utilities.printAnchor("index.html", "No", "btn"));
+                  out.print(Utilities.printAnchor("winner.html?winner=" + PumbaUtilities.getWinner(), "No", "btn"));
                   game.isScoreRound = false;
               } else {
                   out.print(Utilities.printAnchor("pumba.jsp?start=0", "Siguiente", "btn", (game.getTurn() == 0) ? "disabled" : ""));

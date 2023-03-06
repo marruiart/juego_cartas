@@ -191,6 +191,28 @@ section.hero {
     max-width: 130ch;
 }
 
+.main-landing.main-winner {
+    padding-bottom: 0;
+}
+
+.winner {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+}
+
+.winner h2 {
+    text-align: center;
+    margin: 5vh 0;
+    font-size: 3rem;
+}
+
+.winner img {
+    width: 800px;
+}
+
 .form {
     max-width: 25rem;
     margin: 1rem auto 0;
@@ -623,7 +645,8 @@ select:disabled::-ms-expand {
 /********* ENLACES ACTIVADOS/DESACTIVADOS *********/
 
 
-a.disabled, .pumba-btn.disabled {
+a.disabled,
+.pumba-btn.disabled {
     pointer-events: none;
 }
 
@@ -678,7 +701,7 @@ footer small>* {
 @media only screen and (max-width: 930px) {
     body.container {
         overflow-x: auto;
-    }   
+    }
 }
 
 @media only screen and (max-height: 1104px) {

@@ -89,6 +89,19 @@ public class Card {
     }
 
     /**
+     * 
+     * 
+     * @param _playedCard un String que debe tener formato numero_palo
+     * @return una carta como la que ha jugado la persona
+     */
+    public static Card formatPlayedCard(String _playedCard) {
+        String[] card = _playedCard.split("_");
+        String number = card[0];
+        String suit = card[1];
+        return new Card(number, suit);
+    }
+
+    /**
      * Asigna una rotación de la carta que se añadirá al estilo CSS en línea.
      * 
      * @param _position indica el eje de rotación de la carta

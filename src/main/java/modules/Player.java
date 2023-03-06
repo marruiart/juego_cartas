@@ -45,6 +45,10 @@ public class Player {
         return this.number;
     }
 
+    public void setNumber(int _number) {
+        this.number = _number;
+    }
+
     public CardHand getCardHand() {
         return this.cardHand;
     }
@@ -77,8 +81,8 @@ public class Player {
         return this.cardHand.isPumbaTime;
     }
 
-    public void setPumbaTime(boolean _ispumbaTime) {
-        this.cardHand.isPumbaTime = _ispumbaTime;
+    public void setPumbaTime(boolean _isPumbaTime) {
+        this.cardHand.isPumbaTime = _isPumbaTime;
     }
 
     public boolean isLastDroppedKing() {
@@ -100,12 +104,7 @@ public class Player {
     public Card getPlayedCard(String _playedCard) {
         if (_playedCard == null)
             return null;
-        String[] card = _playedCard.split("_");
-        if (card.length != 2)
-            return null;
-        String number = card[0];
-        String suit = card[1];
-        Card tmp = new Card(number, suit);
+        Card tmp = Card.formatPlayedCard(_playedCard);
         for (Card c : this.cardHand.getCards())
             if (c.equals(tmp))
                 return c;
@@ -126,11 +125,7 @@ public class Player {
         for (Card c : validCards)
             System.out.printf("   * %s\n", c.getCardName());
         System.out.println("************************");
-        if (this.getNumberOfCardsInHand() == 2 && validCards.size() >= 1 && !this.getGame().isSelectionRound) {
-            // Se activa para permitir que la persona pulse el botón ¡PUMBA!
-            this.setPumbaTime(true);
-            System.out.printf("\033[1;31m-*- PUMBA ACTIVO  %s -*-\033[0m\n", this.getPlayerName().toUpperCase());
-        }
+        PumbaUtilities.activatePumbaTime(this, _cardOnTable, validCards);
         return validCards;
     }
 

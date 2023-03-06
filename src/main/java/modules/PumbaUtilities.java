@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class PumbaUtilities {
+    private static int winner = 101;
 
     /* ** FUNCIONES PARA INCIAR LA PARTIDA ** */
 
@@ -66,7 +67,7 @@ public class PumbaUtilities {
      * @param game la partida en ejecución
      * @return int con el turno del jugador que es mano
      */
-    public static int chooseManoPlayer(Pumba game) {
+    private static int chooseManoPlayer(Pumba game) {
         int mano = game.setTurn((int) (Math.random() * game.getNumberOfPlayers()));
         // game.setTurn(0); /* DESCOMENTAR PARA QUE EL JUGADOR PRINCIPAL SEA MANO */
         System.out.println("MANO --- jugador " + (mano + 1));
@@ -97,10 +98,33 @@ public class PumbaUtilities {
 
     /* ** FUNCIONES PARA INCIAR OTRA RONDA DE JUEGO ** */
 
-    public static String remove100ScorePlayers(Pumba game, ArrayList<Player> players) {
+    /**
+     * Resetea la ronda de juego, devolviendo todas las cartas al mazo de robo,
+     * eliminando los jugadores que tengan igual o más de 100 puntos, eligiendo un
+     * nuevo jugador Mano y repartiendo nuevamente cartas a los jugadores.
+     * 
+     * @param game la partida en ejecución
+     * @return un String con el listado de jugadores que han sido eliminados
+     */
+    public static String restartRound(Pumba game) {
+        PumbaUtilities.resetDrawPile(game);
+        String removed = PumbaUtilities.remove100ScorePlayers(game);
+        PumbaUtilities.chooseManoPlayer(game);
+        PumbaUtilities.dealCards(game.getDrawPile(), game.getPlayers());
+        return removed;
+    }
+
+    /**
+     * Elimina a aquellos jugadores que tienen igual o más de 100 puntos.
+     * 
+     * @param game la partida en ejecución
+     * @return un String con el listado de jugadores que han sido eliminados
+     */
+    private static String remove100ScorePlayers(Pumba game) {
+        ArrayList<Player> players = (ArrayList<Player>) game.getPlayers().clone();
         String removed = "Se eliminan: <br/><ul>";
         int count = 0;
-        for (Player p : players) {
+        for (Player p : game.getPlayers()) {
             if (p.getScore() >= 100) {
                 System.out.println("XXXX Eliminado " + p.getPlayerName() + " XXXX");
                 removed += String.format("<li>%s</li>", p.getPlayerName(true));
@@ -108,14 +132,34 @@ public class PumbaUtilities {
                 count++;
             }
         }
-        game.setNumberOfPlayers(players.size());
         if (count == 0)
             return "No se elimina a ningún jugador.<br/>";
-        else
-            return removed + "</ul><br/>";
+        game.setPlayers(players);
+        resetPlayersNumbers(game.getPlayers());
+        return (removed + "</ul><br/>");
     }
 
-    public static void resetDrawPile(Pumba game) {
+    /**
+     * Asigna un nuevo número a cada jugador en función del número de jugadores que
+     * han quedado en juego.
+     * 
+     * @param players los jugadores que han quedado en juego
+     */
+    private static void resetPlayersNumbers(ArrayList<Player> players) {
+        for (int p = 1; p < players.size(); p++) {
+            Player player = players.get(p);
+            int n = player.getNumber();
+            player.setNumber(n < p + 1 ? n : p + 1);
+        }
+    }
+
+    /**
+     * Devuelve todas las cartas que hay en la pila de descartes y en las manos de
+     * los jugadores a la pila de robo, colocando de nuevo las cartas derechas.
+     * 
+     * @param game la partida en ejecución
+     */
+    private static void resetDrawPile(Pumba game) {
         ArrayList<Card> discardPile = game.getDiscardPile();
         CardsDeck drawPile = game.getDrawPile();
         ArrayList<Player> players = game.getPlayers();
@@ -274,6 +318,50 @@ public class PumbaUtilities {
         return chosenPlayer;
     }
 
+    /**
+     * Hace que se active el botón de ¡PUMBA! para que la persona lo pulse, además
+     * de activar isPumbaTime para checkear si la persona ha pulsado o no el botón
+     * posteriormente.
+     * 
+     * @param player      el jugador a comprobar
+     * @param droppedCard la carta jugada en la ronda
+     */
+    public static void activatePumbaTime(Player player, Card droppedCard) {
+        ArrayList<Card> validCards = player.getCardHand().getValidCards(droppedCard, null);
+        activatePumbaTime(player, droppedCard, validCards);
+    }
+
+    /**
+     * Hace que se active el botón de ¡PUMBA! para que la persona lo pulse, además
+     * de activar isPumbaTime para checkear si la persona ha pulsado o no el botón
+     * posteriormente.
+     * 
+     * @param player      el jugador a comprobar
+     * @param droppedCard la carta jugada en la ronda
+     * @param validCards  las cartas válidas en la mano del jugador
+     */
+    public static void activatePumbaTime(Player player, Card droppedCard, ArrayList<Card> validCards) {
+        if (player.getNumberOfCardsInHand() == 2 && validCards.size() >= 1) {
+            player.setPumbaTime(true);
+            System.out.printf("\033[1;31m-*- PUMBA ACTIVO  %s -*-\033[0m\n", player.getPlayerName().toUpperCase());
+        }
+    }
+
+    /**
+     * Hace que se active el momento de decir ¡PUMBA! para los jugadores máquina.
+     * 
+     * @param player     el jugador a comprobar
+     * @param validCards las cartas válidas en la mano del jugador
+     */
+    public static void activatePumbaTime(Player player, ArrayList<Card> validCards) {
+        if (player.getNumberOfCardsInHand() == 2 && validCards.size() >= 1) {
+            if (player.getNumber() != 1) {
+                player.setPumbaTime(true);
+                System.out.printf("\033[1;34m--- PUMBA ACTIVO %s ---\033[0m\n", player.getPlayerName().toUpperCase());
+            }
+        }
+    }
+
     /* ** PUNTUACIONES ** */
 
     /**
@@ -283,6 +371,7 @@ public class PumbaUtilities {
      * @param game la partida en ejecución
      */
     public static void setPlayersScore(Pumba game) {
+        int playerScore = 101;
         game.isScoreRound = true;
         for (Player p : game.getPlayers()) {
             int score = 0;
@@ -290,7 +379,13 @@ public class PumbaUtilities {
                 score += c.setUncovered(true).getScore();
             }
             p.updateScore(score);
+            if (p.getScore() < playerScore)
+                winner = p.getNumber();
         }
+    }
+
+    public static int getWinner() {
+        return winner;
     }
 
 }
