@@ -82,7 +82,7 @@
             </div>
           </div>
           <%
-          boolean activePumba = game.getActivePumba();
+          boolean activePumba = personPlayer.isPumbaTime();
           out.print(Utilities.printImg("assets/img/dir"+game.getPlayDirection() +".png", "Flecha de dirección del juego", "arrow-img", "top"));
           out.print(Utilities.printImg("assets/img/dir"+game.getPlayDirection() +".png", "Flecha de dirección del juego", "arrow-img", "bottom"));
           out.print(Utilities.printAnchor("pumba.jsp?start=0", "¡PUMBA!", "pumba-btn", activePumba ? "" : "disabled"));

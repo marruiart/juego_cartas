@@ -200,7 +200,7 @@ public class PumbaUtilities {
     public static boolean isDrawPileEnabled(Pumba game, Player personPlayer) {
         Card c = personPlayer.checkCardOnTable();
         String s = personPlayer.getGame().getSuit();
-        if (game.getTurn() != 0 || game.isSelectionRound() || game.isScoreRound()
+        if (game.getTurn() != 0 || game.isSelectionRound || game.isScoreRound
                 || (personPlayer.getNumberOfCardsInHand() == 0)
                 || (personPlayer.getCardHand().getValidCards(c, s).size() != 0))
             return false;
@@ -283,7 +283,7 @@ public class PumbaUtilities {
      * @param game la partida en ejecución
      */
     public static void setPlayersScore(Pumba game) {
-        game.setIsScoreRound(true);
+        game.isScoreRound = true;
         for (Player p : game.getPlayers()) {
             int score = 0;
             for (Card c : p.getCardHand().getCards()) {

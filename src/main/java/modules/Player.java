@@ -73,6 +73,22 @@ public class Player {
         this.score += _score;
     }
 
+    public boolean isPumbaTime() {
+        return this.cardHand.isPumbaTime;
+    }
+
+    public void setPumbaTime(boolean _ispumbaTime) {
+        this.cardHand.isPumbaTime = _ispumbaTime;
+    }
+
+    public boolean isLastDroppedKing() {
+        return this.cardHand.isLastDroppedKing;
+    }
+
+    public void setLastDroppedKing(boolean _islastDropped) {
+        this.cardHand.isLastDroppedKing = _islastDropped;
+    }
+
     /**
      * Convierte en un objeto Card el String pasado por parámetros.
      * 
@@ -94,6 +110,28 @@ public class Player {
             if (c.equals(tmp))
                 return c;
         return null;
+    }
+
+    /**
+     * Imprime en consola las cartas válidas de las que va a disponer el jugador
+     * principal en el siguiente refresco de la página.
+     * 
+     * @param _cardOnTable la carta sobre la mesa
+     * @param _suit        el palo en juego
+     * @return un ArrayList con las cartas válidas
+     */
+    public ArrayList<Card> printPlayer1ValidCards(Card _cardOnTable, String _suit) {
+        ArrayList<Card> validCards = this.cardHand.getValidCards(_cardOnTable, _suit);
+        System.out.println("\n** TUS CARTAS VALIDAS **");
+        for (Card c : validCards)
+            System.out.printf("   * %s\n", c.getCardName());
+        System.out.println("************************");
+        if (this.getNumberOfCardsInHand() == 2 && validCards.size() >= 1 && !this.getGame().isSelectionRound) {
+            // Se activa para permitir que la persona pulse el botón ¡PUMBA!
+            this.setPumbaTime(true);
+            System.out.printf("\033[1;31m-*- PUMBA ACTIVO  %s -*-\033[0m\n", this.getPlayerName().toUpperCase());
+        }
+        return validCards;
     }
 
     /**
@@ -130,12 +168,6 @@ public class Player {
         if (validCards.size() == 0)
             return null;
         if (_playedCard == null) {
-            if (this.isMachine()) {
-                if (this.getNumberOfCardsInHand() == 2 && validCards.size() >= 1) {
-                    this.getGame().setActivePumba(true);
-                    System.out.println("--- PUMBA ACTIVO ---");
-                }
-            }
             return this.dropCard(validCards.get((int) (Math.random() * validCards.size())));
         } else
             return this.dropCard(_playedCard);
@@ -210,7 +242,7 @@ public class Player {
         String isMachineTxt = isMachine ? "" : " (Tú)";
         String player = this.getPlayerName().replace(" ", "");
         String name = (this.getPlayerName(true) + isManoTxt + isMachineTxt);
-        String score = game.isScoreRound() ? Utilities.printDiv(Integer.toString(this.score), "score" + this.number)
+        String score = game.isScoreRound ? Utilities.printDiv(Integer.toString(this.score), "score" + this.number)
                 : "";
         String content = score + Utilities.printDiv(name, "name") + this.cardHand.toString();
         return Utilities.printDiv(content, player, seat);

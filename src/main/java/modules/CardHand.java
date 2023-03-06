@@ -5,7 +5,8 @@ import java.util.ArrayList;
 public class CardHand {
     private Player player;
     private ArrayList<Card> cards = new ArrayList<Card>();
-    private boolean isLastDroppedKing;
+    public boolean isLastDroppedKing;
+    public boolean isPumbaTime;
 
     public CardHand(Player _player, ArrayList<Card> _cards) {
         this.player = _player;
@@ -27,10 +28,6 @@ public class CardHand {
         return this.cards.size();
     }
 
-    public void setIsLastDroppedKing(boolean _isLastDroppedKing) {
-        this.isLastDroppedKing = _isLastDroppedKing;
-    }
-
     /*** CARTAS VÁLIDAS ***/
 
     /**
@@ -43,30 +40,19 @@ public class CardHand {
      */
     public ArrayList<Card> getValidCards(Card _cardOnTable, String _suit) {
         ArrayList<Card> validCards = new ArrayList<Card>();
-        boolean isSelectionRound = this.player.getGame().isSelectionRound();
+        boolean isSelectionRound = this.player.getGame().isSelectionRound;
         for (Card c : this.cards) {
             if ((!isSelectionRound && c.isValid(_cardOnTable, _suit))
                     || (c.getNumber().equals("rey") && this.isLastDroppedKing)
                     || (_cardOnTable != null && c.getSuit().equals(_cardOnTable.getSuit()) && this.isLastDroppedKing))
                 validCards.add(c);
         }
-        return validCards;
-    }
-
-    /**
-     * Imprime en consola las cartas válidas de las que va a disponer el jugador
-     * principal en el siguiente refresco de la página.
-     * 
-     * @param _cardOnTable la carta sobre la mesa
-     * @param _suit        el palo en juego
-     * @return un ArrayList con las cartas válidas
-     */
-    public ArrayList<Card> printPlayer1ValidCards(Card _cardOnTable, String _suit) {
-        ArrayList<Card> validCards = getValidCards(_cardOnTable, _suit);
-        System.out.println("\n** TUS CARTAS VALIDAS **");
-        for (Card c : validCards)
-            System.out.printf("   * %s\n", c.getCardName());
-        System.out.println("************************");
+        if (this.player.getNumberOfCardsInHand() == 2 && validCards.size() >= 1) {
+            if (this.player.getNumber() != 1) {
+                this.isPumbaTime = true;
+                System.out.printf("\033[1;34m--- PUMBA ACTIVO %s ---\033[0m\n", this.player.getPlayerName().toUpperCase());
+            }
+        }
         return validCards;
     }
 
