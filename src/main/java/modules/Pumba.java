@@ -1,3 +1,6 @@
+//TODO no mantener pumba dicho de una jugada a otra
+//TODO tener que pulsar pumba cuando echa rey persona
+//TODO no chupa 2 si dice pumba
 package modules;
 
 import java.util.ArrayList;
@@ -15,6 +18,7 @@ public class Pumba {
     private Card playedCard;
     private int playDirection;
     private int draw2;
+    private int round;
     private Player prevPlayer;
 
     public Pumba(int _numberOfPlayers) {
@@ -28,6 +32,7 @@ public class Pumba {
         this.playedCard = null;
         this.isScoreRound = false;
         this.isSelectionRound = false;
+        this.round = 1;
         PumbaUtilities.scoreCards(this.drawPile);
         PumbaUtilities.generatePlayers(this);
         PumbaUtilities.dealCards(this.drawPile, this.players);
@@ -38,8 +43,7 @@ public class Pumba {
 
     public CardsDeck getDrawPile() {
         // System.out.println(" ------------------------- ");
-        // System.out.printf("| Cartas en mazo: %2d |\n",
-        // this.drawPile.getCards().size());
+        // System.out.printf("| Cartas en mazo: %2d |\n", this.drawPile.getCards().size());
         return this.drawPile;
     }
 
@@ -59,6 +63,10 @@ public class Pumba {
 
     public ArrayList<Player> getPlayers() {
         return this.players;
+    }
+
+    public void setPlayers(ArrayList<Player> _players) {
+        this.players = _players;
     }
 
     public ArrayList<String> getAllPlayersNames() {
@@ -111,6 +119,14 @@ public class Pumba {
 
     public Player getPlayerOfTurn() {
         return this.players.get(turn);
+    }
+
+    public int getRound() {
+        return this.round;
+    }
+
+    public void incRound() {
+        this.round++;
     }
 
     public String getSuit() {
@@ -526,7 +542,11 @@ public class Pumba {
                 // Jugador se queda sin cartas y gana la ronda o la partida
                 System.out.println("GANA " + player.getPlayerName().toUpperCase());
                 PumbaUtilities.setPlayersScore(this);
-                return String.format("FIN DE LA PARTIDA, ¡GANA %s!", player.getPlayerName().toUpperCase());
+                if (this.players.get(0).getScore() < 100)
+                    return String.format("¡RONDA TERMINADA! ¿Quieres jugar otra ronda?");
+                else
+                    return String.format("¡RONDA TERMINADA! Lo siento, has sido eliminado del juego");
+                // return String.format("FIN DE LA PARTIDA, ¡GANA %s!", player.getPlayerName().toUpperCase());
             }
             gameMessage = player.getPlayerName(true) + playMessage;
             if (droppedCard != null) {

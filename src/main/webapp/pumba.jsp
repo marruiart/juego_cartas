@@ -1,6 +1,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
 <%@page import="modules.*"%>
 <%@page import="modules.Enums.Suits"%>
+
 <!DOCTYPE html>
 <html>
   <head>
@@ -17,27 +18,38 @@
       <h1>Pumba!</h1>
     </header>
     <main class="main-game">
-      <% int start = Integer.parseInt(request.getParameter("start"));
+      <% 
+        Integer start = Integer.parseInt(request.getParameter("start"));
+        String round = request.getParameter("round");
         String message;
         Pumba game;
         Player personPlayer = null;
         String playedCard = null;
         String drawPlayer = null;
+
         if (start == 1) {
           int n = Integer.parseInt(request.getParameter("players"));
           game = new Pumba(n);
           session.setAttribute("game", game);
           message = "Comienza el juego. Turno del \"Mano\".";
+        } else if (start != 1 && round != null && Integer.parseInt(round) >= 1) {
+            game = (Pumba)session.getAttribute("game");
+            game.incRound();
+            PumbaUtilities.resetDrawPile(game);
+            String removed = PumbaUtilities.remove100ScorePlayers(game, game.getPlayers());
+            PumbaUtilities.chooseManoPlayer(game);
+            PumbaUtilities.dealCards(game.getDrawPile(), game.getPlayers());
+            message = String.format("%sComienza la ronda %d. Turno del \"Mano\".", removed, game.getRound());
         } else {
-          playedCard = request.getParameter("card");
-          drawPlayer = request.getParameter("draw_player");
-          String changedSuit = request.getParameter("suits");
-          if (playedCard != null)
-            playedCard = Utilities.getPlayerName(playedCard);
-          if (drawPlayer != null)
-            drawPlayer = Utilities.getPlayerName(drawPlayer);
-          game = (Pumba)session.getAttribute("game");
-          message = game.runPlay(playedCard, changedSuit, drawPlayer);
+            playedCard = request.getParameter("card");
+            drawPlayer = request.getParameter("draw_player");
+            String changedSuit = request.getParameter("suits");
+            if (playedCard != null)
+              playedCard = Utilities.getPlayerName(playedCard);
+            if (drawPlayer != null)
+              drawPlayer = Utilities.getPlayerName(drawPlayer);
+            game = (Pumba)session.getAttribute("game");
+            message = game.runPlay(playedCard, changedSuit, drawPlayer);
       }%>
       <section class="table">
         <div class="all-players">
@@ -118,11 +130,15 @@
           </div>
           <div class="buttons">
             <%
-              if (message.contains("FIN")) {
-                  out.print(Utilities.printAnchor("index.html", "Atrás", "btn"));
+              if (message.contains("FIN") || message.contains("has sido eliminado")) {
+                  out.print(Utilities.printAnchor("index.html", "Volver a inicio", "btn"));
+              } else if (message.contains("RONDA")) {
+                  out.print(Utilities.printAnchor("pumba.jsp?start=0&round=1", "Sí", "btn"));
+                  out.print(Utilities.printAnchor("index.html", "No", "btn"));
+                  game.setIsScoreRound(false);
               } else {
                   out.print(Utilities.printAnchor("pumba.jsp?start=0", "Siguiente", "btn", (game.getTurn() == 0) ? "disabled" : ""));
-                  out.print(Utilities.printAnchor("index.html", "Atrás", "btn"));
+                  out.print(Utilities.printAnchor("index.html", "Terminar", "btn"));
               }
             %>
           </div>
