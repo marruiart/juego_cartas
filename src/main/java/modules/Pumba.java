@@ -313,19 +313,15 @@ public class Pumba {
     private String checkKingCardDropped(Card droppedCard, Boolean playAgain) {
         String kingMessage = null;
         if (droppedCard != null && playAgain && droppedCard.getNumber().equals("rey")) {
-            PumbaUtilities.reverseDirection(this);
-            setTurnModule();
-            PumbaUtilities.reverseDirection(this);
-            Player player = getPlayerOfTurn();
-            setPreviousPlayer(player);
-            System.out.println("REY - VUELVE A JUGAR: " + this.getPlayerOfTurn().getPlayerName());
-            kingMessage = player.isMachine() ? String.format(". Vuelve a jugar %s.", player.getPlayerName())
+            this.setTurn(prevPlayer.getNumber() - 1);
+            System.out.println("REY - VUELVE A JUGAR: " + prevPlayer.getPlayerName());
+            kingMessage = prevPlayer.isMachine() ? String.format(". Vuelve a jugar %s.", prevPlayer.getPlayerName())
                     : ". Vuelves a jugar.";
-            if (player.isMachine()) {
-                kingMessage = String.format(". Vuelve a jugar %s.", player.getPlayerName());
+            if (prevPlayer.isMachine()) {
+                kingMessage = String.format(". Vuelve a jugar %s.", prevPlayer.getPlayerName());
             } else {
                 kingMessage = ". Vuelves a jugar.";
-                PumbaUtilities.activatePumbaTime(player, droppedCard);
+                PumbaUtilities.activatePumbaTime(prevPlayer, droppedCard);
             }
         }
         return kingMessage;
@@ -408,12 +404,15 @@ public class Pumba {
         }
         if (droppedCard == null) {
             if (cardOnTable.getNumber().equals("rey")) {
+                player.setLastDroppedKing(false);
                 System.out.println("--YA NO REPITE TURNO");
                 playAgain = false;
             }
             player.drawCard();
             playMessage = " roba carta";
         } else {
+            if (droppedCard.getNumber().equals("rey"))
+                player.setLastDroppedKing(true);
             playMessage = String.format(" echa %s", droppedCard.getCardName());
         }
         returns.put("playMessage", playMessage);
@@ -495,13 +494,13 @@ public class Pumba {
     }
 
     public String checkEndOfGame(Player player) {
+        PumbaUtilities.setPlayersScore(this);
+        System.out.println("GANA " + player.getPlayerName().toUpperCase());
         if (this.numberOfPlayers == 2 && players.get(1).getScore() >= 100) {
             // Gana la partida la persona
             return "FIN DE LA PARTIDA, ¡ENHORABUENA, HAS GANADO!";
         } else {
             // Jugador se queda sin cartas y gana la ronda o la partida
-            System.out.println("GANA " + player.getPlayerName().toUpperCase());
-            PumbaUtilities.setPlayersScore(this);
             if (this.players.get(0).getScore() < 100)
                 return String.format("¡RONDA TERMINADA! ¿Quieres jugar otra ronda?");
             else
@@ -530,6 +529,7 @@ public class Pumba {
         System.out.println("\n<- Previo: " + prevPlayer.getPlayerName());
         System.out.println("* Jugada dos: " + this.draw2);
         System.out.println("* Es ronda de select: " + this.isSelectionRound);
+        System.out.println("* Palo en juego: " + this.suit);
         System.out.printf("* Rey activo %s: %b\n", player.getPlayerName(), player.isLastDroppedKing());
         System.out.printf("* Rey activo %s: %b\n", prevPlayer.getPlayerName(), prevPlayer.isLastDroppedKing());
 
@@ -583,7 +583,6 @@ public class Pumba {
                     playMessage = (String) returns.get("playMessage");
                     droppedCard = (Card) returns.get("droppedCard");
                     playAgain = (Boolean) returns.get("playAgain");
-                    player.setLastDroppedKing(playAgain);
                 }
             }
             // Comprobar fin de la partida

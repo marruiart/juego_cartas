@@ -90,6 +90,7 @@ public class Player {
     }
 
     public void setLastDroppedKing(boolean _islastDropped) {
+        //System.out.println(this.getPlayerName() + " rey activo --> " + _islastDropped);
         this.cardHand.isLastDroppedKing = _islastDropped;
     }
 
