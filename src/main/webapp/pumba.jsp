@@ -135,7 +135,7 @@
               } else if (message.contains("RONDA")) {
                   out.print(Utilities.printAnchor("pumba.jsp?start=0&round=1", "Sí", "btn"));
                   out.print(Utilities.printAnchor("index.html", "No", "btn"));
-                  game.setIsScoreRound(false);
+                  game.isScoreRound = false;
               } else {
                   out.print(Utilities.printAnchor("pumba.jsp?start=0", "Siguiente", "btn", (game.getTurn() == 0) ? "disabled" : ""));
                   out.print(Utilities.printAnchor("index.html", "Terminar", "btn"));
