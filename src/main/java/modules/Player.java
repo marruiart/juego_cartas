@@ -61,6 +61,10 @@ public class Player {
         return this.isMano;
     }
 
+    public void setIsMano(boolean _mano) {
+        this.isMano = _mano;
+    }
+
     public boolean isMachine() {
         return this.isMachine;
     }
@@ -90,7 +94,8 @@ public class Player {
     }
 
     public void setLastDroppedKing(boolean _islastDropped) {
-        //System.out.println(this.getPlayerName() + " rey activo --> " + _islastDropped);
+        // System.out.println(this.getPlayerName() + " rey activo --> " +
+        // _islastDropped);
         this.cardHand.isLastDroppedKing = _islastDropped;
     }
 

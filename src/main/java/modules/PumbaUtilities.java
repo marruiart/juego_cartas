@@ -54,10 +54,8 @@ public class PumbaUtilities {
      * @param game la partida en ejecución
      */
     public static void generatePlayers(Pumba game) {
-        int mano = chooseManoPlayer(game);
         for (int i = 0; i < game.getNumberOfPlayers(); i++) {
-            boolean isMano = (mano == i);
-            game.getPlayers().add(new Player(game, i + 1, isMano));
+            game.getPlayers().add(new Player(game, i + 1, false));
         }
     }
 
@@ -67,10 +65,12 @@ public class PumbaUtilities {
      * @param game la partida en ejecución
      * @return int con el turno del jugador que es mano
      */
-    private static int chooseManoPlayer(Pumba game) {
+    public static int chooseManoPlayer(Pumba game) {
         int mano = game.setTurn((int) (Math.random() * game.getNumberOfPlayers()));
         // game.setTurn(0); /* DESCOMENTAR PARA QUE EL JUGADOR PRINCIPAL SEA MANO */
-        System.out.println("MANO --- jugador " + (mano + 1));
+        Player player = game.getPlayers().get(mano);
+        player.setIsMano(true);
+        System.out.println("MANO --- " + player.getPlayerName());
         return mano;
     }
 
@@ -108,9 +108,9 @@ public class PumbaUtilities {
      */
     public static String restartRound(Pumba game) {
         PumbaUtilities.resetDrawPile(game);
-        String removed = PumbaUtilities.remove100ScorePlayers(game);
-        PumbaUtilities.chooseManoPlayer(game);
-        PumbaUtilities.dealCards(game.getDrawPile(), game.getPlayers());
+        String removed = (String) PumbaUtilities.remove100ScorePlayers(game).get("removed");
+        ArrayList<Player> players = (ArrayList<Player>) PumbaUtilities.remove100ScorePlayers(game).get("players");
+        game = new Pumba(players.size(), players, game.getDrawPile(), game.getDiscardPile(), game.getRound() + 1);
         return removed;
     }
 
@@ -120,11 +120,13 @@ public class PumbaUtilities {
      * @param game la partida en ejecución
      * @return un String con el listado de jugadores que han sido eliminados
      */
-    private static String remove100ScorePlayers(Pumba game) {
+    private static HashMap<String, Object> remove100ScorePlayers(Pumba game) {
         ArrayList<Player> players = (ArrayList<Player>) game.getPlayers().clone();
+        HashMap<String, Object> returns = new HashMap<>();
         String removed = "Se eliminan: <br/><ul>";
         int count = 0;
         for (Player p : game.getPlayers()) {
+            p.setIsMano(false);
             if (p.getScore() >= 100) {
                 System.out.println("XXXX Eliminado " + p.getPlayerName() + " XXXX");
                 removed += String.format("<li>%s</li>", p.getPlayerName(true));
@@ -132,11 +134,16 @@ public class PumbaUtilities {
                 count++;
             }
         }
-        if (count == 0)
-            return "No se elimina a ningún jugador.<br/>";
+        if (count == 0) {
+            returns.put("removed", "No se elimina a ningún jugador.<br/>");
+            returns.put("players", players);
+            return returns;
+        }
         game.setPlayers(players);
         resetPlayersNumbers(game.getPlayers());
-        return (removed + "</ul><br/>");
+        returns.put("removed", (removed + "</ul><br/>"));
+        returns.put("players", players);
+        return returns;
     }
 
     /**

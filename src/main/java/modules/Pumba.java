@@ -19,19 +19,33 @@ public class Pumba {
     private Player prevPlayer;
 
     public Pumba(int _numberOfPlayers) {
-        this.drawPile = new CardsDeck();
-        this.discardPile = new ArrayList<>();
-        this.players = new ArrayList<>();
+        this(_numberOfPlayers, null, null, null, 1);
+    }
+
+    public Pumba(int _numberOfPlayers, ArrayList<Player> _players, CardsDeck drawPile, ArrayList<Card> discardPile,
+            int _round) {
         this.numberOfPlayers = _numberOfPlayers;
         this.playDirection = 1;
         this.draw2 = 2;
-        this.round = 1;
+        this.round = _round;
         this.suit = null;
         this.isScoreRound = false;
         this.isSelectionRound = false;
         this.playedCard = null;
-        PumbaUtilities.scoreCards(this.drawPile);
-        PumbaUtilities.generatePlayers(this);
+        if (_round == 1) {
+            this.drawPile = new CardsDeck();
+            this.discardPile = new ArrayList<>();
+            this.players = new ArrayList<>();
+            PumbaUtilities.scoreCards(this.drawPile);
+            PumbaUtilities.generatePlayers(this);
+
+        } else {
+            this.drawPile = drawPile;
+            this.discardPile = discardPile;
+            this.players = _players;
+            PumbaUtilities.scoreCards(this.drawPile);
+        }
+        PumbaUtilities.chooseManoPlayer(this);
         PumbaUtilities.dealCards(this.drawPile, this.players);
         this.prevPlayer = this.getPlayerOfTurn();
     }
@@ -40,8 +54,7 @@ public class Pumba {
 
     public CardsDeck getDrawPile() {
         // System.out.println(" ------------------------- ");
-        // System.out.printf("| Cartas en mazo: %2d |\n",
-        // this.drawPile.getCards().size());
+        // System.out.printf("| Cartas en mazo: %2d |\n", this.drawPile.getCards().size());
         return this.drawPile;
     }
 
