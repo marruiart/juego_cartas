@@ -42,7 +42,7 @@ public class CardHand {
         ArrayList<Card> validCards = new ArrayList<Card>();
         boolean isSelectionRound = this.player.getGame().isSelectionRound;
         for (Card c : this.cards) {
-            if ((!isSelectionRound && c.isValid(_cardOnTable, _suit))
+            if ((!isSelectionRound && c.isValid(_cardOnTable, _suit, this.player.getGame()))
                     || (c.getNumber().equals("rey") && this.isLastDroppedKing)
                     || (_cardOnTable != null && c.getSuit().equals(_cardOnTable.getSuit()) && this.isLastDroppedKing))
                 validCards.add(c);

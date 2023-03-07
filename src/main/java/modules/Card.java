@@ -121,7 +121,7 @@ public class Card {
      * @return true si la carta es válida
      * @return false si la carta no es válida (no se puede soltar)
      */
-    public boolean isValid(Card _cardOnTable, String _suit) {
+    public boolean isValid(Card _cardOnTable, String _suit, Pumba game) {
         if (_cardOnTable == null)
             return true;
         String suitOnTable = _cardOnTable.getSuitStr();
@@ -136,8 +136,12 @@ public class Card {
             else
                 return false;
         }
-        if (numberOnTable.equals("dos"))
-            return (thisNumber.equals("dos") ? true : false);
+        if (numberOnTable.equals("dos")) {
+            if (thisNumber.equals("dos"))
+                return true;
+            else if (!thisNumber.equals("dos") && game.getDraw2() != -1)
+                return false;
+        }
         if (thisNumber.equals("sota"))
             return true;
         if (numberOnTable.equals(thisNumber) || suitOnTable.equals(thisSuit))

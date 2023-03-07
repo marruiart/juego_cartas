@@ -124,8 +124,9 @@ public class Pumba {
         return this.round;
     }
 
-    public void incRound() {
-        this.round++;
+    
+    public int getDraw2() {
+        return this.draw2;
     }
 
     public String getSuit() {
