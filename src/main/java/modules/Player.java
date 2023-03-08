@@ -41,6 +41,10 @@ public class Player {
         return this.game;
     }
 
+    public void setGame(Pumba _game) {
+        this.game = _game;
+    }
+
     public int getNumber() {
         return this.number;
     }

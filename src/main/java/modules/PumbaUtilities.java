@@ -67,7 +67,7 @@ public class PumbaUtilities {
      */
     public static int chooseManoPlayer(Pumba game) {
         int mano = game.setTurn((int) (Math.random() * game.getNumberOfPlayers()));
-        // game.setTurn(0); /* DESCOMENTAR PARA QUE EL JUGADOR PRINCIPAL SEA MANO */
+        //mano = game.setTurn(0); /* DESCOMENTAR PARA QUE EL JUGADOR PRINCIPAL SEA MANO */
         Player player = game.getPlayers().get(mano);
         player.setIsMano(true);
         System.out.println("MANO --- " + player.getPlayerName());

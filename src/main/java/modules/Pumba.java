@@ -38,14 +38,16 @@ public class Pumba {
             this.players = new ArrayList<>();
             PumbaUtilities.scoreCards(this.drawPile);
             PumbaUtilities.generatePlayers(this);
-
         } else {
             this.drawPile = drawPile;
             this.discardPile = discardPile;
             this.players = _players;
+            for (Player p : players) {
+                p.setGame(this);
+            }
             PumbaUtilities.scoreCards(this.drawPile);
         }
-        PumbaUtilities.chooseManoPlayer(this);
+        this.turn = PumbaUtilities.chooseManoPlayer(this);
         PumbaUtilities.dealCards(this.drawPile, this.players);
         this.prevPlayer = this.getPlayerOfTurn();
     }
@@ -137,7 +139,6 @@ public class Pumba {
         return this.round;
     }
 
-    
     public int getDraw2() {
         return this.draw2;
     }
