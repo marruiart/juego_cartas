@@ -386,8 +386,10 @@ public class PumbaUtilities {
                 score += c.setUncovered(true).getScore();
             }
             p.updateScore(score);
-            if (p.getScore() < playerScore)
+            if (p.getScore() < playerScore) {
                 winner = p.getNumber();
+                playerScore = p.getScore();
+            }
         }
     }
 

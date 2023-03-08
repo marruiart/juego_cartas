@@ -25,7 +25,7 @@
               out.print(Utilities.printTitle("h2", "¡ENHORABUENA, HAS GANADO!"));
               out.print(Utilities.printImg("assets/img/winner.png", "Imagen de una copa"));
           } else {
-              out.print(Utilities.printTitle("h2", "¡Ha ganado el jugador" + winner + "!"));
+              out.print(Utilities.printTitle("h2", "¡Ha ganado el jugador " + winner + "!"));
               out.print(Utilities.printImg("assets/img/winner-player.png", "Imagen de un podio"));
           }
         %>
