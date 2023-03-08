@@ -164,7 +164,7 @@ public class Card {
      * @return String con la carta entre etiquetas de enlace
      */
     public String toStringAnchorTag(boolean disable) {
-        String href = "http://localhost:8080/juegos_cartas/pumba.jsp?start=0&card=" + this.getCardNameLink();
+        String href = "pumba.jsp?start=0&card=" + this.getCardNameLink();
         String classContent = "";
         if (disable)
             classContent = "disabled";
