@@ -59,6 +59,13 @@ public class PumbaUtilities {
         }
     }
 
+    public static void resetPlayers(Pumba game, ArrayList<Player> players) {
+        for (int i = 0; i < players.size(); i++) {
+            Player p = players.get(i);
+            game.getPlayers().add(new Player(p.getPlayerName(), game, i + 1, false, p.getScore()));
+        }
+    }
+
     /**
      * Elección aleatoria del jugador que será mano Mano.
      * 
@@ -106,12 +113,12 @@ public class PumbaUtilities {
      * @param game la partida en ejecución
      * @return un String con el listado de jugadores que han sido eliminados
      */
-    public static String restartRound(Pumba game) {
-        PumbaUtilities.resetDrawPile(game);
-        String removed = (String) PumbaUtilities.remove100ScorePlayers(game).get("removed");
-        ArrayList<Player> players = (ArrayList<Player>) PumbaUtilities.remove100ScorePlayers(game).get("players");
-        game = new Pumba(players.size(), players, game.getDrawPile(), game.getDiscardPile(), game.getRound() + 1);
-        return removed;
+    public static Pumba restartRound(Pumba game) {
+        HashMap<String, Object> returns = PumbaUtilities.remove100ScorePlayers(game);
+        String removed = (String) returns.get("removed");
+        ArrayList<Player> players = (ArrayList<Player>) returns.get("players");
+        game = new Pumba(players.size(), players, game.getRound() + 1, removed);
+        return game;
     }
 
     /**
@@ -140,45 +147,9 @@ public class PumbaUtilities {
             return returns;
         }
         game.setPlayers(players);
-        resetPlayersNumbers(game.getPlayers());
         returns.put("removed", (removed + "</ul><br/>"));
         returns.put("players", players);
         return returns;
-    }
-
-    /**
-     * Asigna un nuevo número a cada jugador en función del número de jugadores que
-     * han quedado en juego.
-     * 
-     * @param players los jugadores que han quedado en juego
-     */
-    private static void resetPlayersNumbers(ArrayList<Player> players) {
-        for (int p = 1; p < players.size(); p++) {
-            Player player = players.get(p);
-            int n = player.getNumber();
-            player.setNumber(n < p + 1 ? n : p + 1);
-        }
-    }
-
-    /**
-     * Devuelve todas las cartas que hay en la pila de descartes y en las manos de
-     * los jugadores a la pila de robo, colocando de nuevo las cartas derechas.
-     * 
-     * @param game la partida en ejecución
-     */
-    private static void resetDrawPile(Pumba game) {
-        ArrayList<Card> discardPile = game.getDiscardPile();
-        CardsDeck drawPile = game.getDrawPile();
-        ArrayList<Player> players = game.getPlayers();
-        System.out.println("\nCOLOCAR PILA DE ROBO");
-        drawPile.returnCards(discardPile);
-        System.out.println("DEVOLVER MANOS A LA PILA");
-        for (Player p : players)
-            drawPile.returnCards(p.getCardHand().getCards());
-        drawPile.shuffle();
-        for (Card c : drawPile.getCards())
-            c.rotateCard("center", "transform-origin: bottom center; transform: scale(1) rotate(0);");
-        game.setDiscardPile(new ArrayList<Card>());
     }
 
     /* *** MOVIMIENTOS DE LOS MAZOS *** */

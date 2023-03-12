@@ -12,16 +12,20 @@ public class Player {
     private Integer score;
 
     public Player(Pumba _game, int _number, boolean _isMano) {
-        this(null, _game, _number, _isMano);
+        this(null, _game, _number, _isMano, 0);
     }
 
     public Player(String _name, Pumba _game, int _number, boolean _isMano) {
+        this(_name, _game, _number, _isMano, 0);
+    }
+
+    public Player(String _name, Pumba _game, int _number, boolean _isMano, int _score) {
         this.game = _game;
         this.number = _number;
         this.name = _name == null ? String.format("jugador %d", this.number) : _name;
         this.isMano = _isMano;
         this.isMachine = _number == 1 ? false : true;
-        this.score = 0;
+        this.score = _score;
     }
 
     /* GETTERS Y SETTERS */

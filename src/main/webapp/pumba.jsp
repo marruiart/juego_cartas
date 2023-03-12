@@ -34,8 +34,8 @@
           message = "Comienza el juego. Turno del \"Mano\".";
         } else if (start != 1 && round != null && Integer.parseInt(round) >= 1) {
           game = (Pumba)session.getAttribute("game");
-          String removed = PumbaUtilities.restartRound(game);
-          message = String.format("%sComienza la ronda %d. Turno de %s (Mano).", removed, game.getRound(), game.getPlayerOfTurn().getPlayerName(true));
+          game = PumbaUtilities.restartRound(game);
+          message = String.format("%sComienza la ronda %d. Turno de %s (Mano).", game.removedPlayers, game.getRound(), game.getPlayerOfTurn().getPlayerName(true));
         } else {
             playedCard = request.getParameter("card");
             drawPlayer = request.getParameter("draw_player");

@@ -17,13 +17,13 @@ public class Pumba {
     public boolean isSelectionRound;
     private Card playedCard;
     private Player prevPlayer;
+    public String removedPlayers;
 
     public Pumba(int _numberOfPlayers) {
-        this(_numberOfPlayers, null, null, null, 1);
+        this(_numberOfPlayers, null, 1, null);
     }
 
-    public Pumba(int _numberOfPlayers, ArrayList<Player> _players, CardsDeck drawPile, ArrayList<Card> discardPile,
-            int _round) {
+    public Pumba(int _numberOfPlayers, ArrayList<Player> _players, int _round, String _removedPlayers) {
         this.numberOfPlayers = _numberOfPlayers;
         this.playDirection = 1;
         this.draw2 = 2;
@@ -32,21 +32,15 @@ public class Pumba {
         this.isScoreRound = false;
         this.isSelectionRound = false;
         this.playedCard = null;
-        if (_round == 1) {
-            this.drawPile = new CardsDeck();
-            this.discardPile = new ArrayList<>();
-            this.players = new ArrayList<>();
-            PumbaUtilities.scoreCards(this.drawPile);
+        this.drawPile = new CardsDeck();
+        this.discardPile = new ArrayList<>();
+        this.players = new ArrayList<>();
+        this.removedPlayers = _removedPlayers;
+        PumbaUtilities.scoreCards(this.drawPile);
+        if (_round == 1)
             PumbaUtilities.generatePlayers(this);
-        } else {
-            this.drawPile = drawPile;
-            this.discardPile = discardPile;
-            this.players = _players;
-            for (Player p : players) {
-                p.setGame(this);
-            }
-            PumbaUtilities.scoreCards(this.drawPile);
-        }
+        else
+            PumbaUtilities.resetPlayers(this, _players);
         this.turn = PumbaUtilities.chooseManoPlayer(this);
         PumbaUtilities.dealCards(this.drawPile, this.players);
         this.prevPlayer = this.getPlayerOfTurn();
