@@ -11,17 +11,9 @@
 
   <p align="center">
     El proyecto 'Pumba' es una aplicación web desarrollada en JSP que permite a los usuarios jugar el popular juego de cartas 'Pumba'. Se ha desarrollado tanto la interfaz, empleando HTML y CSS, como una lógica de juego realista. El juego incluye la posibilidad de jugar contra la máquina, eligiendo entre 1 y 5 contrincantes. El código fuente del proyecto está disponible en GitHub si se desea contribuir a su mejora. 
-    <br />
-    <a href="https://github.com/marruiart/juego_cartas"><strong>Explore the docs »</strong></a>
-    <br />
-    <br />
-    <a href="https://github.com/marruiart/juego_cartas">View Project</a>
-    ·
-    <a href="https://github.com/marruiart/juego_cartas/issues">Report Bug</a>
-    ·
-    <a href="https://github.com/marruiart/juego_cartas/issues">Request Feature</a>
   </p>
 </div>
+<br />
 
 
 
